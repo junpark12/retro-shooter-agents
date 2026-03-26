@@ -8,7 +8,6 @@ tools:
   - read
   - edit
   - search
-  - github
 handoffs:
   - agent: pl
     label: "디자인 완료 보고 / 설계 확인 요청"

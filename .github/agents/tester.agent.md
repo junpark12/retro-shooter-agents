@@ -8,7 +8,6 @@ tools:
   - read
   - search
   - terminal
-  - github
 handoffs:
   - agent: pl
     label: "QA 결과 보고"

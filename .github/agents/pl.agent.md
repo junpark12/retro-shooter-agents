@@ -6,7 +6,6 @@ description: >-
 model: claude-sonnet-4-5
 tools:
   - read
-  - edit
   - search
   - github
 handoffs:
