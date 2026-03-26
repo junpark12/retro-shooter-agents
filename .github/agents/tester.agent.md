@@ -3,6 +3,7 @@ name: "Tester"
 description: >-
   게임 코드의 품질을 검증하는 QA 엔지니어 에이전트.
   코드 리뷰, 빌드 검증, 버그 탐지, 품질 보고서 작성을 담당한다.
+model: claude-haiku-4-5
 tools:
   - read
   - search

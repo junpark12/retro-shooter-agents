@@ -3,6 +3,7 @@ name: "PL (Project Leader)"
 description: >-
   게임 프로젝트의 총괄 리더. 아키텍처 설계 후 Developer, UI Designer, Tester에게
   작업을 자동 위임하고, 결과를 리뷰하여 프로젝트를 완성한다.
+model: claude-sonnet-4-5
 tools:
   - read
   - edit

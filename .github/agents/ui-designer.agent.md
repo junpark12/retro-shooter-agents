@@ -3,6 +3,7 @@ name: "UI Designer"
 description: >-
   게임의 시각 요소를 담당하는 레트로 UI/아트 디자이너 에이전트.
   프로그래매틱 스프라이트, HUD, 메뉴, 배경, 이펙트를 SDL2 프리미티브로 구현한다.
+model: claude-sonnet-4-5
 tools:
   - read
   - edit
