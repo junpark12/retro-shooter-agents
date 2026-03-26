@@ -3,7 +3,7 @@ name: "Developer"
 description: >-
   게임 엔진 핵심 코드를 구현하는 시니어 개발자 에이전트.
   메인 루프, 플레이어, 적, 총알, 충돌, 보스, 스테이지 시스템을 C++/SDL2로 구현한다.
-model: claude-sonnet-4-5
+model: gpt-5.3-codex
 user-invocable: false
 tools:
   - read
