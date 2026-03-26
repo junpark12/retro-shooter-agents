@@ -2,18 +2,26 @@
 
 > **GitHub Copilot Coding Agent**로 개발하는 90년대 스타일 종스크롤 슈팅 게임
 
-## 🏗️ Workflow
+## 🤖 Custom Agents (`.github/agents/`)
+
+이 프로젝트는 **GitHub Copilot Custom Agents**로 팀을 구성합니다.
+각 에이전트는 독립된 역할과 인스트럭션을 가지고 있습니다.
 
 ```
- GitHub Issues (역할별 태스크)
-     │
-     ├── 🧑‍💼 PL 이슈        → @copilot 할당 → PR 자동 생성
-     ├── 👨‍💻 Dev 이슈       → @copilot 할당 → PR 자동 생성
-     ├── 🎨 Design 이슈    → @copilot 할당 → PR 자동 생성
-     └── 🧪 Test 이슈      → @copilot 할당 → PR 자동 생성
-           │
-           ▼
-     Review & Merge → 🎮 게임 완성!
+.github/agents/
+  ├── pl.agent.md            🧑‍💼 Project Leader
+  ├── developer.agent.md     👨‍💻 Senior Developer
+  ├── ui-designer.agent.md   🎨 UI/Art Designer
+  └── tester.agent.md        🧪 QA Engineer
+```
+
+### Agent 호출 방법
+Copilot Chat에서 에이전트를 직접 호출:
+```
+@pl 아키텍처 설계를 시작해줘. types.h와 entity.h 인터페이스를 정의해.
+@developer 플레이어 시스템을 구현해. player.h/cpp 작성해줘.
+@ui-designer 스프라이트 렌더링 함수를 구현해. sprites.h/cpp 작성.
+@tester 전체 코드 리뷰하고 qa-report.md 작성해줘.
 ```
 
 ## 🎯 Game Spec
@@ -53,24 +61,24 @@ cmake .. -G "Visual Studio 17 2022"
 cmake --build . --config Release
 ```
 
-## 🤖 Agent 역할 (GitHub Issues Labels)
+## 🤖 Agent 팀 구성
 
-| Label | Role | 담당 |
-|-------|------|------|
-| `role:pl` | Project Leader | 아키텍처 설계, 기술 결정, 코드 리뷰 |
-| `role:dev` | Developer | 게임 엔진, 로직, 물리, 충돌 구현 |
-| `role:design` | UI Designer | 스프라이트, HUD, 메뉴, 시각 효과 |
-| `role:test` | Tester | 빌드 검증, 코드 리뷰, 버그 리포트 |
-| `phase:1` ~ `phase:4` | Phase | 개발 단계 |
+| Agent | File | 역할 | Tools |
+|-------|------|------|-------|
+| 🧑‍💼 PL | `pl.agent.md` | 아키텍처 설계, 기술 결정, 코드 리뷰 | read, search, github |
+| 👨‍💻 Developer | `developer.agent.md` | 게임 엔진, 로직, 물리, 충돌 구현 | read, edit, terminal, search |
+| 🎨 UI Designer | `ui-designer.agent.md` | 스프라이트, HUD, 메뉴, 시각 효과 | read, edit, search |
+| 🧪 Tester | `tester.agent.md` | 코드 리뷰, 빌드 검증, 버그 리포트 | read, search, terminal |
 
-## 📋 How to Use
+## 📋 개발 플로우
 
-1. 각 이슈를 **Copilot**에 할당 (`@copilot`)
-2. Copilot이 자동으로 브랜치 생성 + PR 제출
-3. PR 리뷰 후 머지
-4. 다음 Phase 이슈 진행
-
-> ⚠️ Phase 순서대로 진행하세요. Phase 1 (아키텍처) 머지 후 Phase 2 시작.
+```
+Phase 1: @pl         → 아키텍처 설계, 헤더 인터페이스 정의
+Phase 2: @developer  → 게임 엔진 핵심 구현
+         @ui-designer → 스프라이트, HUD, 메뉴 (병렬 작업)
+Phase 3: @developer  → 보스 시스템, 전체 통합
+Phase 4: @tester     → 코드 리뷰, 빌드 검증, QA 리포트
+```
 
 ## 📜 License
 
