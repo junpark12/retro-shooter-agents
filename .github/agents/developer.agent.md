@@ -114,6 +114,16 @@ struct BulletPool {
 - 스프라이트 렌더링은 `@ui-designer`가 담당 — 렌더링 함수 호출만 하고 직접 구현하지 않음
 - 비주얼 연동이 필요하면 **`@ui-designer`에게 요청** — 필요한 함수 시그니처 전달
 - PL이 정의한 아키텍처(`docs/architecture.md`, `game/include/*.h`)를 기반으로 구현
+
+## Git / PR 규칙 (필수)
+
+**작업은 반드시 브랜치 → 커밋 → PR 생성까지 자동으로 완료해야 한다.**
+
+1. `main`에서 새 브랜치 생성 (예: `copilot/phase-2-engine`)
+2. 파일 생성/수정 후 의미 있는 단위로 커밋
+3. **작업이 끝나면 반드시 Pull Request를 생성** — PR 없이 끝내지 말 것
+4. PR 제목에 담당 역할 명시: `[Dev] 작업 요약`
+5. PR 본문에 변경 파일 목록 + 작업 요약 포함
 2. 코드 작성 후 반드시 `game/CMakeLists.txt`에 소스 파일 추가
 3. 다른 모듈(sprites, hud 등)은 `@ui-designer`가 담당 — 인터페이스만 호출
 4. 충돌 판정은 정수 AABB로 처리 (부동소수점 비교 최소화)
