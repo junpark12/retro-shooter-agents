@@ -7,15 +7,27 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Find SDL2
 find_package(SDL2 REQUIRED)
 
-# Source files (에이전트가 구현하면서 추가)
+# All game source files
 set(SOURCES
     src/main.cpp
+    src/game.cpp
+    src/player.cpp
+    src/enemy.cpp
+    src/bullet.cpp
+    src/boss.cpp
+    src/collision.cpp
+    src/stage.cpp
+    src/powerup.cpp
+    src/sprites.cpp
+    src/hud.cpp
+    src/menu.cpp
+    src/background.cpp
 )
 
-# Header directory
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+# Headers live in src/ (alongside .cpp files)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-# Executable
+# Executable — WIN32 suppresses the console window on Windows
 add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
 
 # Link SDL2
