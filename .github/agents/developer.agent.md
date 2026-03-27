@@ -8,7 +8,7 @@ user-invocable: false
 tools:
   - read
   - edit
-  - terminal
+  - execute
   - search
 ---
 

@@ -9,7 +9,7 @@ tools:
   - read
   - edit
   - search
-  - terminal
+  - execute
 ---
 
 # 🎨 UI Designer Agent
