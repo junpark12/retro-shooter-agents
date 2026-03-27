@@ -1,7 +1,6 @@
 #include "menu.h"
 
 #include <array>
-#include <cstdlib>
 #include <string>
 #include <unordered_map>
 
@@ -97,9 +96,9 @@ GameState handleMenuEvent(Menu& m, const SDL_Event& e) {
         if (m.selectedOption == static_cast<int>(MenuOption::START)) {
             return GameState::PLAYING;
         }
-
-        SDL_Quit();
-        std::exit(0);
+        // Signal the game loop to exit cleanly; Game::shutdown() will be called
+        // by main() after run() returns — no SDL_Quit/std::exit needed here.
+        return GameState::QUIT;
     }
 
     return GameState::TITLE;

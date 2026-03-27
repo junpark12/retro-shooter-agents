@@ -160,6 +160,9 @@ void Game::handleEvents() {
                 initPlayer(*player_);
                 startStage(stageNum_);
                 state_ = GameState::PLAYING;
+            } else if (next == GameState::QUIT) {
+                running_ = false;
+                return;
             }
         } else if (state_ == GameState::GAMEOVER || state_ == GameState::VICTORY) {
             if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_RETURN) {

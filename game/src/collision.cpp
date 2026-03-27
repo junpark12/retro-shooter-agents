@@ -22,12 +22,13 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
         if (!b.active || b.owner != BulletOwner::PLAYER) continue;
         Rect bb = b.worldBounds();
 
+        const bool isLaser = (player.powerType == PowerUpType::LASER);
         for (Enemy& e : enemies.pool) {
             if (!e.active) continue;
             if (!rectsOverlap(bb, e.worldBounds())) continue;
 
             e.hp -= b.damage;
-            if (player.powerType != PowerUpType::LASER) {
+            if (!isLaser) {
                 b.active = false;
             }
 
@@ -40,7 +41,11 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
                                  dropTypeFromEnemy(e));
                 }
             }
-            break;
+
+            if (!isLaser) {
+                break; // non-laser bullet consumed by first enemy hit; stop inner loop
+            }
+            // laser: continue iterating enemies — piercing shot hits all in path
         }
     }
 }
