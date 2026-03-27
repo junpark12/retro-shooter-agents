@@ -32,7 +32,8 @@ enum class GameState {
     PLAYING,
     STAGE_CLEAR,
     GAMEOVER,
-    VICTORY
+    VICTORY,
+    QUIT       // signals the main loop to exit cleanly via running_ = false
 };
 
 // ─── Entity type enumerations ─────────────────────────────────────────────────

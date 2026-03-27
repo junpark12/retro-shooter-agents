@@ -1,0 +1,36 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/GalaxyStorm.dir/link.d"
+  "CMakeFiles/GalaxyStorm.dir/src/background.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/background.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/enemy.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/enemy.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/game.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/game.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/main.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/main.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/player.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/player.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o.d"
+  "GalaxyStorm"
+  "GalaxyStorm.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/GalaxyStorm.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()
