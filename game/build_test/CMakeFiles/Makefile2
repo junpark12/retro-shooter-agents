@@ -85,12 +85,12 @@ clean: CMakeFiles/GalaxyStorm.dir/clean
 CMakeFiles/GalaxyStorm.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14 "Built target GalaxyStorm"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 "Built target GalaxyStorm"
 .PHONY : CMakeFiles/GalaxyStorm.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/GalaxyStorm.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles 14
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/GalaxyStorm.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles 0
 .PHONY : CMakeFiles/GalaxyStorm.dir/rule
@@ -102,7 +102,7 @@ GalaxyStorm: CMakeFiles/GalaxyStorm.dir/rule
 # codegen rule for target.
 CMakeFiles/GalaxyStorm.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14 "Finished codegen for target GalaxyStorm"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17 "Finished codegen for target GalaxyStorm"
 .PHONY : CMakeFiles/GalaxyStorm.dir/codegen
 
 # clean rule for target.

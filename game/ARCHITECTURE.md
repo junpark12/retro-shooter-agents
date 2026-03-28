@@ -1,8 +1,8 @@
-# Galaxy Storm — Architecture Document
+# Galaxy Storm — Architecture Document (Bullet Hell Edition)
 
 ## Overview
 
-Galaxy Storm is a 90s-style vertical scrolling arcade shooter built with C++17 and SDL2.
+Galaxy Storm is a **Bullet Hell** vertical scrolling arcade shooter (Gunvein/CAVE style) built with C++17, SDL2, SDL2_image, SDL2_mixer, and SDL2_ttf.
 Resolution: 480×640 (portrait). Target: Windows native (.exe).
 
 ---
@@ -10,17 +10,18 @@ Resolution: 480×640 (portrait). Target: Windows native (.exe).
 ## Game State Machine
 
 ```
-TITLE → PLAYING → STAGE_CLEAR → [next stage or VICTORY]
-                ↘ GAMEOVER
+TITLE → SHIP_SELECT → PLAYING → STAGE_CLEAR → [next stage or VICTORY]
+                               ↘ GAMEOVER
 ```
 
-| State        | Description                              |
-|--------------|------------------------------------------|
-| TITLE        | Main menu, high score display            |
-| PLAYING      | Active gameplay, spawning enemies/waves  |
-| STAGE_CLEAR  | Brief transition screen between stages   |
-| GAMEOVER     | Player lost all lives                    |
-| VICTORY      | All 3 stages cleared                     |
+| State        | Description                                           |
+|--------------|-------------------------------------------------------|
+| TITLE        | Main menu, high score display                         |
+| SHIP_SELECT  | 3-ship selection screen (Bagon/Damul/Gunex)           |
+| PLAYING      | Active gameplay, spawning enemies/waves               |
+| STAGE_CLEAR  | Brief transition screen between stages                |
+| GAMEOVER     | Player lost all lives                                 |
+| VICTORY      | All 3 stages cleared                                  |
 
 ---
 
@@ -29,17 +30,21 @@ TITLE → PLAYING → STAGE_CLEAR → [next stage or VICTORY]
 ```
 main.cpp
   └── Game
-        ├── Background    (no deps)
-        ├── Menu          (no deps)
-        ├── Stage         → Enemy, Boss
-        ├── Player        → Bullet
-        ├── Enemy         → Bullet
-        ├── Boss          → Bullet, Enemy
-        ├── BulletPool    (no deps)
-        ├── PowerUp       (no deps)
-        ├── Collision     → Player, Enemy, Boss, Bullet, PowerUp
-        ├── HUD           → Player (score, lives, power)
-        └── Sprites       (utility, no deps)
+        ├── AssetManager   (SDL2_image, pre-loads all PNG sprites)
+        ├── AudioManager   (SDL2_mixer, BGM + SFX)
+        ├── Background     → AssetManager
+        ├── Menu           → AssetManager, TTF_Font
+        ├── ShipSelect     → AssetManager, TTF_Font
+        ├── Stage          → Enemy, Boss
+        ├── Player         → Bullet, BulletPattern
+        ├── Enemy          → Bullet, BulletPattern
+        ├── Boss           → Bullet, BulletPattern
+        ├── BulletPool     (no deps)
+        ├── BulletPattern  → BulletPool
+        ├── PowerUp        → AssetManager
+        ├── Collision      → Player, Enemy, Boss, Bullet, PowerUp, AudioManager
+        ├── HUD            → Player, AssetManager, TTF_Font
+        └── Sprites        → AssetManager (utility, no state)
 ```
 
 All modules share `types.h` (common enums/structs) and `entity.h` (base Entity).
@@ -52,34 +57,38 @@ All modules share `types.h` (common enums/structs) and `entity.h` (base Entity).
 game/
 ├── CMakeLists.txt
 ├── src/
-│   ├── main.cpp          ← entry point, SDL init
-│   ├── game.cpp          ← game loop, state management
-│   ├── player.cpp
-│   ├── enemy.cpp
-│   ├── bullet.cpp
-│   ├── boss.cpp
-│   ├── collision.cpp
-│   ├── stage.cpp
-│   ├── powerup.cpp
-│   ├── sprites.cpp
-│   ├── hud.cpp
-│   ├── menu.cpp
-│   └── background.cpp
-└── include/              ← all .h headers live here
-    ├── types.h
-    ├── entity.h
-    ├── game.h
-    ├── player.h
-    ├── enemy.h
-    ├── bullet.h
-    ├── boss.h
-    ├── collision.h
-    ├── stage.h
-    ├── powerup.h
-    ├── sprites.h
-    ├── hud.h
-    ├── menu.h
-    └── background.h
+│   ├── types.h              ← shared types, ShipType, BulletPattern, etc.
+│   ├── entity.h             ← base Entity with circular hitRadius
+│   ├── main.cpp             ← entry point
+│   ├── game.cpp             ← game loop + state machine (TITLE→SHIP_SELECT→PLAYING)
+│   ├── player.cpp           ← 3-ship types, lock-on, charge shot, bomb
+│   ├── enemy.cpp            ← 5 enemy types, pattern-based shooting
+│   ├── bullet.cpp           ← object pool (MAX_BULLETS=500)
+│   ├── bullet_pattern.cpp   ← Bullet Hell pattern generator
+│   ├── boss.cpp             ← multi-phase boss (3 phases per boss, 3 bosses)
+│   ├── collision.cpp        ← AABB + circular hitbox (small hitbox for player)
+│   ├── stage.cpp            ← wave/stage manager
+│   ├── powerup.cpp          ← 6 power-up types
+│   ├── asset_manager.cpp    ← SDL2_image PNG loader with cache
+│   ├── audio.cpp            ← SDL2_mixer BGM/SFX manager
+│   ├── sprites.cpp          ← sprite rendering (asset-based + primitive fallback)
+│   ├── hud.cpp              ← HUD with SDL2_ttf
+│   ├── menu.cpp             ← title + ship select screen
+│   └── background.cpp       ← parallax starfield + nebula
+└── assets/
+    ├── sprites/
+    │   ├── player/          ← ship_bagon.png, ship_damul.png, ship_gunex.png
+    │   ├── enemies/         ← enemy_small.png, enemy_medium.png, etc.
+    │   ├── bosses/          ← boss_1.png, boss_2.png, boss_3.png
+    │   ├── bullets/         ← bullet_player.png, bullet_enemy.png, etc.
+    │   ├── effects/         ← explosion_0..3.png
+    │   ├── powerups/        ← powerup_spread.png, etc.
+    │   ├── backgrounds/     ← space_bg.png
+    │   └── ui/              ← life_icon.png, bomb_icon.png, power_bar.png
+    ├── bgm/                 ← bgm_title.ogg, bgm_stage1.ogg, etc.
+    ├── sfx/                 ← sfx_shoot.wav, sfx_explode_small.wav, etc.
+    ├── fonts/               ← arcade font TTF
+    └── CREDITS.md
 ```
 
 ---
@@ -87,94 +96,106 @@ game/
 ## Module Descriptions
 
 ### `types.h` — Shared types
-- `GameState` enum: TITLE, PLAYING, STAGE_CLEAR, GAMEOVER, VICTORY
-- `EnemyType` enum: SMALL, MEDIUM, LARGE
-- `PowerUpType` enum: SPREAD, LASER, MISSILE, SHIELD
-- `BulletOwner` enum: PLAYER, ENEMY
-- `Vec2` struct: float x, y + operators
-- `Rect` struct: float x, y, w, h
-- `rectsOverlap(a, b)` inline AABB helper
-- Constants: SCREEN_W=480, SCREEN_H=640, FPS=60, MAX_BULLETS=256, MAX_ENEMIES=64
+- `GameState`: TITLE, SHIP_SELECT, PLAYING, STAGE_CLEAR, GAMEOVER, VICTORY, QUIT
+- `ShipType`: BAGON, DAMUL, GUNEX
+- `EnemyType`: SMALL, MEDIUM, LARGE, FAST, ARMORED
+- `PowerUpType`: SPREAD, LASER, MISSILE, SHIELD, BOMB, POWER
+- `BulletOwner`: PLAYER, ENEMY
+- `BulletPattern`: SINGLE, SPREAD_3/5, CIRCLE_8/16, SPIRAL_CW/CCW, AIMED, AIMED_SPREAD, CURTAIN, RANDOM_SPREAD, HOMING
+- `Vec2`: float x/y + operators + length() + normalized()
+- `Rect`: float x/y/w/h
+- `rectsOverlap()`, `circlesOverlap()` inline helpers
+- Constants: SCREEN_W=480, SCREEN_H=640, FPS=60, MAX_BULLETS=500, MAX_ENEMIES=64, MAX_LOCK_TARGETS=8
+- `SCORE_PER_EXTRA_LIFE = 100000`
 
 ### `entity.h` — Base entity
-- `Entity` struct: Vec2 pos, Vec2 vel, Rect bounds, bool active, int hp
-- `worldBounds()` → world-space AABB
+- `Entity`: Vec2 pos/vel, Rect bounds, bool active, int hp, float hitRadius, center()
+- `hitRadius` used for circular bullet collision (Bullet Hell small hitbox)
 
-### `game.h` — Game controller
-- `Game` class: `init()`, `run()`, `shutdown()`
-- Private: `handleEvents()`, `update(float dt)`, `render()`
-- Private: `startStage(int)`, `onStageClear()`, `onGameOver()`
-- Owns all subsystem pointers (Player, BulletPool, EnemyPool, Boss, PowerUpPool, Stage, Background)
+### `asset_manager.h/cpp` — SDL2_image asset loader
+- Pre-loads all PNG sprites at init
+- `get(key)` returns cached SDL_Texture* or nullptr
+- Graceful fallback: nullptr → primitive rendering
 
-### `player.h/cpp` — Player ship
-- `Player` extends Entity: lives, score, powerType, shieldTimer, fireTimer, invincibleTimer
-- `initPlayer(Player&)`, `updatePlayer(Player&, float dt, BulletPool&)`
-- `renderPlayer(SDL_Renderer*, const Player&)` — delegates to sprites
-- 8-direction keyboard movement (SDL_GetKeyboardState), screen boundary clamping
-- Spacebar fires; power type determines bullet pattern
+### `audio.h/cpp` — SDL2_mixer audio manager
+- `playBGM(key)` — loops BGM with fade-in
+- `playSFX(key)` — plays one-shot sound effect
+- Silently disabled if SDL2_mixer unavailable
 
-### `enemy.h/cpp` — Enemy system
-- `Enemy` extends Entity: EnemyType, moveTimer, pointValue
-- `EnemyPool` struct: Enemy pool[MAX_ENEMIES]
-- `spawnEnemy(EnemyPool&, EnemyType, Vec2 pos)`, `updateEnemies(EnemyPool&, float dt, const Player&)`
-- `renderEnemies(SDL_Renderer*, const EnemyPool&)`
-- SMALL: straight down. MEDIUM: sine wave. LARGE: tracks player.
+### `game.h/cpp` — Game controller
+- `Game::init()` — SDL2 + SDL2_image + SDL2_mixer + SDL2_ttf init, load assets
+- State machine: TITLE → SHIP_SELECT → PLAYING
+- Owns TTF_Font* for HUD/menu text rendering
+- `selectedShip_` remembers chosen ship type
 
-### `bullet.h/cpp` — Bullet object pool
-- `Bullet` extends Entity: BulletOwner owner, int damage
-- `BulletPool` struct: Bullet pool[MAX_BULLETS]
-- `fireBullet(BulletPool&, Vec2 pos, Vec2 vel, BulletOwner, int dmg)`
-- `updateBullets(BulletPool&, float dt)`, `renderBullets(SDL_Renderer*, const BulletPool&)`
+### `player.h/cpp` — Player ship (3 types)
 
-### `boss.h/cpp` — Boss system
-- `Boss` extends Entity: stageNum, phase (1–3), attackTimer, moveTimer
-- `initBoss(Boss&, int stageNum)`, `updateBoss(Boss&, float dt, BulletPool&, const Player&)`
-- `renderBoss(SDL_Renderer*, const Boss&)` — delegates to sprites
+| Ship | Name  | Fire Pattern | Special |
+|------|-------|--------------|---------|
+| BAGON | Focused | Single/Laser | Cone lock-on → homing laser burst |
+| DAMUL | Wide   | Spread5/Beam | Full-screen lock-on → beam sweep |
+| GUNEX | Explosive | Spread3+Missile | Charge bomb + homing missiles |
 
-### `collision.h/cpp` — Collision detection (AABB)
-- `checkBulletEnemyCollision(BulletPool&, EnemyPool&, Player&)` → score
-- `checkBulletPlayerCollision(BulletPool&, Player&)`
-- `checkPlayerEnemyCollision(Player&, EnemyPool&)`
-- `checkBulletBossCollision(BulletPool&, Boss&, Player&)`
-- `checkPowerUpPickup(Player&, PowerUpPool&)`
+- Lock-on: hold Z → acquire targets → release → fire homing shots
+- Charge: hold X (fire) → charge up → release for charged blast
+- Bomb: press C → screen clear + invincibility (bombStock decrements)
+- Small hitbox (4px radius center of ship)
+- Score → Extra Life: every 100,000 points
+
+### `bullet_pattern.h/cpp` — Bullet Hell pattern generator
+- `firePattern(BulletPool, BulletPattern, origin, toward, baseAngle, speed, dmg, owner)`
+- SINGLE, SPREAD_3/5, CIRCLE_8/16, SPIRAL_CW/CCW, AIMED, AIMED_SPREAD, CURTAIN, RANDOM_SPREAD, HOMING
+
+### `enemy.h/cpp` — Enemy system (5 types)
+- SMALL: straight down, SINGLE pattern
+- MEDIUM: sine wave, SPREAD_3 pattern
+- LARGE: tracks player, CIRCLE_8 pattern, drops power-up
+- FAST: diagonal movement, AIMED pattern
+- ARMORED: slow, high HP, CURTAIN pattern
+
+### `boss.h/cpp` — Boss system (3 bosses, 3 phases each)
+- Phase 1 (>66% HP): moderate attacks
+- Phase 2 (>33% HP): faster, complex patterns (SPIRAL_CW + AIMED_SPREAD)
+- Phase 3 (<33% HP): enraged, dense CIRCLE_16 + CURTAIN simultaneously
+- Each boss has unique movement pattern and attack mix
+
+### `collision.h/cpp` — Collision detection
+- Bullet-Player: circular (4px player hitRadius) — Bullet Hell standard
+- Bullet-Enemy/Boss: AABB
+- Player-Enemy: AABB
+- PowerUp-Player: AABB (generous hitbox)
+- Triggers AudioManager SFX calls
 
 ### `stage.h/cpp` — Stage/wave manager
-- `Stage` struct: stageNum, waveIndex, spawnTimer, enemiesKilled, bossSpawned, stageCleared
-- `initStage(Stage&, int num)`, `updateStage(Stage&, float dt, EnemyPool&, Boss&)`
+- 3 stages, each with 5–7 waves
+- Wave entries: EnemyType, count, spawnInterval, pattern, entryDelay
+- After all waves: short delay → boss spawns
+- Stage 3 has denser waves + mixed enemy types
 
-### `powerup.h/cpp` — Power-up items
-- `PowerUp` extends Entity: PowerUpType type
-- `PowerUpPool` struct: PowerUp pool[MAX_POWERUPS]
-- `spawnPowerUp(PowerUpPool&, Vec2 pos, PowerUpType)`
-- `updatePowerUps(PowerUpPool&, float dt)`, `renderPowerUps(SDL_Renderer*, const PowerUpPool&)`
+### `hud.h/cpp` — HUD with SDL2_ttf
+- Score + Hi-Score, Stage indicator
+- Life icons + bomb stock (sprite-based)
+- Power level bar
+- Boss HP bar during boss fights
+- Stage Clear / Game Over / Victory overlays
 
-### `sprites.h/cpp` — Programmatic sprite rendering
-- Pure rendering utilities — no state, all SDL2 primitives
-- `renderPlayerSprite(SDL_Renderer*, int x, int y)` — cyan triangle fighter
-- `renderEnemySprite(SDL_Renderer*, int x, int y, EnemyType)` — shape/colour by type
-- `renderBossSprite(SDL_Renderer*, int x, int y, int stageNum)`
-- `renderBulletSprite(SDL_Renderer*, int x, int y, BulletOwner)`
-- `renderPowerUpSprite(SDL_Renderer*, int x, int y, PowerUpType)`
-- `renderExplosion(SDL_Renderer*, int x, int y, int frame)` — animated particle burst
-- 90s neon palette: cyan (#00FFFF), magenta (#FF00FF), neon-green (#39FF14), yellow (#FFE800)
+### `menu.h/cpp` — Title + Ship Select
+- Title: "GALAXY STORM" logo, START/QUIT options
+- Ship Select: 3 ships with animated previews, stats, description text
 
-### `hud.h/cpp` — Heads-Up Display
-- `renderHUD(SDL_Renderer*, const Player&, int stageNum)` — score, lives, power bar
-- `renderStageClear(SDL_Renderer*, int stageNum, int score)`
-- `renderGameOver(SDL_Renderer*, int score)`
-- `renderVictory(SDL_Renderer*, int score)`
-- Pixel font drawn with SDL_RenderFillRect
+### `sprites.h/cpp` — Sprite rendering
+- Asset-based: loads SDL_Texture from AssetManager, draws with SDL_RenderCopy
+- Fallback: SDL2 primitive shapes in neon palette if texture is nullptr
+- Extras: lock-on reticle, bomb flash overlay
 
-### `menu.h/cpp` — Title/Menu screen
-- `Menu` struct: selectedOption, blinkTimer
-- `renderMenu(SDL_Renderer*, const Menu&)` — "GALAXY STORM" title, START, QUIT
-- `updateMenu(Menu&, const SDL_Event&)` → returns GameState
+### `background.h/cpp` — Parallax starfield + nebula
+- 3-layer star parallax
+- Optional nebula texture scroll (background sprite)
+- Color-tinted stars (white/cyan/blue/yellow variants)
 
-### `background.h/cpp` — Starfield
-- `Star` struct: Vec2 pos, float speed, Uint8 brightness, int layer
-- `Background` struct: Star stars[MAX_STARS]
-- `initBackground(Background&)`, `updateBackground(Background&, float dt)`
-- `renderBackground(SDL_Renderer*, const Background&)` — 3-layer parallax, neon-tinted stars
+### `powerup.h/cpp` — 6 power-up types
+- SPREAD, LASER, MISSILE, SHIELD, BOMB (restore 1 bomb), POWER (power level +1)
+- Bobbing animation
 
 ---
 
@@ -183,19 +204,20 @@ game/
 ```
 SDL_PollEvent → handleEvents()
                     │
-            ┌───────▼────────┐
-            │  state == TITLE │ → updateMenu / renderMenu
-            └───────┬────────┘
+            ┌───────▼─────────────┐
+            │  state == TITLE      │ → updateMenu / renderMenu
+            │  state == SHIP_SELECT│ → updateShipSelect / renderShipSelect
+            └───────┬─────────────┘
                     │ state == PLAYING
             ┌───────▼────────────────────────────────────┐
             │ updateBackground(dt)                        │
-            │ updatePlayer(dt, bullets)                   │
+            │ updatePlayer(dt, bullets, enemies)          │
             │ updateStage(dt, enemies, boss)              │
-            │ updateEnemies(dt, player)                   │
+            │ updateEnemies(dt, player, bullets)          │
             │ updateBoss(dt, bullets, player)             │
             │ updateBullets(dt)                           │
             │ updatePowerUps(dt)                          │
-            │ checkCollisions(...)                        │
+            │ checkCollisions(audio)                      │
             └───────┬────────────────────────────────────┘
                     │
             ┌───────▼────────┐
@@ -203,6 +225,36 @@ SDL_PollEvent → handleEvents()
             │                │   → player → bullets → HUD
             └────────────────┘
 ```
+
+---
+
+## Bullet Hell Design Notes
+
+### Small Hitbox
+- Player hitRadius = 4px (center of ship)
+- Enemy bullet collision uses `circlesOverlap()` with this radius
+- Visual ship sprite is ~28×36px (much larger than hitbox)
+
+### Lock-on System
+- Hold Z key: enter lock-on mode, reticles appear on enemies
+- Targets acquired while Z held (up to 8 targets)
+- Release Z: fire homing shots at all locked targets simultaneously
+- Different ship types have different lock-on area (cone vs. full-screen)
+
+### Charge Shot
+- Hold X (fire): charge meter fills over 1.5 seconds
+- Release when charged: fire powerful blast
+- BAGON: charge laser. DAMUL: charge beam sweep. GUNEX: charge bomb
+
+### Bomb
+- C key: activate bomb (requires bombStock > 0)
+- Clears all enemy bullets on screen
+- 2-second invincibility
+- Full-screen white flash effect
+
+### Score → Extra Life
+- 100,000 points = +1 life (displayed as 1UP flash on HUD)
+- Hi-Score tracked this session
 
 ---
 
@@ -215,6 +267,7 @@ SDL_PollEvent → handleEvents()
 | Functions / variables | `camelCase` |
 | Constants | `UPPER_SNAKE_CASE` |
 | Header guard | `#pragma once` |
-| Assets | SDL2 primitives only — no external files |
-| Object pooling | Bullets, enemies, power-ups, stars |
+| Asset loading | SDL2_image PNG; fallback to SDL2 primitives |
+| Object pooling | Bullets (500), enemies (64), power-ups (16), stars (128) |
 | Timestep | Fixed 60 FPS; `float dt` in seconds passed to every `update()` |
+| Collision | Circular for player hitbox; AABB for everything else |

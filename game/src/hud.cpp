@@ -2,180 +2,167 @@
 
 #include "player.h"
 
-#include <array>
+#include <algorithm>
+#include <cstdio>
 #include <string>
-#include <unordered_map>
 
 namespace galaxy {
 
 namespace {
-
-using Glyph = std::array<const char*, 7>;
-
-const std::unordered_map<char, Glyph>& font5x7() {
-    static const std::unordered_map<char, Glyph> kFont = {
-        {' ', {"00000","00000","00000","00000","00000","00000","00000"}},
-        {'!', {"00100","00100","00100","00100","00100","00000","00100"}},
-        {':', {"00000","00100","00100","00000","00100","00100","00000"}},
-        {'0', {"01110","10001","10011","10101","11001","10001","01110"}},
-        {'1', {"00100","01100","00100","00100","00100","00100","01110"}},
-        {'2', {"01110","10001","00001","00010","00100","01000","11111"}},
-        {'3', {"11110","00001","00001","01110","00001","00001","11110"}},
-        {'4', {"00010","00110","01010","10010","11111","00010","00010"}},
-        {'5', {"11111","10000","11110","00001","00001","10001","01110"}},
-        {'6', {"00110","01000","10000","11110","10001","10001","01110"}},
-        {'7', {"11111","00001","00010","00100","01000","01000","01000"}},
-        {'8', {"01110","10001","10001","01110","10001","10001","01110"}},
-        {'9', {"01110","10001","10001","01111","00001","00010","11100"}},
-        {'A', {"01110","10001","10001","11111","10001","10001","10001"}},
-        {'B', {"11110","10001","10001","11110","10001","10001","11110"}},
-        {'C', {"01110","10001","10000","10000","10000","10001","01110"}},
-        {'D', {"11110","10001","10001","10001","10001","10001","11110"}},
-        {'E', {"11111","10000","10000","11110","10000","10000","11111"}},
-        {'F', {"11111","10000","10000","11110","10000","10000","10000"}},
-        {'G', {"01110","10001","10000","10111","10001","10001","01110"}},
-        {'H', {"10001","10001","10001","11111","10001","10001","10001"}},
-        {'I', {"01110","00100","00100","00100","00100","00100","01110"}},
-        {'J', {"00001","00001","00001","00001","10001","10001","01110"}},
-        {'K', {"10001","10010","10100","11000","10100","10010","10001"}},
-        {'L', {"10000","10000","10000","10000","10000","10000","11111"}},
-        {'M', {"10001","11011","10101","10101","10001","10001","10001"}},
-        {'N', {"10001","11001","10101","10011","10001","10001","10001"}},
-        {'O', {"01110","10001","10001","10001","10001","10001","01110"}},
-        {'P', {"11110","10001","10001","11110","10000","10000","10000"}},
-        {'Q', {"01110","10001","10001","10001","10101","10010","01101"}},
-        {'R', {"11110","10001","10001","11110","10100","10010","10001"}},
-        {'S', {"01111","10000","10000","01110","00001","00001","11110"}},
-        {'T', {"11111","00100","00100","00100","00100","00100","00100"}},
-        {'U', {"10001","10001","10001","10001","10001","10001","01110"}},
-        {'V', {"10001","10001","10001","10001","01010","01010","00100"}},
-        {'W', {"10001","10001","10001","10101","10101","11011","10001"}},
-        {'X', {"10001","01010","00100","00100","00100","01010","10001"}},
-        {'Y', {"10001","01010","00100","00100","00100","00100","00100"}},
-        {'Z', {"11111","00001","00010","00100","01000","10000","11111"}},
-    };
-    return kFont;
-}
-
-inline void setColor(SDL_Renderer* renderer, Color c, Uint8 a = 255) {
-    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, a);
-}
-
-void renderChar(SDL_Renderer* renderer, int x, int y, char c, int scale, Color color) {
-    const auto& font = font5x7();
-    auto it = font.find(c);
-    if (it == font.end()) it = font.find(' ');
-    const Glyph& g = it->second;
-
-    setColor(renderer, color);
-    for (int row = 0; row < 7; ++row) {
-        for (int col = 0; col < 5; ++col) {
-            if (g[row][col] != '1') continue;
-            SDL_Rect px{x + col * scale, y + row * scale, scale, scale};
-            SDL_RenderFillRect(renderer, &px);
-        }
+void drawFallbackGlyph(SDL_Renderer* renderer, int x, int y, char c, SDL_Color color) {
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+    const int w = 4;
+    const int h = 6;
+    // Simple blocky pseudo-font fallback: draw border + center stroke variation.
+    SDL_Rect border{x, y, w, h};
+    SDL_RenderDrawRect(renderer, &border);
+    if ((c % 2) == 0) {
+        SDL_RenderDrawLine(renderer, x + 1, y + 1, x + 1, y + h - 2);
+    } else {
+        SDL_RenderDrawLine(renderer, x + 1, y + h / 2, x + w - 2, y + h / 2);
     }
 }
-
-void renderText(SDL_Renderer* renderer, int x, int y, const std::string& text, int scale, Color color) {
-    int penX = x;
-    for (char c : text) {
-        renderChar(renderer, penX, y, c, scale, color);
-        penX += (5 + 1) * scale;
-    }
-}
-
-void renderMiniShip(SDL_Renderer* renderer, int x, int y) {
-    setColor(renderer, COLOR_CYAN);
-    SDL_Rect a{x + 3, y + 0, 2, 2};
-    SDL_Rect b{x + 2, y + 2, 4, 2};
-    SDL_Rect c{x + 1, y + 4, 6, 2};
-    SDL_Rect d{x + 3, y + 6, 2, 2};
-    SDL_RenderFillRect(renderer, &a);
-    SDL_RenderFillRect(renderer, &b);
-    SDL_RenderFillRect(renderer, &c);
-    SDL_RenderFillRect(renderer, &d);
-}
-
-std::string powerName(const Player& player) {
-    if (!player.hasPowerUp && player.powerType == PowerUpType::SPREAD) {
-        return "NORMAL";
-    }
-    switch (player.powerType) {
-        case PowerUpType::SPREAD:  return "SPREAD";
-        case PowerUpType::LASER:   return "LASER";
-        case PowerUpType::MISSILE: return "MISSILE";
-        case PowerUpType::SHIELD:  return "SHIELD";
-    }
-    return "NORMAL";
-}
-
-void renderOverlay(SDL_Renderer* renderer, const std::string& title, const std::string& scoreLine, Color titleColor) {
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 180);
-    SDL_Rect overlay{0, 0, SCREEN_W, SCREEN_H};
-    SDL_RenderFillRect(renderer, &overlay);
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-
-    const int titleScale = 4;
-    const int titleW = static_cast<int>(title.size()) * 6 * titleScale;
-    renderText(renderer, (SCREEN_W - titleW) / 2, SCREEN_H / 2 - 70, title, titleScale, titleColor);
-
-    const int scoreScale = 2;
-    const int scoreW = static_cast<int>(scoreLine.size()) * 6 * scoreScale;
-    renderText(renderer, (SCREEN_W - scoreW) / 2, SCREEN_H / 2 + 10, scoreLine, scoreScale, COLOR_WHITE);
-}
-
 } // namespace
 
-void renderHUD(SDL_Renderer* renderer, const Player& player, int stageNum) {
-    const int scale = 2;
-    renderText(renderer, 10, 10, "SCORE:" + std::to_string(player.score), scale, COLOR_GREEN);
-
-    const std::string stageTxt = "STAGE:" + std::to_string(stageNum);
-    const int stageW = static_cast<int>(stageTxt.size()) * 6 * scale;
-    renderText(renderer, (SCREEN_W - stageW) / 2, 10, stageTxt, scale, COLOR_CYAN);
-
-    renderText(renderer, 10, SCREEN_H - 24, "LIVES", 1, COLOR_WHITE);
-    for (int i = 0; i < player.lives; ++i) {
-        renderMiniShip(renderer, 48 + i * 12, SCREEN_H - 24);
+void renderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y, SDL_Color color) {
+    if (!text || !text[0]) return;
+    if (font) {
+        SDL_Surface* surf = TTF_RenderUTF8_Blended(font, text, color);
+        if (!surf) return;
+        SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surf);
+        SDL_Rect dst{x, y, surf->w, surf->h};
+        SDL_FreeSurface(surf);
+        if (!tex) return;
+        SDL_RenderCopy(renderer, tex, nullptr, &dst);
+        SDL_DestroyTexture(tex);
+        return;
     }
 
-    const std::string pwr = powerName(player);
-    const std::string pwrLine = "PWR:" + pwr;
-    const int pwrW = static_cast<int>(pwrLine.size()) * 6;
-    renderText(renderer, SCREEN_W - pwrW - 10, SCREEN_H - 24, pwrLine, 1, COLOR_YELLOW);
+    // Fallback pseudo pixel-font when no TTF font is available.
+    int penX = x;
+    for (const char* p = text; *p; ++p) {
+        if (*p == ' ') {
+            penX += 4;
+            continue;
+        }
+        drawFallbackGlyph(renderer, penX, y, *p, color);
+        penX += 6;
+    }
+}
+
+void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* font, const Player& player, int stageNum) {
+    char scoreBuf[64];
+    std::snprintf(scoreBuf, sizeof(scoreBuf), "SCORE: %07d", std::max(0, player.score));
+    renderText(renderer, font, scoreBuf, 10, 8, {255, 255, 255, 255});
+
+    char stageBuf[32];
+    std::snprintf(stageBuf, sizeof(stageBuf), "STAGE %d", std::max(1, stageNum));
+    renderText(renderer, font, stageBuf, SCREEN_W / 2 - 48, 8, {255, 232, 0, 255});
+
+    const int hudY = SCREEN_H - 28;
+    SDL_Texture* lifeTex = assets.get(SPR_UI_LIFE);
+    SDL_Texture* bombTex = assets.get(SPR_UI_BOMB);
+    const int iconW = 14;
+    const int iconH = 14;
+    int cursorX = 10;
+
+    for (int i = 0; i < player.lives; ++i) {
+        SDL_Rect dst{cursorX + i * (iconW + 3), hudY, iconW, iconH};
+        if (lifeTex) {
+            SDL_RenderCopy(renderer, lifeTex, nullptr, &dst);
+        } else {
+            SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
+            SDL_RenderDrawLine(renderer, dst.x + iconW / 2, dst.y, dst.x, dst.y + iconH);
+            SDL_RenderDrawLine(renderer, dst.x + iconW / 2, dst.y, dst.x + iconW, dst.y + iconH);
+            SDL_RenderDrawLine(renderer, dst.x, dst.y + iconH, dst.x + iconW, dst.y + iconH);
+        }
+    }
+    cursorX += std::max(0, player.lives) * (iconW + 3) + 10;
+
+    for (int i = 0; i < player.bombStock; ++i) {
+        SDL_Rect dst{cursorX + i * (iconW + 3), hudY, iconW, iconH};
+        if (bombTex) {
+            SDL_RenderCopy(renderer, bombTex, nullptr, &dst);
+        } else {
+            SDL_SetRenderDrawColor(renderer, 255, 140, 0, 255);
+            SDL_RenderFillRect(renderer, &dst);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderDrawRect(renderer, &dst);
+        }
+    }
+
+    SDL_Texture* powerBarTex = assets.get(SPR_UI_POWER_BAR);
+    SDL_Rect powerFrame{SCREEN_W - 126, SCREEN_H - 24, 116, 12};
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(renderer, &powerFrame);
+    const int fillW = std::clamp(player.powerLevel, 0, 4) * 28;
+    SDL_Rect fillRect{powerFrame.x + 1, powerFrame.y + 1, fillW, powerFrame.h - 2};
+    if (powerBarTex) {
+        SDL_RenderCopy(renderer, powerBarTex, nullptr, &fillRect);
+    } else {
+        SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+        SDL_RenderFillRect(renderer, &fillRect);
+    }
+    renderText(renderer, font, "PWR", SCREEN_W - 156, SCREEN_H - 26, {255, 255, 255, 255});
 
     if (player.shieldTimer > 0.0f) {
-        const int barX = SCREEN_W - 150;
-        const int barY = 36;
-        const int barW = 130;
-        const int barH = 8;
-        setColor(renderer, COLOR_WHITE);
-        SDL_Rect border{barX, barY, barW, barH};
-        SDL_RenderDrawRect(renderer, &border);
-
-        const float ratio = (player.shieldTimer > 5.0f) ? 1.0f : (player.shieldTimer / 5.0f);
-        setColor(renderer, COLOR_CYAN);
-        SDL_Rect fill{barX + 1, barY + 1, static_cast<int>((barW - 2) * ratio), barH - 2};
-        SDL_RenderFillRect(renderer, &fill);
-        renderText(renderer, barX - 44, barY - 1, "SHLD", 1, COLOR_CYAN);
+        const float ratio = std::clamp(player.shieldTimer / 5.0f, 0.0f, 1.0f);
+        SDL_Rect shieldFrame{8, 28, SCREEN_W - 16, 8};
+        SDL_Rect shieldFill{9, 29, static_cast<int>((SCREEN_W - 18) * ratio), 6};
+        SDL_SetRenderDrawColor(renderer, 80, 120, 255, 255);
+        SDL_RenderDrawRect(renderer, &shieldFrame);
+        SDL_SetRenderDrawColor(renderer, 80, 180, 255, 255);
+        SDL_RenderFillRect(renderer, &shieldFill);
     }
 }
 
-void renderStageClear(SDL_Renderer* renderer, int stageNum, int score) {
-    renderOverlay(renderer,
-                  "STAGE CLEAR!",
-                  "STAGE:" + std::to_string(stageNum) + " SCORE:" + std::to_string(score),
-                  COLOR_GREEN);
+void renderBossHP(SDL_Renderer* renderer, TTF_Font* font, int currentHp, int maxHp, int phase) {
+    if (maxHp <= 0) return;
+    const float ratio = std::clamp(static_cast<float>(currentHp) / static_cast<float>(maxHp), 0.0f, 1.0f);
+    SDL_Rect border{8, 6, SCREEN_W - 16, 14};
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(renderer, &border);
+    const bool blink = (ratio < 0.12f) && ((SDL_GetTicks() / 80) % 2 == 0);
+    SDL_SetRenderDrawColor(renderer, blink ? 255 : 230, blink ? 255 : 30, blink ? 255 : 30, 255);
+    SDL_Rect fill{border.x + 1, border.y + 1, static_cast<int>((border.w - 2) * ratio), border.h - 2};
+    SDL_RenderFillRect(renderer, &fill);
+    renderText(renderer, font, "BOSS", 10, 22, {255, 255, 255, 255});
+    std::string stars(phase, '*');
+    renderText(renderer, font, stars.c_str(), SCREEN_W - 50, 22, {255, 232, 0, 255});
 }
 
-void renderGameOver(SDL_Renderer* renderer, int score) {
-    renderOverlay(renderer, "GAME OVER", "SCORE:" + std::to_string(score), COLOR_RED);
+void renderStageClear(SDL_Renderer* renderer, TTF_Font* font, int stageNum, int score) {
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 190);
+    SDL_Rect r{0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &r);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
+    std::string clearText = "STAGE " + std::to_string(stageNum) + " CLEAR!";
+    renderText(renderer, font, clearText.c_str(), 120, 260, {255, 232, 0, 255});
+    renderText(renderer, font, ("SCORE: " + std::to_string(score)).c_str(), 145, 305, {255, 255, 255, 255});
 }
 
-void renderVictory(SDL_Renderer* renderer, int score) {
-    renderOverlay(renderer, "VICTORY!", "FINAL SCORE:" + std::to_string(score), COLOR_CYAN);
+void renderGameOver(SDL_Renderer* renderer, TTF_Font* font, int score) {
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+    SDL_Rect r{0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &r);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    renderText(renderer, font, "GAME OVER", 148, 270, {255, 30, 30, 255});
+    renderText(renderer, font, ("SCORE: " + std::to_string(score)).c_str(), 150, 312, {255, 255, 255, 255});
+    renderText(renderer, font, "PRESS ENTER", 154, 346, {255, 255, 255, 255});
+}
+
+void renderVictory(SDL_Renderer* renderer, TTF_Font* font, int score) {
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+    SDL_Rect r{0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &r);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    renderText(renderer, font, "VICTORY!", 158, 260, {255, 232, 0, 255});
+    renderText(renderer, font, ("FINAL SCORE: " + std::to_string(score)).c_str(), 90, 310, {255, 255, 255, 255});
+    renderText(renderer, font, "PRESS ENTER", 154, 346, {255, 255, 255, 255});
 }
 
 } // namespace galaxy

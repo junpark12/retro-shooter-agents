@@ -142,10 +142,24 @@ CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/bullet.cpp -o CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.s
 
+CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
+CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/bullet_pattern.cpp
+CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/bullet_pattern.cpp
+
+CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/bullet_pattern.cpp > CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.i
+
+CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/bullet_pattern.cpp -o CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.s
+
 CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
 CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/boss.cpp
 CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/boss.cpp
 
 CMakeFiles/GalaxyStorm.dir/src/boss.cpp.i: cmake_force
@@ -159,7 +173,7 @@ CMakeFiles/GalaxyStorm.dir/src/boss.cpp.s: cmake_force
 CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
 CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/collision.cpp
 CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/collision.cpp
 
 CMakeFiles/GalaxyStorm.dir/src/collision.cpp.i: cmake_force
@@ -173,7 +187,7 @@ CMakeFiles/GalaxyStorm.dir/src/collision.cpp.s: cmake_force
 CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
 CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/stage.cpp
 CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/stage.cpp
 
 CMakeFiles/GalaxyStorm.dir/src/stage.cpp.i: cmake_force
@@ -187,7 +201,7 @@ CMakeFiles/GalaxyStorm.dir/src/stage.cpp.s: cmake_force
 CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
 CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/powerup.cpp
 CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/powerup.cpp
 
 CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.i: cmake_force
@@ -198,10 +212,38 @@ CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/powerup.cpp -o CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.s
 
+CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
+CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/asset_manager.cpp
+CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/asset_manager.cpp
+
+CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/asset_manager.cpp > CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.i
+
+CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/asset_manager.cpp -o CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.s
+
+CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
+CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/audio.cpp
+CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/audio.cpp
+
+CMakeFiles/GalaxyStorm.dir/src/audio.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/GalaxyStorm.dir/src/audio.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/audio.cpp > CMakeFiles/GalaxyStorm.dir/src/audio.cpp.i
+
+CMakeFiles/GalaxyStorm.dir/src/audio.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GalaxyStorm.dir/src/audio.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/audio.cpp -o CMakeFiles/GalaxyStorm.dir/src/audio.cpp.s
+
 CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
 CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/sprites.cpp
 CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/sprites.cpp
 
 CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.i: cmake_force
@@ -215,7 +257,7 @@ CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.s: cmake_force
 CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
 CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/hud.cpp
 CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/hud.cpp
 
 CMakeFiles/GalaxyStorm.dir/src/hud.cpp.i: cmake_force
@@ -229,7 +271,7 @@ CMakeFiles/GalaxyStorm.dir/src/hud.cpp.s: cmake_force
 CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
 CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/menu.cpp
 CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/menu.cpp
 
 CMakeFiles/GalaxyStorm.dir/src/menu.cpp.i: cmake_force
@@ -243,7 +285,7 @@ CMakeFiles/GalaxyStorm.dir/src/menu.cpp.s: cmake_force
 CMakeFiles/GalaxyStorm.dir/src/background.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
 CMakeFiles/GalaxyStorm.dir/src/background.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/background.cpp
 CMakeFiles/GalaxyStorm.dir/src/background.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/background.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/background.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/background.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/background.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/background.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/background.cpp
 
 CMakeFiles/GalaxyStorm.dir/src/background.cpp.i: cmake_force
@@ -261,10 +303,13 @@ GalaxyStorm_OBJECTS = \
 "CMakeFiles/GalaxyStorm.dir/src/player.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/enemy.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.o" \
+"CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o" \
+"CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o" \
+"CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o" \
@@ -278,10 +323,13 @@ GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/game.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/player.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/enemy.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.o
+GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o
+GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o
+GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o
@@ -290,9 +338,13 @@ GalaxyStorm: CMakeFiles/GalaxyStorm.dir/build.make
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
 GalaxyStorm: /usr/lib/x86_64-linux-gnu/libSDL2.so
 GalaxyStorm: /usr/lib/x86_64-linux-gnu/libSDL2main.a
+GalaxyStorm: /usr/lib/x86_64-linux-gnu/libSDL2_image.so
+GalaxyStorm: /usr/lib/x86_64-linux-gnu/libSDL2_mixer.so
+GalaxyStorm: /usr/lib/x86_64-linux-gnu/libSDL2_ttf.so
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX executable GalaxyStorm"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable GalaxyStorm"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/GalaxyStorm.dir/link.txt --verbose=$(VERBOSE)
+	/usr/local/bin/cmake -E copy_directory /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/assets /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/assets
 
 # Rule to build all files generated by this target.
 CMakeFiles/GalaxyStorm.dir/build: GalaxyStorm

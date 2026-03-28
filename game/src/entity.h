@@ -12,9 +12,18 @@ struct Entity {
     bool  active = false; // inactive entities are skipped by update/render
     int   hp     = 1;     // reaches 0 → mark inactive and trigger effects
 
+    // Hitbox radius for circular collision (Bullet Hell small hitbox).
+    float hitRadius = 4.0f;
+
     // Returns the world-space AABB (pos + bounds offset).
     Rect worldBounds() const {
         return { pos.x + bounds.x, pos.y + bounds.y, bounds.w, bounds.h };
+    }
+
+    // Returns the center of the entity (used for circular collision and lock-on).
+    Vec2 center() const {
+        return { pos.x + bounds.x + bounds.w * 0.5f,
+                 pos.y + bounds.y + bounds.h * 0.5f };
     }
 };
 

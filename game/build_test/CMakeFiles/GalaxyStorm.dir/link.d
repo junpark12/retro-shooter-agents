@@ -7,16 +7,22 @@ GalaxyStorm: \
   CMakeFiles/GalaxyStorm.dir/src/player.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/enemy.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.o \
+  CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o \
+  CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o \
+  CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/background.cpp.o \
   /usr/lib/x86_64-linux-gnu/libSDL2.so \
   /usr/lib/x86_64-linux-gnu/libSDL2main.a \
+  /usr/lib/x86_64-linux-gnu/libSDL2_image.so \
+  /usr/lib/x86_64-linux-gnu/libSDL2_mixer.so \
+  /usr/lib/x86_64-linux-gnu/libSDL2_ttf.so \
   /usr/lib/gcc/x86_64-linux-gnu/13/libstdc++.so \
   /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libm.so \
   /usr/lib/gcc/x86_64-linux-gnu/13/../../../x86_64-linux-gnu/libm.so \
@@ -60,6 +66,19 @@ GalaxyStorm: \
   /lib/x86_64-linux-gnu/libwayland-cursor.so.0 \
   /lib/x86_64-linux-gnu/libxkbcommon.so.0 \
   /lib/x86_64-linux-gnu/libdecor-0.so.0 \
+  /lib/x86_64-linux-gnu/libpng16.so.16 \
+  /lib/x86_64-linux-gnu/libjpeg.so.8 \
+  /lib/x86_64-linux-gnu/libtiff.so.6 \
+  /lib/x86_64-linux-gnu/libwebpdemux.so.2 \
+  /lib/x86_64-linux-gnu/libwebp.so.7 \
+  /lib/x86_64-linux-gnu/libmodplug.so.1 \
+  /lib/x86_64-linux-gnu/libfluidsynth.so.3 \
+  /lib/x86_64-linux-gnu/libvorbisfile.so.3 \
+  /lib/x86_64-linux-gnu/libFLAC.so.12 \
+  /lib/x86_64-linux-gnu/libmpg123.so.0 \
+  /lib/x86_64-linux-gnu/libopusfile.so.0 \
+  /lib/x86_64-linux-gnu/libfreetype.so.6 \
+  /lib/x86_64-linux-gnu/libharfbuzz.so.0 \
   /lib64/ld-linux-x86-64.so.2 \
   /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-16.1.so \
   /lib/x86_64-linux-gnu/libdbus-1.so.3 \
@@ -67,25 +86,45 @@ GalaxyStorm: \
   /lib/x86_64-linux-gnu/libXrender.so.1 \
   /lib/x86_64-linux-gnu/libexpat.so.1 \
   /lib/x86_64-linux-gnu/libffi.so.8 \
+  /lib/x86_64-linux-gnu/libz.so.1 \
+  /lib/x86_64-linux-gnu/libzstd.so.1 \
+  /lib/x86_64-linux-gnu/liblzma.so.5 \
+  /lib/x86_64-linux-gnu/libLerc.so.4 \
+  /lib/x86_64-linux-gnu/libjbig.so.0 \
+  /lib/x86_64-linux-gnu/libdeflate.so.0 \
+  /lib/x86_64-linux-gnu/libsharpyuv.so.0 \
+  /lib/x86_64-linux-gnu/libmvec.so.1 \
+  /lib/x86_64-linux-gnu/libgomp.so.1 \
+  /lib/x86_64-linux-gnu/libglib-2.0.so.0 \
   /lib/x86_64-linux-gnu/libsndfile.so.1 \
+  /lib/x86_64-linux-gnu/libpulse-simple.so.0 \
+  /lib/x86_64-linux-gnu/libjack.so.0 \
+  /lib/x86_64-linux-gnu/libpipewire-0.3.so.0 \
+  /lib/x86_64-linux-gnu/libgmodule-2.0.so.0 \
+  /lib/x86_64-linux-gnu/libinstpatch-1.0.so.2 \
+  /lib/x86_64-linux-gnu/libgobject-2.0.so.0 \
+  /lib/x86_64-linux-gnu/libreadline.so.8 \
+  /lib/x86_64-linux-gnu/libvorbis.so.0 \
+  /lib/x86_64-linux-gnu/libogg.so.0 \
+  /lib/x86_64-linux-gnu/libopus.so.0 \
+  /lib/x86_64-linux-gnu/libbz2.so.1.0 \
+  /lib/x86_64-linux-gnu/libbrotlidec.so.1 \
+  /lib/x86_64-linux-gnu/libgraphite2.so.3 \
   /lib/x86_64-linux-gnu/libX11-xcb.so.1 \
   /lib/x86_64-linux-gnu/libsystemd.so.0 \
   /lib/x86_64-linux-gnu/libasyncns.so.0 \
   /lib/x86_64-linux-gnu/libapparmor.so.1 \
   /lib/x86_64-linux-gnu/libXau.so.6 \
   /lib/x86_64-linux-gnu/libXdmcp.so.6 \
-  /lib/x86_64-linux-gnu/libFLAC.so.12 \
-  /lib/x86_64-linux-gnu/libvorbis.so.0 \
+  /lib/x86_64-linux-gnu/libpcre2-8.so.0 \
   /lib/x86_64-linux-gnu/libvorbisenc.so.2 \
-  /lib/x86_64-linux-gnu/libopus.so.0 \
-  /lib/x86_64-linux-gnu/libogg.so.0 \
-  /lib/x86_64-linux-gnu/libmpg123.so.0 \
   /lib/x86_64-linux-gnu/libmp3lame.so.0 \
+  /lib/x86_64-linux-gnu/libdb-5.3.so \
+  /lib/x86_64-linux-gnu/libtinfo.so.6 \
+  /lib/x86_64-linux-gnu/libbrotlicommon.so.1 \
   /lib/x86_64-linux-gnu/libcap.so.2 \
   /lib/x86_64-linux-gnu/libgcrypt.so.20 \
   /lib/x86_64-linux-gnu/liblz4.so.1 \
-  /lib/x86_64-linux-gnu/liblzma.so.5 \
-  /lib/x86_64-linux-gnu/libzstd.so.1 \
   /lib/x86_64-linux-gnu/libbsd.so.0 \
   /lib/x86_64-linux-gnu/libgpg-error.so.0 \
   /lib/x86_64-linux-gnu/libmd.so.0
@@ -106,6 +145,8 @@ CMakeFiles/GalaxyStorm.dir/src/enemy.cpp.o:
 
 CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.o:
 
+CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o:
+
 CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o:
 
 CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o:
@@ -113,6 +154,10 @@ CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o:
 CMakeFiles/GalaxyStorm.dir/src/stage.cpp.o:
 
 CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o:
+
+CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o:
+
+CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o:
 
 CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o:
 
@@ -125,6 +170,12 @@ CMakeFiles/GalaxyStorm.dir/src/background.cpp.o:
 /usr/lib/x86_64-linux-gnu/libSDL2.so:
 
 /usr/lib/x86_64-linux-gnu/libSDL2main.a:
+
+/usr/lib/x86_64-linux-gnu/libSDL2_image.so:
+
+/usr/lib/x86_64-linux-gnu/libSDL2_mixer.so:
+
+/usr/lib/x86_64-linux-gnu/libSDL2_ttf.so:
 
 /usr/lib/gcc/x86_64-linux-gnu/13/libstdc++.so:
 
@@ -212,6 +263,32 @@ CMakeFiles/GalaxyStorm.dir/src/background.cpp.o:
 
 /lib/x86_64-linux-gnu/libdecor-0.so.0:
 
+/lib/x86_64-linux-gnu/libpng16.so.16:
+
+/lib/x86_64-linux-gnu/libjpeg.so.8:
+
+/lib/x86_64-linux-gnu/libtiff.so.6:
+
+/lib/x86_64-linux-gnu/libwebpdemux.so.2:
+
+/lib/x86_64-linux-gnu/libwebp.so.7:
+
+/lib/x86_64-linux-gnu/libmodplug.so.1:
+
+/lib/x86_64-linux-gnu/libfluidsynth.so.3:
+
+/lib/x86_64-linux-gnu/libvorbisfile.so.3:
+
+/lib/x86_64-linux-gnu/libFLAC.so.12:
+
+/lib/x86_64-linux-gnu/libmpg123.so.0:
+
+/lib/x86_64-linux-gnu/libopusfile.so.0:
+
+/lib/x86_64-linux-gnu/libfreetype.so.6:
+
+/lib/x86_64-linux-gnu/libharfbuzz.so.0:
+
 /lib64/ld-linux-x86-64.so.2:
 
 /usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-16.1.so:
@@ -226,7 +303,53 @@ CMakeFiles/GalaxyStorm.dir/src/background.cpp.o:
 
 /lib/x86_64-linux-gnu/libffi.so.8:
 
+/lib/x86_64-linux-gnu/libz.so.1:
+
+/lib/x86_64-linux-gnu/libzstd.so.1:
+
+/lib/x86_64-linux-gnu/liblzma.so.5:
+
+/lib/x86_64-linux-gnu/libLerc.so.4:
+
+/lib/x86_64-linux-gnu/libjbig.so.0:
+
+/lib/x86_64-linux-gnu/libdeflate.so.0:
+
+/lib/x86_64-linux-gnu/libsharpyuv.so.0:
+
+/lib/x86_64-linux-gnu/libmvec.so.1:
+
+/lib/x86_64-linux-gnu/libgomp.so.1:
+
+/lib/x86_64-linux-gnu/libglib-2.0.so.0:
+
 /lib/x86_64-linux-gnu/libsndfile.so.1:
+
+/lib/x86_64-linux-gnu/libpulse-simple.so.0:
+
+/lib/x86_64-linux-gnu/libjack.so.0:
+
+/lib/x86_64-linux-gnu/libpipewire-0.3.so.0:
+
+/lib/x86_64-linux-gnu/libgmodule-2.0.so.0:
+
+/lib/x86_64-linux-gnu/libinstpatch-1.0.so.2:
+
+/lib/x86_64-linux-gnu/libgobject-2.0.so.0:
+
+/lib/x86_64-linux-gnu/libreadline.so.8:
+
+/lib/x86_64-linux-gnu/libvorbis.so.0:
+
+/lib/x86_64-linux-gnu/libogg.so.0:
+
+/lib/x86_64-linux-gnu/libopus.so.0:
+
+/lib/x86_64-linux-gnu/libbz2.so.1.0:
+
+/lib/x86_64-linux-gnu/libbrotlidec.so.1:
+
+/lib/x86_64-linux-gnu/libgraphite2.so.3:
 
 /lib/x86_64-linux-gnu/libX11-xcb.so.1:
 
@@ -240,29 +363,23 @@ CMakeFiles/GalaxyStorm.dir/src/background.cpp.o:
 
 /lib/x86_64-linux-gnu/libXdmcp.so.6:
 
-/lib/x86_64-linux-gnu/libFLAC.so.12:
-
-/lib/x86_64-linux-gnu/libvorbis.so.0:
+/lib/x86_64-linux-gnu/libpcre2-8.so.0:
 
 /lib/x86_64-linux-gnu/libvorbisenc.so.2:
 
-/lib/x86_64-linux-gnu/libopus.so.0:
-
-/lib/x86_64-linux-gnu/libogg.so.0:
-
-/lib/x86_64-linux-gnu/libmpg123.so.0:
-
 /lib/x86_64-linux-gnu/libmp3lame.so.0:
+
+/lib/x86_64-linux-gnu/libdb-5.3.so:
+
+/lib/x86_64-linux-gnu/libtinfo.so.6:
+
+/lib/x86_64-linux-gnu/libbrotlicommon.so.1:
 
 /lib/x86_64-linux-gnu/libcap.so.2:
 
 /lib/x86_64-linux-gnu/libgcrypt.so.20:
 
 /lib/x86_64-linux-gnu/liblz4.so.1:
-
-/lib/x86_64-linux-gnu/liblzma.so.5:
-
-/lib/x86_64-linux-gnu/libzstd.so.1:
 
 /lib/x86_64-linux-gnu/libbsd.so.0:
 
