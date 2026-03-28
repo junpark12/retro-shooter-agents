@@ -1,11 +1,15 @@
 #pragma once
-#include "entity.h"
+#include "types.h"
+#include "asset_manager.h"
+#include <SDL.h>
 
 namespace galaxy {
 
 // ─── PowerUp ──────────────────────────────────────────────────────────────────
 struct PowerUp : Entity {
-    PowerUpType type = PowerUpType::SPREAD;
+    PowerUpType type      = PowerUpType::SPREAD;
+    float       bobTimer  = 0.0f;  // for bobbing animation
+    int         bobDir    = 1;
 };
 
 // Fixed-size pool.
@@ -20,6 +24,7 @@ void spawnPowerUp(PowerUpPool& pp, Vec2 pos, PowerUpType type);
 void updatePowerUps(PowerUpPool& pp, float dt);
 
 // Render all active power-ups.
-void renderPowerUps(SDL_Renderer* renderer, const PowerUpPool& pp);
+void renderPowerUps(SDL_Renderer* renderer, const AssetManager& assets,
+                    const PowerUpPool& pp);
 
 } // namespace galaxy

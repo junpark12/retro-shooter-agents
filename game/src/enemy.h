@@ -7,10 +7,15 @@ struct BulletPool; // defined in bullet.h
 
 // ─── Enemy ────────────────────────────────────────────────────────────────────
 struct Enemy : Entity {
-    EnemyType type       = EnemyType::SMALL;
-    float     moveTimer  = 0.0f;  // used for sine-wave phase or tracking cooldown
-    int       pointValue = 100;
-    float     fireTimer  = 0.0f;  // cooldown between enemy shots
+    EnemyType type        = EnemyType::SMALL;
+    float     moveTimer   = 0.0f;   // sine-wave phase or tracking cooldown
+    int       pointValue  = 100;
+    float     fireTimer   = 0.0f;   // cooldown between enemy shots
+    BulletPattern firePattern = BulletPattern::SINGLE;
+    float     patternTimer = 0.0f;  // for multi-phase pattern timing
+    int       patternPhase = 0;     // current phase in complex pattern
+    bool      lockedOn    = false;  // true when player has locked onto this enemy
+    int       colorVariant = 0;     // sprite color variant
 };
 
 // Fixed-size pool.
@@ -22,7 +27,7 @@ struct EnemyPool {
 void spawnEnemy(EnemyPool& ep, EnemyType type, Vec2 pos);
 
 // Update all active enemies: movement patterns and shooting.
-// Player position is used for LARGE enemy tracking.
+// Player position is used for LARGE/FAST enemy tracking.
 void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos);
 
 // Render all active enemies.

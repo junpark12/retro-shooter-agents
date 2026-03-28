@@ -1,42 +1,65 @@
 #pragma once
 #include "types.h"
+#include "asset_manager.h"
 #include <SDL.h>
 
 namespace galaxy {
 
+struct Player;  // defined in player.h
+struct Enemy;   // defined in enemy.h
+struct Boss;    // defined in boss.h
+struct Bullet;  // defined in bullet.h
+
 // ─── Sprites ──────────────────────────────────────────────────────────────────
 // All functions draw to the given renderer at the given (x, y) position.
 // x, y refer to the top-left corner of the sprite bounding box.
-// No state is maintained — these are pure rendering utilities.
+// If a texture is available via AssetManager, it is used; otherwise falls back
+// to SDL2 primitive rendering (neon palette).
 
-// Player ship: cyan delta-wing triangle, ~28×36 px.
-void renderPlayerSprite(SDL_Renderer* renderer, int x, int y);
+// Player ship: size ~28×36 px. Ship type determines sprite.
+void renderPlayerSprite(SDL_Renderer* renderer, const AssetManager& assets,
+                        int x, int y, ShipType ship, bool invincible = false,
+                        int animFrame = 0);
 
-// Enemy sprite; shape and colour vary by type:
-//   SMALL  — small magenta diamond, ~16×16 px
-//   MEDIUM — neon-green hexagon,    ~24×24 px
-//   LARGE  — red angular wedge,     ~32×28 px
-void renderEnemySprite(SDL_Renderer* renderer, int x, int y, EnemyType type);
+// Enemy sprite; shape and colour vary by type.
+void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
+                       int x, int y, EnemyType type, bool lockedOn = false);
 
-// Boss sprite differs by stage number (1–3):
-//   Stage 1 — wide cyan battleship,   ~64×48 px
-//   Stage 2 — yellow rotating cruiser,~72×56 px
-//   Stage 3 — magenta fortress,       ~80×64 px
-void renderBossSprite(SDL_Renderer* renderer, int x, int y, int stageNum);
+// Boss sprite differs by stage number (1–3).
+// Optionally draws a lock-on ring overlay.
+void renderBossSprite(SDL_Renderer* renderer, const AssetManager& assets,
+                      int x, int y, int stageNum, bool lockedOn = false,
+                      int phase = 1);
 
-// Bullet sprite:
-//   PLAYER — bright cyan pill,        ~4×12 px
-//   ENEMY  — magenta orb,             ~6×6 px
-void renderBulletSprite(SDL_Renderer* renderer, int x, int y, BulletOwner owner);
+// Bullet sprite. colorIdx selects a color variant (0–3) for Bullet Hell variety.
+void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
+                        int x, int y, BulletOwner owner, int colorIdx = 0);
 
-// Power-up sprite; colour and shape by type:
-//   SPREAD  — yellow 5-point star,   ~18×18 px
-//   LASER   — cyan vertical bar,     ~8×24 px
-//   MISSILE — green chevron,         ~14×18 px
-//   SHIELD  — white circle outline,  ~20×20 px
-void renderPowerUpSprite(SDL_Renderer* renderer, int x, int y, PowerUpType type);
+// Power-up sprite; colour and shape by type.
+void renderPowerUpSprite(SDL_Renderer* renderer, const AssetManager& assets,
+                         int x, int y, PowerUpType type);
 
 // Particle explosion burst; frame 0..7 expands the burst radius.
-void renderExplosion(SDL_Renderer* renderer, int x, int y, int frame);
+void renderExplosion(SDL_Renderer* renderer, const AssetManager& assets,
+                     int x, int y, int frame, bool big = false);
+
+// Lock-on reticle drawn around a target.
+void renderLockOnReticle(SDL_Renderer* renderer, int x, int y,
+                         int w, int h, float timer);
+
+// Bomb flash overlay (full-screen white flash when bomb is activated).
+void renderBombFlash(SDL_Renderer* renderer, float bombTimer);
+
+// Ship preview for ship select screen.
+void renderShipPreview(SDL_Renderer* renderer, const AssetManager& assets,
+                       int x, int y, ShipType ship, bool selected);
+
+// ─── Fallback primitive renderers (used when no texture is available) ─────────
+void renderPlayerPrimitive(SDL_Renderer* renderer, int x, int y, ShipType ship);
+void renderEnemyPrimitive(SDL_Renderer* renderer, int x, int y, EnemyType type);
+void renderBossPrimitive(SDL_Renderer* renderer, int x, int y, int stageNum);
+void renderBulletPrimitive(SDL_Renderer* renderer, int x, int y,
+                           BulletOwner owner, int colorIdx);
+void renderPowerUpPrimitive(SDL_Renderer* renderer, int x, int y, PowerUpType type);
 
 } // namespace galaxy
