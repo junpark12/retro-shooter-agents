@@ -17,9 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install SDL2 via vcpkg
+      - name: Install SDL2 + extensions via vcpkg
         run: |
-          vcpkg install sdl2:x64-windows
+          vcpkg install sdl2:x64-windows sdl2-image:x64-windows sdl2-mixer:x64-windows sdl2-ttf:x64-windows
           echo "CMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake" >> $env:GITHUB_ENV
 
       - name: Configure CMake
@@ -36,12 +36,23 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path release
           Copy-Item build\Release\GalaxyStorm.exe release\
-          # Copy SDL2.dll from vcpkg installed bin
-          $sdl2dll = Get-ChildItem "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\bin\SDL2.dll" -ErrorAction SilentlyContinue
-          if ($sdl2dll) { Copy-Item $sdl2dll.FullName release\ }
-          # Also try build output directory
-          $buildDll = Get-ChildItem build\Release\SDL2.dll -ErrorAction SilentlyContinue
-          if ($buildDll) { Copy-Item $buildDll.FullName release\ -Force }
+          # Copy all DLLs from vcpkg
+          $vcpkgBin = "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\bin"
+          $dlls = @("SDL2.dll", "SDL2_image.dll", "SDL2_mixer.dll", "SDL2_ttf.dll",
+                    "libpng16.dll", "zlib1.dll", "libjpeg-62.dll", "libwebp-7.dll",
+                    "libtiff-6.dll", "libmpg123-0.dll", "libFLAC.dll", "libvorbis-0.dll",
+                    "libvorbisfile-3.dll", "libogg-0.dll", "freetype.dll", "brotlidec.dll",
+                    "brotlicommon.dll", "bz2.dll", "libsharpyuv.dll")
+          foreach ($dll in $dlls) {
+            $src = Join-Path $vcpkgBin $dll
+            if (Test-Path $src) { Copy-Item $src release\ }
+          }
+          # Also copy from build output
+          Get-ChildItem build\Release\*.dll -ErrorAction SilentlyContinue | Copy-Item -Destination release\ -Force
+          # Copy assets directory
+          if (Test-Path game\assets) {
+            Copy-Item -Recurse game\assets release\assets
+          }
           Compress-Archive -Path release\* -DestinationPath GalaxyStorm-windows-x64.zip
 
       - name: Upload artifact
