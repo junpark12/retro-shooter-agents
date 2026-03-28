@@ -1,5 +1,5 @@
 #pragma once
-#include "types.h"
+#include "entity.h"
 #include "asset_manager.h"
 #include <SDL.h>
 

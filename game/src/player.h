@@ -45,6 +45,12 @@ struct Player : Entity {
     // Sprite animation
     int        animFrame       = 0;
     float      animTimer       = 0.0f;
+
+    // Previous-frame button states (stored in Player to reset on initPlayer).
+    // Avoids stale state when the game is restarted.
+    bool       prevLockHeld    = false;
+    bool       prevFireHeld    = false;
+    bool       prevBombHeld    = false;
 };
 
 // Initialise the player at the default starting position with the given ship type.

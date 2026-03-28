@@ -8,9 +8,12 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/asset_manager.cpp" "CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o.d"
+  "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/audio.cpp" "CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/background.cpp" "CMakeFiles/GalaxyStorm.dir/src/background.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/background.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/boss.cpp" "CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/boss.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/bullet.cpp" "CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.o.d"
+  "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/bullet_pattern.cpp" "CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/collision.cpp" "CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/collision.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/enemy.cpp" "CMakeFiles/GalaxyStorm.dir/src/enemy.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/enemy.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/game.cpp" "CMakeFiles/GalaxyStorm.dir/src/game.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/game.cpp.o.d"

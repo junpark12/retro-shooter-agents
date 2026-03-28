@@ -129,6 +129,54 @@ GalaxyStorm/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/build
 .PHONY : GalaxyStorm/fast
 
+src/asset_manager.o: src/asset_manager.cpp.o
+.PHONY : src/asset_manager.o
+
+# target to build an object file
+src/asset_manager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.o
+.PHONY : src/asset_manager.cpp.o
+
+src/asset_manager.i: src/asset_manager.cpp.i
+.PHONY : src/asset_manager.i
+
+# target to preprocess a source file
+src/asset_manager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.i
+.PHONY : src/asset_manager.cpp.i
+
+src/asset_manager.s: src/asset_manager.cpp.s
+.PHONY : src/asset_manager.s
+
+# target to generate assembly for a file
+src/asset_manager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/asset_manager.cpp.s
+.PHONY : src/asset_manager.cpp.s
+
+src/audio.o: src/audio.cpp.o
+.PHONY : src/audio.o
+
+# target to build an object file
+src/audio.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/audio.cpp.o
+.PHONY : src/audio.cpp.o
+
+src/audio.i: src/audio.cpp.i
+.PHONY : src/audio.i
+
+# target to preprocess a source file
+src/audio.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/audio.cpp.i
+.PHONY : src/audio.cpp.i
+
+src/audio.s: src/audio.cpp.s
+.PHONY : src/audio.s
+
+# target to generate assembly for a file
+src/audio.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/audio.cpp.s
+.PHONY : src/audio.cpp.s
+
 src/background.o: src/background.cpp.o
 .PHONY : src/background.o
 
@@ -200,6 +248,30 @@ src/bullet.s: src/bullet.cpp.s
 src/bullet.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/bullet.cpp.s
 .PHONY : src/bullet.cpp.s
+
+src/bullet_pattern.o: src/bullet_pattern.cpp.o
+.PHONY : src/bullet_pattern.o
+
+# target to build an object file
+src/bullet_pattern.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.o
+.PHONY : src/bullet_pattern.cpp.o
+
+src/bullet_pattern.i: src/bullet_pattern.cpp.i
+.PHONY : src/bullet_pattern.i
+
+# target to preprocess a source file
+src/bullet_pattern.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.i
+.PHONY : src/bullet_pattern.cpp.i
+
+src/bullet_pattern.s: src/bullet_pattern.cpp.s
+.PHONY : src/bullet_pattern.s
+
+# target to generate assembly for a file
+src/bullet_pattern.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/bullet_pattern.cpp.s
+.PHONY : src/bullet_pattern.cpp.s
 
 src/collision.o: src/collision.cpp.o
 .PHONY : src/collision.o
@@ -450,6 +522,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... GalaxyStorm"
+	@echo "... src/asset_manager.o"
+	@echo "... src/asset_manager.i"
+	@echo "... src/asset_manager.s"
+	@echo "... src/audio.o"
+	@echo "... src/audio.i"
+	@echo "... src/audio.s"
 	@echo "... src/background.o"
 	@echo "... src/background.i"
 	@echo "... src/background.s"
@@ -459,6 +537,9 @@ help:
 	@echo "... src/bullet.o"
 	@echo "... src/bullet.i"
 	@echo "... src/bullet.s"
+	@echo "... src/bullet_pattern.o"
+	@echo "... src/bullet_pattern.i"
+	@echo "... src/bullet_pattern.s"
 	@echo "... src/collision.o"
 	@echo "... src/collision.i"
 	@echo "... src/collision.s"

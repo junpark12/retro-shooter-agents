@@ -1,15 +1,15 @@
 #include "enemy.h"
 
 #include "bullet.h"
+#include "bullet_pattern.h"
 #include "sprites.h"
 
 #include <cmath>
+#include <cstdlib>
 
 namespace galaxy {
 
 namespace {
-constexpr float PI = 3.14159265f;
-
 void setupEnemyStats(Enemy& e, EnemyType type) {
     e.type = type;
     e.moveTimer = 0.0f;
@@ -36,6 +36,26 @@ void setupEnemyStats(Enemy& e, EnemyType type) {
             e.pointValue = 500;
             e.vel.y = 70.0f;
             break;
+        case EnemyType::FAST:
+            e.bounds = {0.0f, 0.0f, 18.0f, 18.0f};
+            e.hp = 2;
+            e.pointValue = 200;
+            e.vel = {(std::rand() % 2 == 0) ? -130.0f : 130.0f, 180.0f};
+            break;
+        case EnemyType::ARMORED:
+            e.bounds = {0.0f, 0.0f, 36.0f, 32.0f};
+            e.hp = 10;
+            e.pointValue = 700;
+            e.vel = {0.0f, 75.0f};
+            break;
+    }
+
+    switch (type) {
+        case EnemyType::SMALL:   e.firePattern = BulletPattern::SINGLE; break;
+        case EnemyType::MEDIUM:  e.firePattern = BulletPattern::SPREAD_3; break;
+        case EnemyType::LARGE:   e.firePattern = BulletPattern::AIMED_SPREAD; break;
+        case EnemyType::FAST:    e.firePattern = BulletPattern::AIMED; break;
+        case EnemyType::ARMORED: e.firePattern = BulletPattern::CURTAIN; break;
     }
 }
 }
@@ -55,6 +75,7 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
 
         e.moveTimer += dt;
         e.fireTimer -= dt;
+        e.patternTimer += dt;
 
         switch (e.type) {
             case EnemyType::SMALL:
@@ -73,34 +94,31 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
                 e.vel.x = targetX * 14.0f;
                 break;
             }
+            case EnemyType::FAST:
+                if (e.pos.x < 10.0f || e.pos.x > SCREEN_W - 30.0f) e.vel.x *= -1.0f;
+                break;
+            case EnemyType::ARMORED:
+                e.vel.x = std::sin(e.moveTimer * 1.2f) * 45.0f;
+                break;
         }
 
         e.pos += e.vel * dt;
 
         if (e.fireTimer <= 0.0f) {
             Vec2 origin = {e.pos.x + e.bounds.w * 0.5f, e.pos.y + e.bounds.h};
-            Vec2 toPlayer = {playerPos.x - origin.x, playerPos.y - origin.y};
-            float len = std::sqrt(toPlayer.x * toPlayer.x + toPlayer.y * toPlayer.y);
-            if (len < 0.001f) len = 1.0f;
-            Vec2 dir = {toPlayer.x / len, toPlayer.y / len};
+            float speed = 200.0f;
+            float angle = e.patternTimer;
+            int dmg = 1;
 
             switch (e.type) {
-                case EnemyType::SMALL:
-                    fireBullet(bullets, origin, {dir.x * 180.0f, dir.y * 180.0f}, BulletOwner::ENEMY, 1);
-                    e.fireTimer = 1.5f;
-                    break;
-                case EnemyType::MEDIUM:
-                    fireBullet(bullets, origin, {dir.x * 200.0f - 50.0f, dir.y * 200.0f}, BulletOwner::ENEMY, 1);
-                    fireBullet(bullets, origin, {dir.x * 200.0f + 50.0f, dir.y * 200.0f}, BulletOwner::ENEMY, 1);
-                    e.fireTimer = 1.2f;
-                    break;
-                case EnemyType::LARGE:
-                    fireBullet(bullets, origin, {dir.x * 220.0f, dir.y * 220.0f}, BulletOwner::ENEMY, 1);
-                    fireBullet(bullets, origin, {std::cos(PI * 0.35f) * -220.0f, 220.0f}, BulletOwner::ENEMY, 1);
-                    fireBullet(bullets, origin, {std::cos(PI * 0.35f) * 220.0f, 220.0f}, BulletOwner::ENEMY, 1);
-                    e.fireTimer = 0.95f;
-                    break;
+                case EnemyType::SMALL:   speed = 190.0f; e.fireTimer = 1.5f; break;
+                case EnemyType::MEDIUM:  speed = 220.0f; e.fireTimer = 1.2f; break;
+                case EnemyType::LARGE:   speed = 230.0f; e.fireTimer = 0.95f; break;
+                case EnemyType::FAST:    speed = 280.0f; e.fireTimer = 0.75f; break;
+                case EnemyType::ARMORED: speed = 210.0f; e.fireTimer = 1.35f; dmg = 2; break;
             }
+
+            firePattern(bullets, e.firePattern, origin, playerPos, angle, speed, dmg, BulletOwner::ENEMY);
         }
 
         if (e.pos.y > SCREEN_H + 40.0f || e.pos.x < -80.0f || e.pos.x > SCREEN_W + 80.0f) {
@@ -112,7 +130,7 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
 void renderEnemies(SDL_Renderer* renderer, const EnemyPool& ep) {
     for (const Enemy& e : ep.pool) {
         if (!e.active) continue;
-        renderEnemySprite(renderer, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type);
+        renderEnemyPrimitive(renderer, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type);
     }
 }
 

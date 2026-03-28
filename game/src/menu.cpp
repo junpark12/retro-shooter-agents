@@ -1,79 +1,19 @@
 #include "menu.h"
 
+#include "hud.h"
+#include "sprites.h"
+
 #include <array>
+#include <cmath>
 #include <string>
-#include <unordered_map>
 
 namespace galaxy {
 
-namespace {
-
-using Glyph = std::array<const char*, 7>;
-
-const std::unordered_map<char, Glyph>& font5x7() {
-    static const std::unordered_map<char, Glyph> kFont = {
-        {' ', {"00000","00000","00000","00000","00000","00000","00000"}},
-        {'!', {"00100","00100","00100","00100","00100","00000","00100"}},
-        {'>', {"10000","01000","00100","00010","00100","01000","10000"}},
-        {':', {"00000","00100","00100","00000","00100","00100","00000"}},
-        {'1', {"00100","01100","00100","00100","00100","00100","01110"}},
-        {'4', {"00010","00110","01010","10010","11111","00010","00010"}},
-        {'9', {"01110","10001","10001","01111","00001","00010","11100"}},
-        {'A', {"01110","10001","10001","11111","10001","10001","10001"}},
-        {'B', {"11110","10001","10001","11110","10001","10001","11110"}},
-        {'C', {"01110","10001","10000","10000","10000","10001","01110"}},
-        {'E', {"11111","10000","10000","11110","10000","10000","11111"}},
-        {'F', {"11111","10000","10000","11110","10000","10000","10000"}},
-        {'G', {"01110","10001","10000","10111","10001","10001","01110"}},
-        {'I', {"01110","00100","00100","00100","00100","00100","01110"}},
-        {'L', {"10000","10000","10000","10000","10000","10000","11111"}},
-        {'M', {"10001","11011","10101","10101","10001","10001","10001"}},
-        {'O', {"01110","10001","10001","10001","10001","10001","01110"}},
-        {'Q', {"01110","10001","10001","10001","10101","10010","01101"}},
-        {'R', {"11110","10001","10001","11110","10100","10010","10001"}},
-        {'S', {"01111","10000","10000","01110","00001","00001","11110"}},
-        {'T', {"11111","00100","00100","00100","00100","00100","00100"}},
-        {'U', {"10001","10001","10001","10001","10001","10001","01110"}},
-        {'X', {"10001","01010","00100","00100","00100","01010","10001"}},
-        {'Y', {"10001","01010","00100","00100","00100","00100","00100"}},
-    };
-    return kFont;
-}
-
-inline void setColor(SDL_Renderer* renderer, Color c, Uint8 a = 255) {
-    SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, a);
-}
-
-void renderChar(SDL_Renderer* renderer, int x, int y, char c, int scale, Color color) {
-    const auto& font = font5x7();
-    auto it = font.find(c);
-    if (it == font.end()) it = font.find(' ');
-    const Glyph& g = it->second;
-    setColor(renderer, color);
-
-    for (int row = 0; row < 7; ++row) {
-        for (int col = 0; col < 5; ++col) {
-            if (g[row][col] != '1') continue;
-            SDL_Rect px{x + col * scale, y + row * scale, scale, scale};
-            SDL_RenderFillRect(renderer, &px);
-        }
-    }
-}
-
-void renderText(SDL_Renderer* renderer, int x, int y, const std::string& txt, int scale, Color color) {
-    int penX = x;
-    for (char c : txt) {
-        renderChar(renderer, penX, y, c, scale, color);
-        penX += 6 * scale;
-    }
-}
-
-} // namespace
-
 void updateMenu(Menu& m, float dt) {
+    m.animTimer += dt;
     m.blinkTimer += dt;
-    while (m.blinkTimer >= 0.5f) {
-        m.blinkTimer -= 0.5f;
+    if (m.blinkTimer >= 0.5f) {
+        m.blinkTimer = 0.0f;
         m.blinkVisible = !m.blinkVisible;
     }
 }
@@ -94,68 +34,111 @@ GameState handleMenuEvent(Menu& m, const SDL_Event& e) {
 
     if (key == SDL_SCANCODE_RETURN || key == SDL_SCANCODE_SPACE) {
         if (m.selectedOption == static_cast<int>(MenuOption::START)) {
-            return GameState::PLAYING;
+            return GameState::SHIP_SELECT;
         }
-        // Signal the game loop to exit cleanly; Game::shutdown() will be called
-        // by main() after run() returns — no SDL_Quit/std::exit needed here.
         return GameState::QUIT;
     }
-
+    if (key == SDL_SCANCODE_ESCAPE) {
+        return GameState::QUIT;
+    }
     return GameState::TITLE;
 }
 
-void renderMenu(SDL_Renderer* renderer, const Menu& m) {
-    setColor(renderer, {0, 0, 0});
+void renderMenu(SDL_Renderer* renderer, const AssetManager&, TTF_Font* font, const Menu& m) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 20, 255);
     SDL_Rect bg{0, 0, SCREEN_W, SCREEN_H};
     SDL_RenderFillRect(renderer, &bg);
 
-    // Decorative static stars
-    setColor(renderer, COLOR_WHITE);
-    const SDL_Point stars[] = {
-        {24, 34}, {78, 96}, {130, 56}, {214, 88}, {302, 72}, {426, 44},
-        {442, 118}, {60, 164}, {172, 138}, {260, 176}, {344, 154}, {410, 192}
-    };
-    for (const SDL_Point& p : stars) {
-        SDL_Rect s{p.x, p.y, 2, 2};
-        SDL_RenderFillRect(renderer, &s);
-    }
+    // static decorative stars
+    SDL_SetRenderDrawColor(renderer, 120, 150, 255, 255);
+    SDL_Rect s0{50, 80, 2, 2}; SDL_RenderFillRect(renderer, &s0);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 180, 255);
+    SDL_Rect s1{390, 140, 2, 2}; SDL_RenderFillRect(renderer, &s1);
+    SDL_SetRenderDrawColor(renderer, 0, 220, 255, 255);
+    SDL_Rect s2{420, 60, 1, 1}; SDL_RenderFillRect(renderer, &s2);
 
-    // Title
-    const std::string title = "GALAXY STORM";
-    const int titleScale = 3;
-    const int titleW = static_cast<int>(title.size()) * 6 * titleScale;
-    renderText(renderer, (SCREEN_W - titleW) / 2, SCREEN_H / 3 - 36, title, titleScale, COLOR_CYAN);
+    const int titleY = 120 + static_cast<int>(std::sin(m.animTimer * 2.0f) * 4.0f);
+    renderText(renderer, font, "GALAXY STORM", 92, titleY, SDL_Color{255, 232, 0, 255});
+    renderText(renderer, font, "BULLET HELL SHOOTER", 128, titleY + 34, SDL_Color{0, 255, 255, 255});
 
-    // Options
-    const int optScale = 2;
-    const int optionY0 = SCREEN_H / 2 + 40;
-    renderText(renderer, SCREEN_W / 2 - 35, optionY0, "START", optScale, COLOR_WHITE);
-    renderText(renderer, SCREEN_W / 2 - 35, optionY0 + 40, "QUIT", optScale, COLOR_WHITE);
+    const bool startSel = m.selectedOption == static_cast<int>(MenuOption::START);
+    const bool quitSel = m.selectedOption == static_cast<int>(MenuOption::QUIT);
+    renderText(renderer, font, "START", 196, 320, startSel ? SDL_Color{255, 232, 0, 255} : SDL_Color{255, 255, 255, 255});
+    renderText(renderer, font, "QUIT", 204, 356, quitSel ? SDL_Color{255, 232, 0, 255} : SDL_Color{255, 255, 255, 255});
 
     if (m.blinkVisible) {
-        const int cursorY = optionY0 + (m.selectedOption == static_cast<int>(MenuOption::START) ? 0 : 40);
-        renderText(renderer, SCREEN_W / 2 - 55, cursorY, ">", optScale, COLOR_GREEN);
+        renderText(renderer, font, ">", 176, startSel ? 320 : 356, SDL_Color{255, 232, 0, 255});
     }
 
-    // Footer (© 1994 GALAXY SOFT) with primitive copyright mark
-    const int fy = SCREEN_H - 26;
-    const int fx = SCREEN_W / 2 - 67;
-    setColor(renderer, COLOR_YELLOW);
-    SDL_Rect c1{fx + 1, fy + 1, 3, 1};
-    SDL_Rect c2{fx + 0, fy + 2, 1, 3};
-    SDL_Rect c3{fx + 1, fy + 5, 3, 1};
-    SDL_Rect ring1{fx + 0, fy + 0, 5, 1};
-    SDL_Rect ring2{fx + 0, fy + 6, 5, 1};
-    SDL_Rect ring3{fx - 1, fy + 1, 1, 5};
-    SDL_Rect ring4{fx + 5, fy + 1, 1, 5};
-    SDL_RenderFillRect(renderer, &c1);
-    SDL_RenderFillRect(renderer, &c2);
-    SDL_RenderFillRect(renderer, &c3);
-    SDL_RenderFillRect(renderer, &ring1);
-    SDL_RenderFillRect(renderer, &ring2);
-    SDL_RenderFillRect(renderer, &ring3);
-    SDL_RenderFillRect(renderer, &ring4);
-    renderText(renderer, SCREEN_W / 2 - 57, fy, "1994 GALAXY SOFT", 1, COLOR_YELLOW);
+    renderText(renderer, font, "PRESS SPACE TO START", 120, 420, SDL_Color{220, 220, 220, 255});
+    renderText(renderer, font, "C 2026 GALAXY STORM TEAM", 118, SCREEN_H - 24, SDL_Color{130, 130, 130, 255});
+}
+
+void updateShipSelect(ShipSelect& ss, float dt) {
+    ss.previewTimer += dt;
+    ss.blinkTimer += dt;
+    if (ss.blinkTimer >= 0.4f) {
+        ss.blinkTimer = 0.0f;
+        ss.blinkVisible = !ss.blinkVisible;
+    }
+}
+
+GameState handleShipSelectEvent(ShipSelect& ss, const SDL_Event& e, ShipType& outShip) {
+    if (e.type != SDL_KEYDOWN) return GameState::SHIP_SELECT;
+    const SDL_Scancode key = e.key.keysym.scancode;
+    if (key == SDL_SCANCODE_LEFT || key == SDL_SCANCODE_A) {
+        ss.selectedShip = (ss.selectedShip + 2) % 3;
+        return GameState::SHIP_SELECT;
+    }
+    if (key == SDL_SCANCODE_RIGHT || key == SDL_SCANCODE_D) {
+        ss.selectedShip = (ss.selectedShip + 1) % 3;
+        return GameState::SHIP_SELECT;
+    }
+    if (key == SDL_SCANCODE_ESCAPE || key == SDL_SCANCODE_BACKSPACE) {
+        return GameState::TITLE;
+    }
+    if (key == SDL_SCANCODE_RETURN || key == SDL_SCANCODE_SPACE) {
+        outShip = (ss.selectedShip == 0) ? ShipType::BAGON
+                : (ss.selectedShip == 1) ? ShipType::DAMUL
+                                         : ShipType::GUNEX;
+        return GameState::PLAYING;
+    }
+    return GameState::SHIP_SELECT;
+}
+
+void renderShipSelect(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* font, const ShipSelect& ss) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 20, 255);
+    SDL_Rect bg{0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &bg);
+
+    renderText(renderer, font, "SELECT YOUR SHIP", 110, 72, SDL_Color{255, 232, 0, 255});
+
+    renderShipPreview(renderer, assets, 48, 176, ShipType::BAGON, ss.selectedShip == 0);
+    renderShipPreview(renderer, assets, 190, 176, ShipType::DAMUL, ss.selectedShip == 1);
+    renderShipPreview(renderer, assets, 332, 176, ShipType::GUNEX, ss.selectedShip == 2);
+
+    std::array<const char*, 3> stats = {
+        "POWER **** SPEED *** AREA **",
+        "POWER *** SPEED *** AREA *****",
+        "POWER ***** SPEED ** AREA ***"
+    };
+    std::array<const char*, 3> desc = {
+        "BAGON: HIGH FOCUS LASER LOCK-ON",
+        "DAMUL: WIDE SPREAD FOR CROWD CONTROL",
+        "GUNEX: HEAVY BURST + HOMING MISSILES"
+    };
+    std::array<const char*, 3> names = {"BAGON", "DAMUL", "GUNEX"};
+
+    const int i = ss.selectedShip;
+    renderText(renderer, font, names[i], 206, 300, SDL_Color{255, 255, 255, 255});
+    renderText(renderer, font, stats[i], 52, 350, SDL_Color{0, 255, 255, 255});
+    renderText(renderer, font, desc[i], 38, 388, SDL_Color{220, 220, 220, 255});
+
+    if (ss.blinkVisible) {
+        const int x = (i == 0) ? 66 : (i == 1) ? 206 : 348;
+        renderText(renderer, font, "SELECTED", x, 266, SDL_Color{255, 232, 0, 255});
+    }
+    renderText(renderer, font, "<- -> SELECT | ENTER CONFIRM", 74, 548, SDL_Color{180, 180, 180, 255});
 }
 
 } // namespace galaxy

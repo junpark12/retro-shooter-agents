@@ -1,22 +1,17 @@
 #include "boss.h"
 
 #include "bullet.h"
+#include "bullet_pattern.h"
 #include "sprites.h"
 
+#include <algorithm>
 #include <cmath>
+#include <cstdlib>
 
 namespace galaxy {
 
 namespace {
 constexpr float PI = 3.14159265f;
-
-void fireAimed(BulletPool& bullets, Vec2 origin, Vec2 target, float speed, int damage = 1) {
-    Vec2 d = {target.x - origin.x, target.y - origin.y};
-    float len = std::sqrt(d.x * d.x + d.y * d.y);
-    if (len < 0.001f) len = 1.0f;
-    Vec2 dir = {d.x / len, d.y / len};
-    fireBullet(bullets, origin, {dir.x * speed, dir.y * speed}, BulletOwner::ENEMY, damage);
-}
 }
 
 void initBoss(Boss& b, int stageNum) {
@@ -43,6 +38,13 @@ void initBoss(Boss& b, int stageNum) {
             break;
     }
     b.hp = b.maxHp;
+    b.patternAngle = 0.0f;
+    b.burstCount = 0;
+    b.burstTimer = 0.0f;
+    b.enraged = false;
+    b.targetPos = {b.pos.x, b.pos.y};
+    b.moveCooldown = 1.5f;
+    b.lockedOn = false;
 }
 
 void updateBoss(Boss& b, float dt, BulletPool& bullets, Vec2 playerPos) {
@@ -52,73 +54,80 @@ void updateBoss(Boss& b, float dt, BulletPool& bullets, Vec2 playerPos) {
     b.attackTimer -= dt;
 
     if (b.hp <= b.maxHp / 3) b.phase = 3;
-    else if (b.hp <= b.maxHp / 2) b.phase = 2;
+    else if (b.hp <= b.maxHp * 2 / 3) b.phase = 2;
     else b.phase = 1;
+    b.enraged = (b.phase == 3);
 
-    const float width = b.bounds.w;
-    const float maxX = static_cast<float>(SCREEN_W) - width;
+    const float speedMul = b.enraged ? 2.0f : 1.0f;
+    const float bulletMul = b.enraged ? 1.5f : 1.0f;
+    b.patternAngle += dt * 1.4f;
 
-    if (b.stageNum == 1) {
-        b.pos.x = SCREEN_W * 0.5f - width * 0.5f + std::sin(b.moveTimer * 1.6f) * 140.0f;
-    } else if (b.stageNum == 2) {
-        b.pos.x = SCREEN_W * 0.5f - width * 0.5f + std::sin(b.moveTimer * (1.8f + b.phase * 0.3f)) * 120.0f;
-        b.pos.y = 52.0f + std::sin(b.moveTimer * 2.1f) * 26.0f;
-    } else {
-        // Stage 3: laser sweep feel with broad horizontal movement.
-        b.pos.x = SCREEN_W * 0.5f - width * 0.5f + std::sin(b.moveTimer * (1.2f + b.phase * 0.25f)) * 165.0f;
-        b.pos.y = 44.0f + std::sin(b.moveTimer * 1.0f) * 18.0f;
+    // Horizontal patrol + occasional reposition.
+    b.pos.x = SCREEN_W * 0.5f - b.bounds.w * 0.5f + std::sin(b.moveTimer * (1.1f + b.stageNum * 0.2f)) * 130.0f;
+    b.moveCooldown -= dt;
+    if (b.moveCooldown <= 0.0f) {
+        b.targetPos = {static_cast<float>(20 + (std::rand() % (SCREEN_W - static_cast<int>(b.bounds.w) - 40))), 35.0f + static_cast<float>(std::rand() % 80)};
+        b.moveCooldown = 2.5f;
     }
-
-    if (b.pos.x < 0.0f) b.pos.x = 0.0f;
-    if (b.pos.x > maxX) b.pos.x = maxX;
+    Vec2 toTarget = b.targetPos - b.pos;
+    if (toTarget.length() > 1.0f) {
+        b.pos += toTarget.normalized() * (90.0f * speedMul * dt);
+    }
+    b.pos.x = std::clamp(b.pos.x, 0.0f, static_cast<float>(SCREEN_W) - b.bounds.w);
+    b.pos.y = std::clamp(b.pos.y, 20.0f, 140.0f);
 
     Vec2 origin = {b.pos.x + b.bounds.w * 0.5f, b.pos.y + b.bounds.h * 0.65f};
 
     if (b.attackTimer <= 0.0f) {
         if (b.stageNum == 1) {
-            // 3-way burst.
-            fireBullet(bullets, origin, {-140.0f, 220.0f}, BulletOwner::ENEMY, 1);
-            fireBullet(bullets, origin, {0.0f, 260.0f}, BulletOwner::ENEMY, 1);
-            fireBullet(bullets, origin, {140.0f, 220.0f}, BulletOwner::ENEMY, 1);
-            b.attackTimer = (b.phase == 1) ? 1.0f : (b.phase == 2 ? 0.8f : 0.6f);
-        } else if (b.stageNum == 2) {
-            // 8-way circular burst + occasional aimed shot (dash pressure).
-            constexpr Vec2 dirs[8] = {
-                { 0.0f,  1.0f}, { 0.707f,  0.707f}, { 1.0f,  0.0f}, { 0.707f, -0.707f},
-                { 0.0f, -1.0f}, {-0.707f, -0.707f}, {-1.0f,  0.0f}, {-0.707f,  0.707f}
-            };
-            float spd = 190.0f + b.phase * 20.0f;
-            for (const Vec2& d : dirs) {
-                fireBullet(bullets, origin, {d.x * spd, d.y * spd}, BulletOwner::ENEMY, 1);
-            }
-            fireAimed(bullets, origin, playerPos, 240.0f + b.phase * 30.0f, 1);
-            b.attackTimer = (b.phase == 1) ? 1.1f : (b.phase == 2 ? 0.85f : 0.65f);
-        } else {
-            // Stage 3 phase A/B
-            if (b.phase < 3) {
-                // Laser sweep approximation: dense downward lanes.
-                for (int i = -2; i <= 2; ++i) {
-                    fireBullet(bullets, {origin.x + i * 16.0f, origin.y}, {i * 25.0f, 320.0f},
-                               BulletOwner::ENEMY, 1);
-                }
+            if (b.phase == 1) {
+                firePattern(bullets, BulletPattern::CIRCLE_8, origin, playerPos, b.patternAngle, 220.0f * bulletMul, 1, BulletOwner::ENEMY);
+            } else if (b.phase == 2) {
+                firePattern(bullets, BulletPattern::AIMED_SPREAD, origin, playerPos, 0.0f, 260.0f * bulletMul, 1, BulletOwner::ENEMY);
             } else {
-                // Phase B: add guided-ish missiles.
-                for (int i = -2; i <= 2; ++i) {
-                    fireBullet(bullets, {origin.x + i * 18.0f, origin.y}, {i * 35.0f, 340.0f},
-                               BulletOwner::ENEMY, 1);
-                }
-                fireAimed(bullets, origin, playerPos, 280.0f, 2);
-                fireAimed(bullets, {origin.x - 24.0f, origin.y}, playerPos, 250.0f, 1);
-                fireAimed(bullets, {origin.x + 24.0f, origin.y}, playerPos, 250.0f, 1);
+                firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 250.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 170.0f * bulletMul, 1, BulletOwner::ENEMY);
             }
-            b.attackTimer = (b.phase == 1) ? 0.95f : (b.phase == 2 ? 0.70f : 0.5f);
+            b.attackTimer = (b.phase == 1 ? 1.0f : b.phase == 2 ? 0.8f : 0.55f) / speedMul;
+        } else if (b.stageNum == 2) {
+            if (b.phase == 1) {
+                firePattern(bullets, BulletPattern::SPIRAL_CCW, origin, playerPos, b.patternAngle, 230.0f * bulletMul, 1, BulletOwner::ENEMY);
+            } else if (b.phase == 2) {
+                firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 240.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::AIMED, origin, playerPos, 0.0f, 300.0f * bulletMul, 1, BulletOwner::ENEMY);
+            } else {
+                firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 180.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::RANDOM_SPREAD, origin, playerPos, -PI * 0.5f, 250.0f * bulletMul, 1, BulletOwner::ENEMY);
+            }
+            b.attackTimer = (b.phase == 1 ? 0.95f : b.phase == 2 ? 0.75f : 0.5f) / speedMul;
+        } else {
+            if (b.phase == 1) {
+                firePattern(bullets, BulletPattern::AIMED_SPREAD, origin, playerPos, 0.0f, 270.0f * bulletMul, 1, BulletOwner::ENEMY);
+            } else if (b.phase == 2) {
+                firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 240.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 230.0f * bulletMul, 1, BulletOwner::ENEMY);
+            } else {
+                firePattern(bullets, BulletPattern::SINGLE, origin, playerPos, 0.0f, 280.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::SPREAD_3, origin, playerPos, -PI * 0.5f, 280.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::SPREAD_5, origin, playerPos, -PI * 0.5f, 260.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::CIRCLE_8, origin, playerPos, b.patternAngle, 220.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 170.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 240.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::SPIRAL_CCW, origin, playerPos, b.patternAngle, 240.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::AIMED, origin, playerPos, 0.0f, 320.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::AIMED_SPREAD, origin, playerPos, 0.0f, 290.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 230.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::RANDOM_SPREAD, origin, playerPos, -PI * 0.5f, 260.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::HOMING, origin, playerPos, -PI * 0.5f, 220.0f * bulletMul, 1, BulletOwner::ENEMY);
+            }
+            b.attackTimer = (b.phase == 1 ? 0.85f : b.phase == 2 ? 0.60f : 0.38f) / speedMul;
         }
     }
 }
 
 void renderBoss(SDL_Renderer* renderer, const Boss& b) {
     if (!b.active) return;
-    renderBossSprite(renderer, static_cast<int>(b.pos.x), static_cast<int>(b.pos.y), b.stageNum);
+    renderBossPrimitive(renderer, static_cast<int>(b.pos.x), static_cast<int>(b.pos.y), b.stageNum);
 }
 
 } // namespace galaxy

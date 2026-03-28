@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 // Forward-declare subsystem structs to avoid pulling in every header here.
 namespace galaxy {
@@ -12,6 +13,7 @@ namespace galaxy {
     struct Stage;
     struct Background;
     struct Menu;
+    struct ShipSelect;
     struct AssetManager;
     struct AudioManager;
 }
@@ -55,8 +57,11 @@ private:
     Stage*        stage_        = nullptr;
     Background*   background_   = nullptr;
     Menu*         menu_         = nullptr;
+    ShipSelect*   shipSelect_   = nullptr;
     AssetManager* assets_       = nullptr;
     AudioManager* audio_        = nullptr;
+    TTF_Font*     font_         = nullptr;
+    bool          bossMusicPlaying_ = false;
 
     // ── Per-frame helpers ─────────────────────────────────────────────────────
 
