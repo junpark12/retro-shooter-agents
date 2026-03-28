@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*'
+    branches:
+      - main
+  pull_request:
+    types: [closed]
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       tag_name:
@@ -14,6 +20,10 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
+    if: >-
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     steps:
       - uses: actions/checkout@v4
 
@@ -61,7 +71,7 @@ jobs:
           name: GalaxyStorm-windows-x64
           path: GalaxyStorm-windows-x64.zip
 
-      - name: Create Release
+      - name: Create Release (tag push)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
@@ -77,5 +87,34 @@ jobs:
           tag_name: ${{ github.event.inputs.tag_name }}
           files: GalaxyStorm-windows-x64.zip
           generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Auto-tag and Release (PR merge or push to main)
+        if: >-
+          (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+          (github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/'))
+        shell: bash
+        run: |
+          # Generate auto-increment tag based on date + run number
+          TAG="v0.$(date +%Y%m%d).${{ github.run_number }}"
+          echo "Auto-tagging as $TAG"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG"
+          git push origin "$TAG"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release (auto)
+        if: >-
+          (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+          (github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/'))
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v0.${{ github.run_number }}
+          files: GalaxyStorm-windows-x64.zip
+          generate_release_notes: true
+          name: "Galaxy Storm Build #${{ github.run_number }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
