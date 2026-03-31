@@ -163,24 +163,54 @@ OFL 글꼴을 포함한 소프트웨어를 판매 가능.
 
 ---
 
-## Pending External Asset Requests (2026-03-31)
+## 🛸 Sprites — Boss Ships (200 Starships)
 
-The files below are requested via `asset-request.json` and will be downloaded by workflow.
+> Downloaded from OpenGameArt. Individual PNG files (ship_0.png … ship_210.png).
 
-| Package/File | Source | Author | License | Purpose |
-|------|------|--------|----------|----------|
-| `https://opengameart.org/sites/default/files/SpaceShooterRedux.zip` | OpenGameArt | Kenney | CC-BY 3.0 | Ships, enemies, bullets, UI, backgrounds, fonts, bonus SFX |
-| `https://opengameart.org/sites/default/files/kenney_spaceShooterExtension.zip` | OpenGameArt | Kenney | CC-BY 3.0 | Extra enemies, meteors, parts, projectile variants |
-| `https://opengameart.org/sites/default/files/spaceArt.zip` | OpenGameArt | Kenney | CC-BY 3.0 | Additional baseline shmup sprite set |
-| `https://opengameart.org/sites/default/files/space_shooter_pack.zip` | OpenGameArt | ansimuz | CC-BY 3.0 | Pixel fallback ships, bullets, explosions, backgrounds |
-| `https://opengameart.org/sites/default/files/OutThere_0.ogg` | OpenGameArt | yd | CC0 | Stage/ambient BGM |
-| `https://opengameart.org/sites/default/files/ObservingTheStar.zip` | OpenGameArt | yd | CC0 | Menu/stage BGM pack |
-| `https://opengameart.org/sites/default/files/Space%20Bass_0.ogg` | OpenGameArt | Fupi | CC0 | Boss/tense stage BGM |
-| `https://opengameart.org/sites/default/files/The%20Essential%20Retro%20Video%20Game%20Sound%20Effects%20Collection%20%5B512%20sounds%5D.zip` | OpenGameArt | SubspaceAudio | CC0 | Laser/explosion/UI SFX bank |
-| `https://opengameart.org/sites/default/files/100-CC0-SFX_0.zip` | OpenGameArt | rubberduck | CC0 | General-purpose SFX bank |
-| `https://opengameart.org/sites/default/files/200Starships.zip` | OpenGameArt | Wisedawn | CC0 | Boss-scale ship candidates and enemy variants |
-| `https://opengameart.org/sites/default/files/spr_bullet_strip.png` | OpenGameArt | Bonsaiheldin | CC0 | Bullet strip set 1 |
-| `https://opengameart.org/sites/default/files/spr_bullet_strip02.png` | OpenGameArt | Bonsaiheldin | CC0 | Bullet strip set 2 |
-| `https://opengameart.org/sites/default/files/spr_bullet_strip03.png` | OpenGameArt | Bonsaiheldin | CC0 | Bullet strip set 3 |
-| `https://opengameart.org/sites/default/files/spr_bullet_strip04.png` | OpenGameArt | Bonsaiheldin | CC0 | Bullet strip set 4 |
-| `https://opengameart.org/sites/default/files/M484ExplosionSet1.png` | OpenGameArt | Master484 | CC0 | Ship destruction / explosion sprite sheet |
+| 파일 | 출처 | 작성자 | 라이선스 | 용도 |
+|------|------|--------|----------|------|
+| `sprites/bosses/ship_20.png` | [OpenGameArt](https://opengameart.org/content/200-spaceships) | Wisedawn | CC0 | Stage 1 Boss (primary) |
+| `sprites/bosses/ship_80.png` | [OpenGameArt](https://opengameart.org/content/200-spaceships) | Wisedawn | CC0 | Stage 2 Boss (primary) |
+| `sprites/bosses/ship_180.png` | [OpenGameArt](https://opengameart.org/content/200-spaceships) | Wisedawn | CC0 | Stage 3 Boss (primary) |
+
+---
+
+## 👾 Sprites — Enemy Ships (Kenney Space Shooter Extension)
+
+| 파일 | 출처 | 작성자 | 라이선스 | 용도 |
+|------|------|--------|----------|------|
+| `sprites/enemies/spaceShips_001.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 1 |
+| `sprites/enemies/spaceShips_002.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 2 |
+| `sprites/enemies/spaceShips_003.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 3 |
+| `sprites/enemies/spaceShips_004.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 4 |
+| `sprites/enemies/spaceShips_005.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 5 |
+
+---
+
+## 💥 Sprites — Explosion Sprite Sheet
+
+| 파일 | 출처 | 작성자 | 라이선스 | 용도 |
+|------|------|--------|----------|------|
+| `sprites/effects/M484ExplosionSet1.png` | [OpenGameArt](https://opengameart.org/content/m484-explosion-set-1) | Master484 | CC0 | 9-type animated explosion sprite sheet (yellow/blue/red, large/medium/small) |
+
+---
+
+## 🔵 Sprites — Bullet Strips
+
+| 파일 | 출처 | 작성자 | 라이선스 | 용도 |
+|------|------|--------|----------|------|
+| `sprites/bullets/spr_bullet_strip.png`   | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 | Blue/violet glow bullet |
+| `sprites/bullets/spr_bullet_strip02.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 | Green glow bullet |
+| `sprites/bullets/spr_bullet_strip03.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 | Yellow/gold glow bullet |
+| `sprites/bullets/spr_bullet_strip04.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 | Red/orange glow bullet |
+
+---
+
+## 📝 Integration Notes (2026-03-31)
+
+| 에셋 | 적용 위치 | 설명 |
+|------|-----------|------|
+| `ship_20/80/180.png` | `sprites.cpp renderBossSprite()` | 200 Starships를 Stage 1/2/3 보스 기본 스프라이트로 사용. boss_1/2/3.png를 fallback으로 유지 |
+| `spaceShips_001-005.png` | `asset_manager.cpp` | SPR_ENEMY_SHIP_1~5 키로 로드. 향후 웨이브별 적 변종으로 활용 가능 |
+| `M484ExplosionSet1.png` | `sprites.cpp renderExplosion()` | SDL_QueryTexture로 시트 크기 동적 계산. 3×3 섹션(색상×크기), 8프레임 애니메이션 |
+| `spr_bullet_strip*.png` | `sprites.cpp renderBulletSprite()` | 적 탄막의 colorIdx에 따라 청/녹/황/적 글로우 orb 사용. laser_enemy.png를 fallback으로 유지 |
