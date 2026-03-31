@@ -75,10 +75,49 @@ Coding Agent는 보안 샌드박스에서 실행되어 **외부 인터넷 접근
 - **asset_urls**: `"https://kenney.nl/media/pages/assets/space-shooter-redux/5db7e519e2-1677497524/kenney_space-shooter-redux.zip"`
 - **asset_category**: `sprites/player`
 
-### Workflow 완료 확인
+### Workflow 완료 대기 및 Artifact 가져오기 (필수 절차)
 
-`github` 도구의 `list_workflow_runs`로 실행 상태를 확인하고,
-완료 후 `download_workflow_run_artifact`로 결과물을 가져옵니다.
+Workflow는 비동기로 실행되므로 **반드시 완료를 확인한 후** artifact를 가져와야 합니다.
+
+**Step 1: Workflow 트리거**
+- `github` 도구로 `download-assets` workflow에 `workflow_dispatch` 이벤트 전송
+- 트리거 후 반환되는 workflow run ID를 기억
+
+**Step 2: 완료 대기 (폴링)**
+- `github` 도구의 `list_workflow_runs`로 해당 run의 `status`를 반복 확인
+- `status`가 `completed`가 될 때까지 대기 (보통 1~3분 소요)
+- `conclusion`이 `success`인지 확인. `failure`면 에러 원인을 확인하고 PL에게 보고
+
+**Step 3: Artifact 목록 확인**
+- `github` 도구의 `list_workflow_run_artifacts`로 해당 run의 artifact 목록을 확인
+- `game-assets-{category}` 이름의 artifact ID를 확인
+
+**Step 4: Artifact 다운로드**
+- `github` 도구의 `download_workflow_run_artifact`로 artifact를 다운로드
+- 다운로드된 파일을 `game/assets/{category}/`에 배치
+
+**Step 5: 검증 및 기록**
+- 다운로드된 파일이 올바른 형식(PNG, OGG, WAV 등)인지 확인
+- `game/assets/CREDITS.md`에 출처와 라이선스 기록
+
+```
+예시 흐름 (자연어):
+
+1. "github 도구로 download-assets workflow를 트리거합니다.
+    inputs: asset_urls=https://kenney.nl/..., asset_category=sprites/player"
+
+2. "github 도구로 workflow run 상태를 확인합니다."
+   → status: "in_progress" → 다시 확인
+   → status: "completed", conclusion: "success" → 다음 단계
+
+3. "github 도구로 이 run의 artifact 목록을 가져옵니다."
+   → artifact: game-assets-sprites/player (id: 12345)
+
+4. "github 도구로 artifact 12345를 다운로드합니다."
+   → game/assets/sprites/player/에 파일 배치
+
+5. "CREDITS.md를 업데이트합니다."
+```
 
 ---
 
