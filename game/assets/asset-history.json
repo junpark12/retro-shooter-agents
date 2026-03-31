@@ -1,5 +1,5 @@
 {
-  "assets": [
+  "downloaded": [
     {
       "category": "sprites/enemies",
       "urls": [
@@ -7,7 +7,8 @@
         "https://kenney.nl/media/pages/assets/space-shooter-extension/4e579a75d0-1677497489/kenney_space-shooter-extension.zip"
       ],
       "source": "OpenGameArt + Kenney",
-      "license": "CC-BY 3.0 + CC0"
+      "license": "CC-BY 3.0 + CC0",
+      "date": "2026-03-31"
     },
     {
       "category": "sprites/bosses",
@@ -15,7 +16,8 @@
         "https://opengameart.org/sites/default/files/200Starships.zip"
       ],
       "source": "OpenGameArt",
-      "license": "CC0"
+      "license": "CC0",
+      "date": "2026-03-31"
     },
     {
       "category": "sprites/bullets",
@@ -26,7 +28,8 @@
         "https://opengameart.org/sites/default/files/spr_bullet_strip04.png"
       ],
       "source": "OpenGameArt",
-      "license": "CC0"
+      "license": "CC0",
+      "date": "2026-03-31"
     },
     {
       "category": "sprites/effects",
@@ -34,7 +37,8 @@
         "https://opengameart.org/sites/default/files/M484ExplosionSet1.png"
       ],
       "source": "OpenGameArt",
-      "license": "CC0"
+      "license": "CC0",
+      "date": "2026-03-31"
     }
   ]
 }
