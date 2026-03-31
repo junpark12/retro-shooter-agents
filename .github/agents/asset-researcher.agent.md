@@ -51,26 +51,89 @@ Coding Agent는 보안 샌드박스에서 실행되어 **외부 인터넷 접근
 
 ---
 
-## 🔄 에셋 다운로드 플로우 (Workflow + Artifact 방식)
+## 🔄 에셋 다운로드 플로우 (asset-request.json → push 트리거)
+
+Coding Agent의 토큰에는 `workflow_dispatch` 권한이 없으므로,
+**`asset-request.json` 파일을 커밋하여 push 이벤트로 workflow를 트리거**합니다.
 
 ```
-1. 에셋 URL 파악 (기존 지식 또는 `github` 도구로 검색)
+1. 에셋 URL 파악 (기존 지식 기반)
    ↓
-2. `github` 도구로 download-assets workflow 트리거
-   - search_query: 검색 키워드
-   - asset_urls: 다운로드 URL (쉼표 구분)
-   - asset_category: 에셋 카테고리 (sprites/player, bgm 등)
+2. game/assets/asset-request.json 파일을 생성하여 커밋+push
+   → push 이벤트로 download-assets workflow가 자동 트리거됨
    ↓
-3. workflow 완료 대기 (github 도구로 run status 확인)
+3. workflow가 에셋을 다운로드하여 같은 브랜치에 커밋
+   → asset-request.json은 처리 후 삭제됨
    ↓
-4. artifact 다운로드 (github 도구의 download_workflow_run_artifact)
+4. git pull로 다운로드된 에셋을 가져옴
    ↓
-5. 다운로드된 파일을 game/assets/ 에 배치
-   ↓
-6. CREDITS.md 업데이트
+5. CREDITS.md 업데이트
 ```
 
-### 알려진 에셋 URL (직접 사용 가능)
+### asset-request.json 형식
+
+```json
+{
+  "assets": [
+    {
+      "category": "sprites/player",
+      "urls": [
+        "https://kenney.nl/media/pages/assets/space-shooter-redux/5db7e519e2-1677497524/kenney_space-shooter-redux.zip"
+      ],
+      "source": "Kenney.nl",
+      "license": "CC0"
+    },
+    {
+      "category": "sprites/enemies",
+      "urls": [
+        "https://kenney.nl/media/pages/assets/space-shooter-extension/4e579a75d0-1677497489/kenney_space-shooter-extension.zip"
+      ],
+      "source": "Kenney.nl",
+      "license": "CC0"
+    }
+  ]
+}
+```
+
+### 구체적 실행 절차
+
+**Step 1: asset-request.json 생성 및 커밋**
+```bash
+# execute 도구로 실행
+cat > game/assets/asset-request.json << 'EOF'
+{
+  "assets": [
+    {
+      "category": "sprites/player",
+      "urls": ["https://kenney.nl/media/pages/assets/space-shooter-redux/5db7e519e2-1677497524/kenney_space-shooter-redux.zip"],
+      "source": "Kenney.nl",
+      "license": "CC0"
+    }
+  ]
+}
+EOF
+git add game/assets/asset-request.json
+git commit -m "chore: request asset download via workflow"
+git push
+```
+
+**Step 2: Workflow가 자동 실행됨 (대기)**
+- push 이벤트가 download-assets workflow를 트리거
+- workflow가 에셋을 다운로드하고 같은 브랜치에 커밋
+- asset-request.json은 처리 후 자동 삭제됨
+- 보통 1~3분 소요
+
+**Step 3: git pull로 에셋 가져오기**
+```bash
+# execute 도구로 실행
+git pull origin $(git branch --show-current)
+ls game/assets/sprites/player/  # 다운로드된 파일 확인
+```
+
+**Step 4: CREDITS.md 업데이트**
+- 다운로드된 에셋의 출처와 라이선스를 기록
+
+### 알려진 에셋 URL (asset-request.json에 사용)
 
 | 소스 | URL | 라이선스 |
 |------|-----|----------|
@@ -78,103 +141,28 @@ Coding Agent는 보안 샌드박스에서 실행되어 **외부 인터넷 접근
 | Kenney Space Shooter Extension | `https://kenney.nl/media/pages/assets/space-shooter-extension/4e579a75d0-1677497489/kenney_space-shooter-extension.zip` | CC0 |
 | Kenney Pixel Shmup | `https://kenney.nl/media/pages/assets/pixel-shmup/3d1a69b9b4-1677497365/kenney_pixel-shmup.zip` | CC0 |
 
-### Workflow 트리거 예시
+### Workflow 완료 대기 방법
 
-**정확한 github MCP 도구 호출:**
+asset-request.json을 push한 후, workflow 완료를 대기하는 방법:
 
-Step 1 — workflow ID 확인:
-```
-github MCP 도구: list_workflows
-  owner: junpark12
-  repo: retro-shooter-agents
-→ download-assets.yml의 workflow_id를 확인
-```
-
-Step 2 — workflow_dispatch 트리거:
-```
-github MCP 도구: create_workflow_dispatch
-  owner: junpark12
-  repo: retro-shooter-agents
-  workflow_id: download-assets.yml
-  ref: main
-  inputs:
-    search_query: "spaceship sprite CC0 kenney"
-    asset_urls: "https://kenney.nl/media/pages/assets/space-shooter-redux/5db7e519e2-1677497524/kenney_space-shooter-redux.zip"
-    asset_category: "sprites/player"
+**방법 1: git pull 반복 (권장)**
+```bash
+# 30초 대기 후 pull 시도, asset-request.json이 삭제되었으면 완료
+sleep 30
+git pull
+# asset-request.json이 아직 있으면 → 아직 처리 중 → 다시 대기
+# asset-request.json이 삭제되었으면 → 완료 → 에셋 파일 확인
+ls game/assets/sprites/player/
 ```
 
-Step 3 — 실행 상태 폴링:
+**방법 2: github MCP 도구로 workflow run 확인**
 ```
 github MCP 도구: list_workflow_runs
   owner: junpark12
   repo: retro-shooter-agents
   workflow_id: download-assets.yml
-→ 가장 최근 run의 status 확인 → "completed" + conclusion: "success" 될 때까지 반복
+→ 가장 최근 run의 status가 "completed"인지 확인
 ```
-
-Step 4 — artifact 목록 확인:
-```
-github MCP 도구: list_workflow_run_artifacts
-  owner: junpark12
-  repo: retro-shooter-agents
-  run_id: (위에서 확인한 run ID)
-→ artifact name: "game-assets-sprites/player", artifact_id 확인
-```
-
-Step 5 — artifact 다운로드:
-```
-github MCP 도구: download_workflow_run_artifact
-  owner: junpark12
-  repo: retro-shooter-agents
-  artifact_id: (위에서 확인한 ID)
-→ ZIP 파일 다운로드 → 압축 해제 → game/assets/sprites/player/에 배치
-```
-
-### Workflow 완료 대기 및 Artifact 가져오기 (필수 절차)
-
-Workflow는 비동기로 실행되므로 **반드시 완료를 확인한 후** artifact를 가져와야 합니다.
-
-**Step 1: Workflow 트리거**
-- `github` 도구로 `download-assets` workflow에 `workflow_dispatch` 이벤트 전송
-- 트리거 후 반환되는 workflow run ID를 기억
-
-**Step 2: 완료 대기 (폴링)**
-- `github` 도구의 `list_workflow_runs`로 해당 run의 `status`를 반복 확인
-- `status`가 `completed`가 될 때까지 대기 (보통 1~3분 소요)
-- `conclusion`이 `success`인지 확인. `failure`면 에러 원인을 확인하고 PL에게 보고
-
-**Step 3: Artifact 목록 확인**
-- `github` 도구의 `list_workflow_run_artifacts`로 해당 run의 artifact 목록을 확인
-- `game-assets-{category}` 이름의 artifact ID를 확인
-
-**Step 4: Artifact 다운로드**
-- `github` 도구의 `download_workflow_run_artifact`로 artifact를 다운로드
-- 다운로드된 파일을 `game/assets/{category}/`에 배치
-
-**Step 5: 검증 및 기록**
-- 다운로드된 파일이 올바른 형식(PNG, OGG, WAV 등)인지 확인
-- `game/assets/CREDITS.md`에 출처와 라이선스 기록
-
-```
-예시 흐름 (자연어):
-
-1. "github 도구로 download-assets workflow를 트리거합니다.
-    inputs: asset_urls=https://kenney.nl/..., asset_category=sprites/player"
-
-2. "github 도구로 workflow run 상태를 확인합니다."
-   → status: "in_progress" → 다시 확인
-   → status: "completed", conclusion: "success" → 다음 단계
-
-3. "github 도구로 이 run의 artifact 목록을 가져옵니다."
-   → artifact: game-assets-sprites/player (id: 12345)
-
-4. "github 도구로 artifact 12345를 다운로드합니다."
-   → game/assets/sprites/player/에 파일 배치
-
-5. "CREDITS.md를 업데이트합니다."
-```
-
----
 
 ## 폴백 (최후의 수단): Python/Pillow 스프라이트 생성
 

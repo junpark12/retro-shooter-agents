@@ -6,6 +6,8 @@ on:
       - 'v*'
     branches:
       - main
+    paths-ignore:
+      - 'game/assets/asset-request.json'
   pull_request:
     types: [closed]
     branches:
