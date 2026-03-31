@@ -54,6 +54,11 @@ void renderBombFlash(SDL_Renderer* renderer, float bombTimer);
 void renderShipPreview(SDL_Renderer* renderer, const AssetManager& assets,
                        int x, int y, ShipType ship, bool selected);
 
+// Engine exhaust fire animation drawn below the player ship.
+// fireFrame cycles 0–7; drawn relative to the ship's bottom-center.
+void renderEngineExhaust(SDL_Renderer* renderer, const AssetManager& assets,
+                         int shipX, int shipY, int shipW, int fireFrame);
+
 // ─── Fallback primitive renderers (used when no texture is available) ─────────
 void renderPlayerPrimitive(SDL_Renderer* renderer, int x, int y, ShipType ship);
 void renderEnemyPrimitive(SDL_Renderer* renderer, int x, int y, EnemyType type);

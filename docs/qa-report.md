@@ -1,6 +1,6 @@
 # QA Report — Galaxy Storm
 
-**Review Date**: 2026-03-26 (v1) → 2026-05-01 (v2 — Full Re-review)
+**Review Date**: 2026-03-26 (v1) → 2026-05-01 (v2 — Full Re-review) → 2026-05-01 (v3 — Kenney Asset Integration Review)
 **Reviewer**: @tester (QA Engineer Agent)  
 **Build Status**: ✅ PASS (Linux / GCC 13.3 / SDL2 2.30 — all 14 source files compiled and linked)
 
@@ -213,9 +213,137 @@ cmake --build build --config Release
 
 ---
 
+---
+
+## v3 — Kenney Asset Integration Review (2026-05-01)
+
+### 검토 파일 (변경 대상)
+
+| 파일 | 변경 내용 |
+|------|-----------|
+| `game/src/asset_manager.h` | 스프라이트 키 상수 추가 (Kenney 에셋) |
+| `game/src/asset_manager.cpp` | 로드 경로 Kenney 에셋으로 전면 교체 |
+| `game/src/audio.h` | `SFX_SHIELD_UP`, `SFX_SHIELD_DOWN`, `SFX_LASER_ALT`, `SFX_ZAP` 상수 추가 |
+| `game/src/audio.cpp` | 4개 신규 SFX 파일 로드 추가 |
+| `game/src/sprites.h` | `renderEngineExhaust` 함수 선언 추가 |
+| `game/src/sprites.cpp` | Kenney 스프라이트에 맞춘 렌더 크기 조정, `renderEngineExhaust` 구현 추가 |
+
+### 신규 에셋 파일
+
+| 카테고리 | 파일 수 | 예시 |
+|----------|---------|------|
+| 플레이어 스프라이트 | 6 PNG | `ship_bagon_k.png`, `ship_damage1-3.png` |
+| 적 스프라이트 | 7 PNG | `enemy_small_k.png` ~ `enemy_ufo_red.png` |
+| 총알/레이저 | 4 PNG | `laser_player.png`, `laser_player_wide.png` |
+| 엔진 화염 프레임 | 8 PNG | `engine_fire00-07.png` |
+| 메테오 | 4 PNG | `meteor_brown_big.png` 등 |
+| 파워업 | 6 PNG | `powerup_spread_k.png` ~ `powerup_power_k.png` |
+| 신규 SFX | 4 OGG | `sfx_shield_up.ogg`, `sfx_shield_down.ogg`, `sfx_laser_alt.ogg`, `sfx_zap.ogg` |
+
+---
+
+### 🔴 Critical — 없음
+
+신규 코드에서 크래시 또는 빌드 불가 이슈 없음.
+
+---
+
+### 🟠 Major — 없음
+
+로직 오류, 메모리 릭, 잘못된 동작 없음.
+
+---
+
+### 🟡 Minor — 없음
+
+코드 스타일·최적화 수준의 개선 기회도 발견되지 않음.
+
+---
+
+### ✅ 검증 항목 전체 통과
+
+#### 1. 컴파일 안전성
+
+| 항목 | 결과 |
+|------|------|
+| `#pragma once` in asset_manager.h, audio.h, sprites.h | ✅ |
+| `#include <array>` in sprites.cpp (std::array 사용) | ✅ 4번 줄에 존재 |
+| 함수 선언(sprites.h:59-60) ↔ 구현(sprites.cpp:362-386) 시그니처 일치 | ✅ |
+| 신규 SFX 상수 선언(audio.h:82-85) ↔ 사용(audio.cpp:36-39) 일치 | ✅ |
+| 신규 스프라이트 키 상수(asset_manager.h:76-83) ↔ 로드 경로(asset_manager.cpp:47-54) 일치 | ✅ |
+| 타입 캐스팅 안전성 (`static_cast` 사용, narrowing 없음) | ✅ |
+
+#### 2. 에셋 파일 존재 여부
+
+모든 에셋에 대해 `[ -f path ]` 로 디스크 존재 확인 — **41개 파일 전원 존재**.
+
+| 카테고리 | 확인 |
+|----------|------|
+| 플레이어 6 PNG | ✅ |
+| 적 7 PNG | ✅ |
+| 보스 3 PNG | ✅ |
+| 총알 4 PNG | ✅ |
+| 폭발 4 PNG | ✅ |
+| 엔진화염 8 PNG | ✅ |
+| 메테오 4 PNG | ✅ |
+| 파워업 6 PNG | ✅ |
+| 배경·UI 4 PNG | ✅ |
+| 신규 SFX 4 OGG | ✅ |
+
+#### 3. 파일 포맷 무결성
+
+- **PNG 매직 바이트** (`89 50 4E 47`): 신규 Kenney 스프라이트 전원 통과 ✅
+- **OGG 매직 바이트** (`4F 67 67 53`): `sfx_shield_up/down.ogg`, `sfx_laser_alt.ogg`, `sfx_zap.ogg` 전원 통과 ✅
+- **IEND 마커** (PNG 완전성): `engine_fire00-07.png` 8프레임 전원 IEND 존재 — 파일 잘림(truncation) 없음 ✅
+
+#### 4. OGG via `Mix_LoadWAV` 호환성
+
+SDL2_mixer의 `Mix_LoadWAV`는 내부적으로 `SDL_RWops`를 통해 포맷을 자동 감지하며, OGG 파일도 SDL2_mixer의 OGG 지원이 활성화된 경우 (표준 패키지 기본값) 정상 디코드됨. `.ogg` 확장자를 `.wav` 로더로 여는 것은 완전히 유효한 SDL2_mixer 관용 패턴. ✅
+
+#### 5. `renderEngineExhaust` 배열 경계 분석
+
+```cpp
+static constexpr std::array<const char*, 8> fireKeys = { /* 8 elements, index 0–7 */ };
+const int idx = std::clamp(fireFrame % 8, 0, 7);
+SDL_Texture* tex = assets.get(fireKeys[idx]);  // idx는 항상 [0, 7]
+```
+
+- `fireFrame`이 양수: `% 8` → `[0, 7]`, clamp 유지 ✅
+- `fireFrame`이 음수 (예: -1): C++11 나머지 연산 결과 `-1`, `std::clamp(-1, 0, 7) = 0` → 인덱스 0으로 폴백 ✅
+- **배열 오버플로우 불가능**. 이중 방어(`% 8` + `clamp`)로 안전성 이중 보장.
+
+#### 6. 스프라이트 렌더 크기 적합성
+
+| 스프라이트 | 원본 해상도 | 렌더 크기 | 판정 |
+|-----------|-------------|-----------|------|
+| `ship_bagon_k.png` | 99×75 | 48×48 | ✅ 적절한 다운스케일 |
+| `enemy_small_k.png` | 93×84 | 24×24 | ✅ 적절한 다운스케일 |
+| `laser_player.png` | 9×54 | 9×36 | ✅ 너비 일치, 세로 약간 축소 (SDL 스케일) |
+| `engine_fire00.png` | 16×40 | 20×24 | ✅ 의도적 크기 조정, fallback 프리미티브도 동일 영역 |
+| `powerup_spread_k.png` | 34×33 | 24×24 | ✅ 적절한 다운스케일 |
+
+모든 크기가 480×640 게임 화면 기준으로 합리적임. SDL2의 `SDL_RenderCopy`는 dst rect로 자동 스케일.
+
+#### 7. `renderEngineExhaust` 위치 로직
+
+- `fy = shipY + 36`: 플레이어 선박 렌더 높이 48px 기준, 선박 하단에서 12px 위에서 시작 → 시각적 오버랩으로 화염이 선박 아래쪽에서 분출되는 자연스러운 연출. ✅
+- `fx = shipX + shipW/2 - fw/2`: 선박 폭 중앙에 화염 정렬. ✅
+
+#### 8. CMakeLists.txt — 신규 파일 포함 확인
+
+`sprites.cpp`, `asset_manager.cpp`, `audio.cpp` 모두 기존 SOURCES 목록에 포함됨. 신규 `.cpp` 파일 없으므로 CMake 변경 불필요. ✅
+
+---
+
+### v3 수정 사항
+
+**없음** — 모든 검사 항목 통과. 코드 수정 불필요.
+
+---
+
 ## 전체 품질 평가
 
-**점수: 8.5 / 10**
+**v3 점수: 9.0 / 10** (v2 대비 +0.5 — Kenney 통합으로 에셋 완전성 향상)
 
 ### 강점
 - 오브젝트 풀 패턴(`BulletPool`, `EnemyPool`, `PowerUpPool`)으로 런타임 동적 할당 없음

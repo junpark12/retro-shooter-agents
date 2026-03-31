@@ -32,6 +32,11 @@ bool AudioManager::init() {
     loadSound(SFX_1UP,           "assets/sfx/sfx_1up.wav");
     loadSound(SFX_MENU_MOVE,     "assets/sfx/sfx_menu_move.wav");
     loadSound(SFX_MENU_SELECT,   "assets/sfx/sfx_menu_select.wav");
+    // Extra SFX (from Kenney pack)
+    loadSound(SFX_SHIELD_UP,   "assets/sfx/sfx_shield_up.ogg");
+    loadSound(SFX_SHIELD_DOWN, "assets/sfx/sfx_shield_down.ogg");
+    loadSound(SFX_LASER_ALT,   "assets/sfx/sfx_laser_alt.ogg");
+    loadSound(SFX_ZAP,         "assets/sfx/sfx_zap.ogg");
 
     setBGMVolume(bgmVolume);
     setSFXVolume(sfxVolume);

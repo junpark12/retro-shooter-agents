@@ -78,5 +78,10 @@ constexpr const char* SFX_CHARGE        = "sfx_charge";
 constexpr const char* SFX_1UP           = "sfx_1up";
 constexpr const char* SFX_MENU_MOVE     = "sfx_menu_move";
 constexpr const char* SFX_MENU_SELECT   = "sfx_menu_select";
+// Extra SFX (from Kenney pack)
+constexpr const char* SFX_SHIELD_UP     = "sfx_shield_up";
+constexpr const char* SFX_SHIELD_DOWN   = "sfx_shield_down";
+constexpr const char* SFX_LASER_ALT     = "sfx_laser_alt";
+constexpr const char* SFX_ZAP           = "sfx_zap";
 
 } // namespace galaxy
