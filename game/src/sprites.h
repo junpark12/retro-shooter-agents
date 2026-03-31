@@ -21,6 +21,10 @@ void renderPlayerSprite(SDL_Renderer* renderer, const AssetManager& assets,
                         int x, int y, ShipType ship, bool invincible = false,
                         int animFrame = 0);
 
+// Hitbox indicator: a small bright dot at the player's circular hitbox center.
+// cx, cy are world-space center coordinates; radius is the hitbox radius in px.
+void renderHitboxIndicator(SDL_Renderer* renderer, int cx, int cy, float radius);
+
 // Enemy sprite; shape and colour vary by type.
 void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
                        int x, int y, EnemyType type, bool lockedOn = false);

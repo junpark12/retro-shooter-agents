@@ -16,6 +16,7 @@ namespace galaxy {
     struct ShipSelect;
     struct AssetManager;
     struct AudioManager;
+    struct ParticleSystem;
 }
 
 namespace galaxy {
@@ -61,6 +62,7 @@ private:
     AssetManager* assets_       = nullptr;
     AudioManager* audio_        = nullptr;
     TTF_Font*     font_         = nullptr;
+    ParticleSystem* particles_  = nullptr;
     bool          bossMusicPlaying_ = false;
     int           hiScore_          = 0;   // all-time high score (persisted)
 
