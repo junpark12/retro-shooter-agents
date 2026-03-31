@@ -11,6 +11,7 @@ tools:
   - edit
   - execute
   - search
+  - github
 ---
 
 # 👨‍💻 Developer Agent

@@ -10,6 +10,7 @@ tools:
   - search
   - execute
   - edit
+  - github
 ---
 
 # 🧪 Tester Agent
