@@ -9,10 +9,6 @@ on:
     paths-ignore:
       - 'game/assets/asset-request.json'
       - 'game/assets/asset-history.json'
-  pull_request:
-    types: [closed]
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       tag_name:
