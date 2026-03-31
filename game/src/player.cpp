@@ -65,32 +65,86 @@ void collectNearestTargets(Player& p, EnemyPool& enemies) {
 
 void firePrimary(Player& p, BulletPool& bullets) {
     const Vec2 muzzle{p.pos.x + 14.0f, p.pos.y};
+    const int level = std::clamp(p.powerLevel, 1, 4);
 
     switch (p.shipType) {
-        case ShipType::BAGON:
-            fireBullet(bullets, muzzle, {0.0f, -760.0f}, BulletOwner::PLAYER, 2);
-            p.fireTimer = 0.08f;
-            break;
-        case ShipType::DAMUL:
-            for (int i = -2; i <= 2; ++i) {
-                const float rad = (i * 20.0f) * PI / 180.0f;
-                fireBullet(bullets, muzzle, {std::sin(rad) * 580.0f, -std::cos(rad) * 580.0f},
-                           BulletOwner::PLAYER, 1);
+        case ShipType::BAGON: {
+            if (level == 1) {
+                fireBullet(bullets, muzzle, {0.0f, -760.0f}, BulletOwner::PLAYER, 2);
+                p.fireTimer = 0.08f;
+            } else if (level == 2) {
+                fireBullet(bullets, muzzle, {0.0f, -860.0f}, BulletOwner::PLAYER, 2);
+                p.fireTimer = 0.08f;
+            } else if (level == 3) {
+                fireBullet(bullets, muzzle, {-30.0f, -760.0f}, BulletOwner::PLAYER, 2);
+                fireBullet(bullets, muzzle, {30.0f, -760.0f}, BulletOwner::PLAYER, 2);
+                p.fireTimer = 0.07f;
+            } else {
+                for (int i = -1; i <= 1; ++i) {
+                    const float rad = (i * 15.0f) * PI / 180.0f;
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 760.0f, -std::cos(rad) * 760.0f},
+                               BulletOwner::PLAYER, 2);
+                }
+                p.fireTimer = 0.07f;
             }
-            p.fireTimer = 0.14f;
             break;
-        case ShipType::GUNEX:
-            for (int i = -1; i <= 1; ++i) {
-                const float rad = (i * 18.0f) * PI / 180.0f;
-                fireBullet(bullets, muzzle, {std::sin(rad) * 500.0f, -std::cos(rad) * 500.0f},
-                           BulletOwner::PLAYER, 2);
+        }
+        case ShipType::DAMUL: {
+            if (level == 1) {
+                fireBullet(bullets, muzzle, {0.0f, -580.0f}, BulletOwner::PLAYER, 1);
+                p.fireTimer = 0.10f;
+            } else if (level == 2) {
+                for (int i = -1; i <= 1; ++i) {
+                    const float rad = (i * 20.0f) * PI / 180.0f;
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 580.0f, -std::cos(rad) * 580.0f},
+                               BulletOwner::PLAYER, 1);
+                }
+                p.fireTimer = 0.14f;
+            } else if (level == 3) {
+                for (int i = -2; i <= 2; ++i) {
+                    const float rad = (i * 20.0f) * PI / 180.0f;
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 580.0f, -std::cos(rad) * 580.0f},
+                               BulletOwner::PLAYER, 1);
+                }
+                p.fireTimer = 0.14f;
+            } else {
+                for (int i = -3; i <= 3; ++i) {
+                    const float rad = (i * 16.0f) * PI / 180.0f;
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 580.0f, -std::cos(rad) * 580.0f},
+                               BulletOwner::PLAYER, 1);
+                }
+                p.fireTimer = 0.14f;
             }
-            fireHomingBullet(bullets, {muzzle.x - 6.0f, muzzle.y + 6.0f}, {-120.0f, -360.0f},
-                             BulletOwner::PLAYER, {muzzle.x - 80.0f, muzzle.y - 180.0f}, 2);
-            fireHomingBullet(bullets, {muzzle.x + 6.0f, muzzle.y + 6.0f}, {120.0f, -360.0f},
-                             BulletOwner::PLAYER, {muzzle.x + 80.0f, muzzle.y - 180.0f}, 2);
-            p.fireTimer = 0.20f;
             break;
+        }
+        case ShipType::GUNEX: {
+            if (level == 1) {
+                fireBullet(bullets, muzzle, {0.0f, -500.0f}, BulletOwner::PLAYER, 2);
+                p.fireTimer = 0.15f;
+            } else {
+                for (int i = -1; i <= 1; ++i) {
+                    const float rad = (i * 18.0f) * PI / 180.0f;
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 500.0f, -std::cos(rad) * 500.0f},
+                               BulletOwner::PLAYER, 2);
+                }
+
+                if (level >= 3) {
+                    fireHomingBullet(bullets, {muzzle.x + 6.0f, muzzle.y + 6.0f}, {120.0f, -360.0f},
+                                     BulletOwner::PLAYER, {muzzle.x + 80.0f, muzzle.y - 180.0f}, 2);
+                }
+                if (level >= 4) {
+                    fireHomingBullet(bullets, {muzzle.x - 6.0f, muzzle.y + 6.0f}, {-120.0f, -360.0f},
+                                     BulletOwner::PLAYER, {muzzle.x - 80.0f, muzzle.y - 180.0f}, 2);
+                }
+
+                if (level == 2) {
+                    p.fireTimer = 0.18f;
+                } else {
+                    p.fireTimer = 0.20f;
+                }
+            }
+            break;
+        }
     }
 }
 

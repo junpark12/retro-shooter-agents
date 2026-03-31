@@ -176,7 +176,9 @@ void renderBulletPrimitive(SDL_Renderer* renderer, int x, int y, BulletOwner own
         else if (colorIdx % 4 == 1) setColor(renderer, COLOR_RED);
         else if (colorIdx % 4 == 2) setColor(renderer, COLOR_YELLOW);
         else setColor(renderer, COLOR_GREEN);
-        drawFilledCircle(renderer, x + 4, y + 4, 4);
+        drawFilledCircle(renderer, x + 5, y + 5, 6);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
+        SDL_RenderDrawPoint(renderer, x + 5, y + 5);
     }
 }
 
@@ -282,14 +284,14 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
                 const int orbW = std::max(1, texW / 3);
                 src = SDL_Rect{0, 0, orbW, texH};
                 srcPtr = &src;
-                dst = SDL_Rect{x, y, 12, 12};
+                dst = SDL_Rect{x - 2, y - 2, 14, 14};
                 usingStrip = true;
             }
         }
 
         if (!usingStrip) {
             tex = assets.get(SPR_BULLET_ENEMY);
-            dst = SDL_Rect{x, y, 9, 36};
+            dst = SDL_Rect{x - 2, y - 2, 14, 14};
             srcPtr = nullptr;
         }
     }
@@ -299,7 +301,12 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
             SDL_SetTextureColorMod(tex, 120, 255, 255);
         } else {
             if (usingStrip) {
-                SDL_SetTextureColorMod(tex, 255, 255, 255);
+                switch (colorIdx % 4) {
+                    case 0: SDL_SetTextureColorMod(tex, 255, 80, 255); break;
+                    case 1: SDL_SetTextureColorMod(tex, 255, 60, 60); break;
+                    case 2: SDL_SetTextureColorMod(tex, 255, 240, 50); break;
+                    default: SDL_SetTextureColorMod(tex, 80, 255, 80); break;
+                }
             } else {
                 switch (colorIdx % 4) {
                     case 0: SDL_SetTextureColorMod(tex, 255, 0, 255); break;

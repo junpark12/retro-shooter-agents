@@ -19,6 +19,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
 #include <string>
 
 namespace galaxy {
@@ -37,6 +38,21 @@ const char* stageBgmKey(int stageNum) {
 
 Game::Game() = default;
 Game::~Game() = default;
+
+void Game::loadHiScore() {
+    std::ifstream in("hi_score.dat");
+    if (in && (in >> hiScore_)) {
+        return;
+    }
+    hiScore_ = 0;
+}
+
+void Game::saveHiScore() {
+    std::ofstream out("hi_score.dat");
+    if (out) {
+        out << hiScore_;
+    }
+}
 
 bool Game::init() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_AUDIO) != 0) {
@@ -95,6 +111,7 @@ bool Game::init() {
     audio_->init();
     initBackground(*background_);
     initPlayer(*player_, selectedShip_);
+    loadHiScore();
 
     for (auto& b : bullets_->pool) b.active = false;
     for (auto& e : enemies_->pool) e.active = false;
@@ -257,6 +274,8 @@ void Game::update(float dt) {
     checkBulletBossCollision(*bullets_, *boss_, *player_, audio_);
     checkPowerUpPickup(*player_, *powerUps_, audio_);
 
+    if (player_->score > hiScore_) hiScore_ = player_->score;
+
     if (player_->score >= player_->nextLifeScore) {
         player_->lives++;
         player_->nextLifeScore += SCORE_PER_EXTRA_LIFE;
@@ -301,7 +320,7 @@ void Game::render() {
     renderBullets(renderer_, *assets_, *bullets_);
 
     if (state_ == GameState::PLAYING) {
-        renderHUD(renderer_, *assets_, font_, *player_, stageNum_);
+        renderHUD(renderer_, *assets_, font_, *player_, stageNum_, hiScore_);
         if (boss_->active) {
             renderBossHP(renderer_, font_, boss_->hp, boss_->maxHp, boss_->phase);
         }
@@ -333,6 +352,7 @@ void Game::onStageClear() {
     stageNum_++;
     if (stageNum_ > 3) {
         state_ = GameState::VICTORY;
+        saveHiScore();
         if (audio_) audio_->playBGM(BGM_VICTORY);
     } else {
         state_ = GameState::STAGE_CLEAR;
@@ -341,6 +361,7 @@ void Game::onStageClear() {
 
 void Game::onGameOver() {
     state_ = GameState::GAMEOVER;
+    saveHiScore();
     if (audio_) audio_->playBGM(BGM_GAMEOVER);
 }
 

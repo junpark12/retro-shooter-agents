@@ -21,7 +21,7 @@ struct Player; // defined in player.h
 //   - Lock-on status indicator
 //   - Shield/invincibility bar when active
 void renderHUD(SDL_Renderer* renderer, const AssetManager& assets,
-               TTF_Font* font, const Player& player, int stageNum);
+               TTF_Font* font, const Player& player, int stageNum, int hiScore = 0);
 
 // Boss HP bar drawn at the top of the screen during boss fight.
 void renderBossHP(SDL_Renderer* renderer, TTF_Font* font,
