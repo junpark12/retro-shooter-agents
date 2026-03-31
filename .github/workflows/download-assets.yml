@@ -1,0 +1,92 @@
+name: Download Game Assets
+
+on:
+  workflow_dispatch:
+    inputs:
+      search_query:
+        description: 'Search keywords (e.g. "spaceship sprite CC0 kenney")'
+        required: true
+      asset_urls:
+        description: 'Comma-separated download URLs'
+        required: true
+      asset_category:
+        description: 'Asset category for target path'
+        required: true
+        default: 'sprites'
+        type: choice
+        options:
+          - sprites/player
+          - sprites/enemies
+          - sprites/bosses
+          - sprites/bullets
+          - sprites/effects
+          - sprites/powerups
+          - sprites/backgrounds
+          - sprites/ui
+          - bgm
+          - sfx
+          - fonts
+
+jobs:
+  download-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download and extract assets
+        run: |
+          TARGET_DIR="game/assets/${{ inputs.asset_category }}"
+          mkdir -p "$TARGET_DIR"
+          WORK_DIR=$(mktemp -d)
+
+          echo "## Download Summary" > "$WORK_DIR/download-report.md"
+          echo "- Search query: ${{ inputs.search_query }}" >> "$WORK_DIR/download-report.md"
+          echo "- Category: ${{ inputs.asset_category }}" >> "$WORK_DIR/download-report.md"
+          echo "- Files:" >> "$WORK_DIR/download-report.md"
+
+          IFS=',' read -ra URLS <<< "${{ inputs.asset_urls }}"
+          for url in "${URLS[@]}"; do
+            url=$(echo "$url" | xargs)  # trim whitespace
+            FILENAME=$(basename "$url" | sed 's/[?#].*//')
+            echo "Downloading: $url -> $FILENAME"
+
+            if curl -fL --max-time 60 -o "$WORK_DIR/$FILENAME" "$url"; then
+              # If ZIP, extract; otherwise copy directly
+              if [[ "$FILENAME" == *.zip ]]; then
+                EXTRACT_DIR="$WORK_DIR/extracted_$(basename $FILENAME .zip)"
+                mkdir -p "$EXTRACT_DIR"
+                unzip -o "$WORK_DIR/$FILENAME" -d "$EXTRACT_DIR"
+                # Copy supported file types
+                find "$EXTRACT_DIR" \( -name "*.png" -o -name "*.ogg" -o -name "*.wav" -o -name "*.ttf" -o -name "*.mp3" \) \
+                  -exec cp {} "$TARGET_DIR/" \;
+                echo "  - ✅ $FILENAME (extracted)" >> "$WORK_DIR/download-report.md"
+              else
+                cp "$WORK_DIR/$FILENAME" "$TARGET_DIR/"
+                echo "  - ✅ $FILENAME" >> "$WORK_DIR/download-report.md"
+              fi
+            else
+              echo "  - ❌ $FILENAME (download failed)" >> "$WORK_DIR/download-report.md"
+            fi
+          done
+
+          # List downloaded files
+          echo "" >> "$WORK_DIR/download-report.md"
+          echo "### Files in $TARGET_DIR:" >> "$WORK_DIR/download-report.md"
+          ls -la "$TARGET_DIR" >> "$WORK_DIR/download-report.md" 2>/dev/null || echo "(empty)" >> "$WORK_DIR/download-report.md"
+
+          # Copy report to target for artifact
+          cp "$WORK_DIR/download-report.md" "$TARGET_DIR/../download-report.md"
+
+      - name: Upload assets as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-assets-${{ inputs.asset_category }}
+          path: game/assets/${{ inputs.asset_category }}
+          retention-days: 30
+
+      - name: Upload download report
+        uses: actions/upload-artifact@v4
+        with:
+          name: download-report
+          path: game/assets/download-report.md
+          retention-days: 30
