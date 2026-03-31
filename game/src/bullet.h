@@ -1,5 +1,6 @@
 #pragma once
 #include "entity.h"
+#include "asset_manager.h"
 
 namespace galaxy {
 
@@ -32,7 +33,7 @@ void fireHomingBullet(BulletPool& bp, Vec2 pos, Vec2 vel, BulletOwner owner,
 void updateBullets(BulletPool& bp, float dt);
 
 // Render all active bullets.
-void renderBullets(SDL_Renderer* renderer, const BulletPool& bp);
+void renderBullets(SDL_Renderer* renderer, const AssetManager& assets, const BulletPool& bp);
 
 // Deactivate all enemy bullets (used when bomb is activated).
 void clearEnemyBullets(BulletPool& bp);
