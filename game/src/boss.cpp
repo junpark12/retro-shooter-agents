@@ -125,9 +125,9 @@ void updateBoss(Boss& b, float dt, BulletPool& bullets, Vec2 playerPos) {
     }
 }
 
-void renderBoss(SDL_Renderer* renderer, const Boss& b) {
+void renderBoss(SDL_Renderer* renderer, const AssetManager& assets, const Boss& b) {
     if (!b.active) return;
-    renderBossPrimitive(renderer, static_cast<int>(b.pos.x), static_cast<int>(b.pos.y), b.stageNum);
+    renderBossSprite(renderer, assets, static_cast<int>(b.pos.x), static_cast<int>(b.pos.y), b.stageNum, b.lockedOn, b.phase);
 }
 
 } // namespace galaxy
