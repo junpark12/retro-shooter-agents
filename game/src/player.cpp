@@ -267,9 +267,12 @@ void activateBomb(Player& p, BulletPool& bullets) {
     clearEnemyBullets(bullets);
 }
 
-void renderPlayer(SDL_Renderer* renderer, const Player& p) {
+void renderPlayer(SDL_Renderer* renderer, const AssetManager& assets, const Player& p) {
     if (!p.active) return;
-    renderPlayerPrimitive(renderer, static_cast<int>(p.pos.x), static_cast<int>(p.pos.y), p.shipType);
+    renderPlayerSprite(renderer, assets, static_cast<int>(p.pos.x), static_cast<int>(p.pos.y),
+                       p.shipType, p.invincibleTimer > 0.0f, p.animFrame);
+    renderEngineExhaust(renderer, assets, static_cast<int>(p.pos.x), static_cast<int>(p.pos.y),
+                        28, p.animFrame);
 }
 
 } // namespace galaxy

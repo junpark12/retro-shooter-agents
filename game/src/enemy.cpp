@@ -127,10 +127,10 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
     }
 }
 
-void renderEnemies(SDL_Renderer* renderer, const EnemyPool& ep) {
+void renderEnemies(SDL_Renderer* renderer, const AssetManager& assets, const EnemyPool& ep) {
     for (const Enemy& e : ep.pool) {
         if (!e.active) continue;
-        renderEnemyPrimitive(renderer, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type);
+        renderEnemySprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type, e.lockedOn);
     }
 }
 

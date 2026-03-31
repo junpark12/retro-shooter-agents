@@ -82,11 +82,11 @@ void updateBullets(BulletPool& bp, float dt) {
     }
 }
 
-void renderBullets(SDL_Renderer* renderer, const BulletPool& bp) {
+void renderBullets(SDL_Renderer* renderer, const AssetManager& assets, const BulletPool& bp) {
     for (const Bullet& b : bp.pool) {
         if (!b.active) continue;
-        renderBulletPrimitive(renderer, static_cast<int>(b.pos.x), static_cast<int>(b.pos.y),
-                              b.owner, b.colorIdx);
+        renderBulletSprite(renderer, assets, static_cast<int>(b.pos.x), static_cast<int>(b.pos.y),
+                           b.owner, b.colorIdx);
     }
 }
 

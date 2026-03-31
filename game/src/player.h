@@ -1,5 +1,6 @@
 #pragma once
 #include "entity.h"
+#include "asset_manager.h"
 
 namespace galaxy {
 
@@ -68,6 +69,6 @@ void activateBomb(Player& p, BulletPool& bullets);
 
 // Render the player sprite (delegates to sprites module).
 // Does nothing when p.active == false.
-void renderPlayer(SDL_Renderer* renderer, const Player& p);
+void renderPlayer(SDL_Renderer* renderer, const AssetManager& assets, const Player& p);
 
 } // namespace galaxy

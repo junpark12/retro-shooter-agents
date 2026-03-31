@@ -294,11 +294,11 @@ void Game::render() {
         return;
     }
 
-    renderEnemies(renderer_, *enemies_);
-    renderBoss(renderer_, *boss_);
+    renderEnemies(renderer_, *assets_, *enemies_);
+    renderBoss(renderer_, *assets_, *boss_);
     renderPowerUps(renderer_, *assets_, *powerUps_);
-    renderPlayer(renderer_, *player_);
-    renderBullets(renderer_, *bullets_);
+    renderPlayer(renderer_, *assets_, *player_);
+    renderBullets(renderer_, *assets_, *bullets_);
 
     if (state_ == GameState::PLAYING) {
         renderHUD(renderer_, *assets_, font_, *player_, stageNum_);

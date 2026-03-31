@@ -1,5 +1,6 @@
 #pragma once
 #include "entity.h"
+#include "asset_manager.h"
 
 namespace galaxy {
 
@@ -37,6 +38,6 @@ void initBoss(Boss& b, int stageNum);
 void updateBoss(Boss& b, float dt, BulletPool& bullets, Vec2 playerPos);
 
 // Render the boss sprite (delegates to sprites module).
-void renderBoss(SDL_Renderer* renderer, const Boss& b);
+void renderBoss(SDL_Renderer* renderer, const AssetManager& assets, const Boss& b);
 
 } // namespace galaxy

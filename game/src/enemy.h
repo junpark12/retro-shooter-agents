@@ -1,5 +1,6 @@
 #pragma once
 #include "entity.h"
+#include "asset_manager.h"
 
 namespace galaxy {
 
@@ -31,7 +32,7 @@ void spawnEnemy(EnemyPool& ep, EnemyType type, Vec2 pos);
 void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos);
 
 // Render all active enemies.
-void renderEnemies(SDL_Renderer* renderer, const EnemyPool& ep);
+void renderEnemies(SDL_Renderer* renderer, const AssetManager& assets, const EnemyPool& ep);
 
 // Returns true when all enemies in the pool are inactive.
 bool allEnemiesDefeated(const EnemyPool& ep);
