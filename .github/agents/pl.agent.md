@@ -60,10 +60,11 @@ tools:
 
 1. **PL은 설계만 직접 수행**: 아키텍처, 인터페이스(`.h`), 문서 작성만 가능
 2. **🚨 소스 코드(.cpp/.c) 수정은 절대 직접 하지 않는다** — 한 줄 수정도 서브에이전트 호출로만 위임
-3. **`agent` 도구**로 `@asset-researcher`, `@developer`, `@ui-designer`, `@tester`를 직접 호출
+3. **`agent` 도구**로 `@developer`, `@ui-designer`, `@tester`를 직접 호출
 4. **중간에 사용자에게 허락을 구하지 말 것**: Phase 1~5를 끝까지 자동 실행
 5. **"직접 하는 게 빠르다"는 판단 금지**: 무조건 서브에이전트를 호출하라
 6. **"간단한 수정"도 직접 하지 않는다**: 코드 수정은 규모와 무관하게 반드시 `@developer`에게 위임
+7. **`@asset-researcher`를 호출하지 말 것**: asset-researcher는 VS Code 전용 에이전트로, Coding Agent 환경에서는 사용할 수 없다. 에셋이 부족하면 사용자에게 안내한다 (아래 참조)
 
 ---
 
@@ -76,10 +77,30 @@ tools:
 
 | 에이전트 | 호출 | 역할 |
 |----------|------|------|
-| **Asset Researcher** | `@asset-researcher` | 무료 에셋 검색/다운로드 (스프라이트, BGM, SFX, 폰트) |
 | **Developer** | `@developer` | 게임 엔진 핵심 `.cpp` 구현 (에셋 로딩, 오디오 포함) |
 | **UI Designer** | `@ui-designer` | 스프라이트 기반 렌더링, HUD, 메뉴, 이펙트 `.cpp` 구현 |
 | **Tester** | `@tester` | 코드 리뷰, 빌드 검증, 에셋 검증, QA 보고서 |
+
+> ⚠️ **`@asset-researcher`는 호출하지 마세요.**
+> asset-researcher는 `target: vscode` 전용 에이전트로, Coding Agent 환경에서는 존재하지 않습니다.
+
+### 에셋 부족 시 대응 규칙
+
+`game/assets/` 디렉토리에 필요한 에셋이 없을 경우:
+
+1. **먼저 기존 에셋을 확인** — `game/assets/sprites/`, `game/assets/bgm/` 등을 탐색
+2. **기존 에셋으로 작업 가능하면** — 있는 에셋을 최대한 활용하여 구현 진행
+3. **에셋이 부족하여 구현이 불가능하면** — 사용자에게 다음과 같이 안내:
+
+```
+⚠️ 필요한 에셋이 부족합니다.
+VS Code에서 @asset-researcher를 실행하여 에셋을 준비한 후 다시 요청해주세요.
+
+부족한 에셋:
+- [목록]
+```
+
+4. **에셋 없이도 진행 가능한 부분은 먼저 구현** — SDL2 프리미티브 fallback으로 동작하도록
 
 ### 호출 시 포함할 내용
 
@@ -126,14 +147,11 @@ tools:
 5. 나머지 모듈 헤더 파일들 (asset_manager.h, audio.h, bullet_pattern.h 등)
 6. `game/CMakeLists.txt` 업데이트 (SDL2_image, SDL2_mixer, SDL2_ttf 추가)
 
-### Phase 2: 에셋 수집 (서브에이전트 호출)
-7. **`@asset-researcher` 호출** — 무료 에셋 검색 및 다운로드
-   - 플레이어 기체 (3종), 적 스프라이트, 보스 스프라이트
-   - 총알/탄막 스프라이트, 폭발 이펙트 시트
-   - BGM (타이틀, 스테이지별, 보스전, 게임오버)
-   - SFX (발사, 폭발, 파워업, 피격 등)
-   - 아케이드 폰트 (TTF)
-   - `game/assets/CREDITS.md` 작성
+### Phase 2: 에셋 확인 (PL 직접 수행)
+7. **`game/assets/` 디렉토리에서 사용 가능한 에셋 확인**
+   - 이미 다운로드된 에셋이 있으면 → 그대로 활용하여 Phase 3 진행
+   - 에셋이 부족하면 → 사용자에게 "@asset-researcher를 VS Code에서 실행해주세요" 안내 후 중단
+   - 에셋 없이도 fallback 가능하면 → SDL2 프리미티브로 진행
 
 ### Phase 3: 구현 위임 (서브에이전트 호출)
 8. **`@developer` 호출** — 게임 엔진 핵심 구현
