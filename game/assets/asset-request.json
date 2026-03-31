@@ -1,0 +1,28 @@
+{
+  "assets": [
+    {
+      "category": "sprites/player",
+      "urls": [
+        "https://kenney.nl/media/pages/assets/space-shooter-redux/5db7e519e2-1677497524/kenney_space-shooter-redux.zip"
+      ],
+      "source": "Kenney.nl — Space Shooter Redux",
+      "license": "CC0"
+    },
+    {
+      "category": "sprites/enemies",
+      "urls": [
+        "https://kenney.nl/media/pages/assets/space-shooter-extension/4e579a75d0-1677497489/kenney_space-shooter-extension.zip"
+      ],
+      "source": "Kenney.nl — Space Shooter Extension",
+      "license": "CC0"
+    },
+    {
+      "category": "sprites/bullets",
+      "urls": [
+        "https://kenney.nl/media/pages/assets/pixel-shmup/3d1a69b9b4-1677497365/kenney_pixel-shmup.zip"
+      ],
+      "source": "Kenney.nl — Pixel Shmup",
+      "license": "CC0"
+    }
+  ]
+}

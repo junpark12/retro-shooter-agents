@@ -159,4 +159,19 @@ OFL 글꼴을 포함한 소프트웨어를 판매 가능.
 
 ---
 
+---
+
+## 📦 External Asset Packs (Requested via asset-request.json)
+
+> 아래 에셋은 `download-assets` GitHub Actions workflow가 자동으로 다운로드합니다.
+> PR merge 후 `game/assets/sprites/player/`, `sprites/enemies/`, `sprites/bullets/` 에 배치됩니다.
+
+| 팩 이름 | 출처 | 배치 경로 | 라이선스 |
+|---------|------|-----------|----------|
+| Kenney Space Shooter Redux | [Kenney.nl](https://kenney.nl/assets/space-shooter-redux) | `sprites/player/` | CC0 |
+| Kenney Space Shooter Extension | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | `sprites/enemies/` | CC0 |
+| Kenney Pixel Shmup | [Kenney.nl](https://kenney.nl/assets/pixel-shmup) | `sprites/bullets/` | CC0 |
+
+---
+
 *Galaxy Storm Asset Pack — 2025*
