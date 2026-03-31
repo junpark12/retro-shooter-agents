@@ -160,3 +160,21 @@ OFL 글꼴을 포함한 소프트웨어를 판매 가능.
 ---
 
 *Galaxy Storm Asset Pack — 2025*
+
+---
+
+## Pending External Asset Requests (2026-03-31)
+
+The files below are requested via `asset-request.json` and will be downloaded by workflow.
+
+| Package/File | Source | Author | License | Purpose |
+|------|------|--------|----------|----------|
+| `https://opengameart.org/sites/default/files/SpaceShooterRedux.zip` | OpenGameArt | Kenney | CC-BY 3.0 | Ships, enemies, bullets, UI, backgrounds, fonts, bonus SFX |
+| `https://opengameart.org/sites/default/files/kenney_spaceShooterExtension.zip` | OpenGameArt | Kenney | CC-BY 3.0 | Extra enemies, meteors, parts, projectile variants |
+| `https://opengameart.org/sites/default/files/spaceArt.zip` | OpenGameArt | Kenney | CC-BY 3.0 | Additional baseline shmup sprite set |
+| `https://opengameart.org/sites/default/files/space_shooter_pack.zip` | OpenGameArt | ansimuz | CC-BY 3.0 | Pixel fallback ships, bullets, explosions, backgrounds |
+| `https://opengameart.org/sites/default/files/OutThere_0.ogg` | OpenGameArt | yd | CC0 | Stage/ambient BGM |
+| `https://opengameart.org/sites/default/files/ObservingTheStar.zip` | OpenGameArt | yd | CC0 | Menu/stage BGM pack |
+| `https://opengameart.org/sites/default/files/Space%20Bass_0.ogg` | OpenGameArt | Fupi | CC0 | Boss/tense stage BGM |
+| `https://opengameart.org/sites/default/files/The%20Essential%20Retro%20Video%20Game%20Sound%20Effects%20Collection%20%5B512%20sounds%5D.zip` | OpenGameArt | SubspaceAudio | CC0 | Laser/explosion/UI SFX bank |
+| `https://opengameart.org/sites/default/files/100-CC0-SFX_0.zip` | OpenGameArt | rubberduck | CC0 | General-purpose SFX bank |

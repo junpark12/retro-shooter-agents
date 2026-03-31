@@ -1,0 +1,106 @@
+{
+  "assets": [
+    {
+      "category": "sprites/player",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip",
+        "https://opengameart.org/sites/default/files/kenney_spaceShooterExtension.zip",
+        "https://opengameart.org/sites/default/files/spaceArt.zip"
+      ],
+      "source": "OpenGameArt (Kenney)",
+      "license": "CC-BY 3.0"
+    },
+    {
+      "category": "sprites/enemies",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip",
+        "https://opengameart.org/sites/default/files/kenney_spaceShooterExtension.zip",
+        "https://opengameart.org/sites/default/files/space_shooter_pack.zip"
+      ],
+      "source": "OpenGameArt (Kenney, ansimuz)",
+      "license": "CC-BY 3.0"
+    },
+    {
+      "category": "sprites/bosses",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip",
+        "https://opengameart.org/sites/default/files/kenney_spaceShooterExtension.zip"
+      ],
+      "source": "OpenGameArt (Kenney)",
+      "license": "CC-BY 3.0"
+    },
+    {
+      "category": "sprites/bullets",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip",
+        "https://opengameart.org/sites/default/files/space_shooter_pack.zip"
+      ],
+      "source": "OpenGameArt (Kenney, ansimuz)",
+      "license": "CC-BY 3.0"
+    },
+    {
+      "category": "sprites/effects",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip",
+        "https://opengameart.org/sites/default/files/space_shooter_pack.zip"
+      ],
+      "source": "OpenGameArt (Kenney, ansimuz)",
+      "license": "CC-BY 3.0"
+    },
+    {
+      "category": "sprites/powerups",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip",
+        "https://opengameart.org/sites/default/files/space_shooter_pack.zip"
+      ],
+      "source": "OpenGameArt (Kenney, ansimuz)",
+      "license": "CC-BY 3.0"
+    },
+    {
+      "category": "sprites/backgrounds",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip",
+        "https://opengameart.org/sites/default/files/space_shooter_pack.zip"
+      ],
+      "source": "OpenGameArt (Kenney, ansimuz)",
+      "license": "CC-BY 3.0"
+    },
+    {
+      "category": "sprites/ui",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip",
+        "https://opengameart.org/sites/default/files/spaceArt.zip"
+      ],
+      "source": "OpenGameArt (Kenney)",
+      "license": "CC-BY 3.0"
+    },
+    {
+      "category": "bgm",
+      "urls": [
+        "https://opengameart.org/sites/default/files/OutThere_0.ogg",
+        "https://opengameart.org/sites/default/files/ObservingTheStar.zip",
+        "https://opengameart.org/sites/default/files/Space%20Bass_0.ogg"
+      ],
+      "source": "OpenGameArt",
+      "license": "CC0"
+    },
+    {
+      "category": "sfx",
+      "urls": [
+        "https://opengameart.org/sites/default/files/The%20Essential%20Retro%20Video%20Game%20Sound%20Effects%20Collection%20%5B512%20sounds%5D.zip",
+        "https://opengameart.org/sites/default/files/100-CC0-SFX_0.zip",
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip"
+      ],
+      "source": "OpenGameArt",
+      "license": "CC0 and CC-BY 3.0"
+    },
+    {
+      "category": "fonts",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShooterRedux.zip"
+      ],
+      "source": "OpenGameArt (Kenney)",
+      "license": "CC-BY 3.0"
+    }
+  ]
+}
