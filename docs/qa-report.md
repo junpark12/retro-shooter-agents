@@ -1,6 +1,6 @@
 # QA Report — Galaxy Storm
 
-**Review Date**: 2026-03-26 (v1) → 2026-05-01 (v2 — Full Re-review) → 2026-05-01 (v3 — Kenney Asset Integration Review)
+**Review Date**: 2026-03-26 (v1) → 2026-05-01 (v2 — Full Re-review) → 2026-05-01 (v3 — Kenney Asset Integration Review) → 2026-05-01 (v4 — Particle System / HIGH_SCORE / HitboxIndicator Review)
 **Reviewer**: @tester (QA Engineer Agent)  
 **Build Status**: ✅ PASS (Linux / GCC 13.3 / SDL2 2.30 — all 14 source files compiled and linked)
 
@@ -341,9 +341,164 @@ SDL_Texture* tex = assets.get(fireKeys[idx]);  // idx는 항상 [0, 7]
 
 ---
 
+## v4 — Particle System / HIGH_SCORE / HitboxIndicator Review (2026-05-01)
+
+### 검토 파일
+
+| 파일 | 변경 내용 |
+|------|-----------|
+| `game/src/particles.h` | 새 파일 — `Particle`, `ParticleSystem` 구조체, API 선언 |
+| `game/src/particles.cpp` | 새 파일 — `spawnExplosion`, `updateParticles`, `renderParticles` 구현 |
+| `game/src/menu.h` | 수정 — `HIGH_SCORE` MenuOption, `handleHighScoreEvent`, `renderHighScore` 추가 |
+| `game/src/menu.cpp` | 수정 — HIGH_SCORE 화면 핸들러·렌더러 구현 |
+| `game/src/sprites.h` | 수정 — `renderHitboxIndicator` 선언 추가 |
+| `game/src/sprites.cpp` | 수정 — `renderHitboxIndicator` 구현 |
+| `game/src/collision.h` | 수정 — `ParticleSystem*` 파라미터 추가 |
+| `game/src/collision.cpp` | 수정 — 적 사망 시 파티클 스폰 |
+| `game/src/game.h` | 수정 — `particles_` 멤버 추가 |
+| `game/src/game.cpp` | 수정 — HIGH_SCORE 상태 처리, 파티클 update/render 통합 |
+| `game/src/player.cpp` | 수정 — `renderHitboxIndicator` 호출 |
+| `game/src/types.h` | 수정 — `GameState::HIGH_SCORE`, `MAX_PARTICLES` 추가 |
+
+---
+
+### 🔴 Critical — 없음
+
+---
+
+### 🟠 Major — 발견 및 수정 완료
+
+#### [particles.cpp:25 / particles.h] `initialSizes[]` 정적 전역 배열 — 다중 인스턴스에서 잘못된 크기 계산
+
+- **위치**: `particles.cpp:25` (수정 전), `updateParticles()` 87번째 줄
+- **문제**:
+  ```cpp
+  // 수정 전 — anonymous namespace의 파일 스코프 전역 배열
+  float initialSizes[MAX_PARTICLES] = {};
+  ```
+  `spawnExplosion(ParticleSystem& ps, ...)` 에서 파티클을 `ps.pool[i]`에 기록하면서 **풀 인덱스 `i`를 키로** `initialSizes[i]`에 초기 크기를 저장한다.
+  `updateParticles()` 역시 같은 인덱스 `i`로 `p.size = initialSizes[i] * (1.0f - lifeT)`를 계산한다.
+
+  이 설계는 **단 하나의 `ParticleSystem` 인스턴스만 존재할 때만** 올바르다.
+  - 두 번째 `ParticleSystem`이 생겨 `spawnExplosion(ps2, ...)` 를 호출하면, `ps1.pool[i]`의 활성 파티클이 공유 배열 `initialSizes[i]`를 덮어쓰여 **ps1의 파티클 크기가 갑자기 변환되는 시각적 버그** 발생.
+  - 현재 코드는 `particles_` 단일 인스턴스만 사용하여 런타임 크래시는 없지만, 코드베이스 확장 시 즉시 잠복 버그로 발현된다.
+  - `initialSizes[]`가 `Particle` 구조체 외부에 존재하므로, `Particle`을 복사·이동할 때 초기 크기 정보가 유실될 수 있다.
+
+- **수정 방법**: `initialSize` 필드를 `Particle` 구조체에 직접 추가하고, 전역 배열을 제거한다.
+
+- **수정 전**:
+  ```cpp
+  // particles.h
+  struct Particle {
+      ...
+      float size;
+      bool  active = false;
+  };
+
+  // particles.cpp (anonymous namespace)
+  float initialSizes[MAX_PARTICLES] = {};
+
+  // spawnExplosion
+  p.size = size;
+  initialSizes[i] = size;   // 전역 배열에 기록
+
+  // updateParticles
+  p.size = initialSizes[i] * (1.0f - lifeT);  // 전역 배열 참조
+  ```
+
+- **수정 후** (✅ 이미 적용됨):
+  ```cpp
+  // particles.h
+  struct Particle {
+      ...
+      float size;
+      float initialSize;  // 스폰 시 크기를 구조체 자체에 저장
+      bool  active = false;
+  };
+
+  // particles.cpp — 전역 배열 제거됨
+
+  // spawnExplosion
+  p.size = size;
+  p.initialSize = size;   // 구조체 멤버에 기록
+
+  // updateParticles
+  p.size = p.initialSize * (1.0f - lifeT);  // 구조체 멤버 참조
+  ```
+
+- **심각도**: 🟠 Major (현재 단일 인스턴스라 크래시 없음; 다중 인스턴스 시 즉시 버그)
+
+---
+
+### 🟡 Minor — 발견 및 수정 완료
+
+#### [game.cpp:274] `STAGE_CLEAR` 상태에서 파티클 업데이트 누락 — 폭발 효과 동결
+
+- **위치**: `game.cpp:274` (수정 전)
+- **문제**: `update()` 내 `state_ != PLAYING` 조기 반환 블록이 `STAGE_CLEAR` 상태도 포함하여 `updateParticles()` 가 호출되지 않는다. 스테이지 클리어 순간 발생한 폭발 파티클이 화면에서 정지(freeze)되는 시각적 결함.
+- **수정 후** (✅ 이미 적용됨):
+  ```cpp
+  // STAGE_CLEAR 중에는 파티클만 계속 갱신
+  if (state_ == GameState::STAGE_CLEAR) {
+      updateParticles(*particles_, dt);
+      return;
+  }
+  ```
+- **심각도**: 🟡 Minor (크래시 없음; 시각적 품질 저하)
+
+---
+
+### 🟡 Minor — 미수정 (개선 제안)
+
+| # | 위치 | 설명 |
+|---|------|------|
+| 1 | `menu.cpp:88` | `"C 2026"` — `©` 심볼이 아스키 `C`로만 표시됨. `u8"©"` 또는 `"\xC2\xA9"` UTF-8 시퀀스 사용 권장. 단, 폰트(`PressStart2P`)가 해당 코드포인트를 지원해야 함. |
+| 2 | `collision.cpp:139` | `checkBulletBossCollision()`에 `ParticleSystem*` 파라미터 없어 보스 사망 시 파티클 없음. `checkBulletEnemyCollision`과 동일하게 `ParticleSystem* ps = nullptr` 추가 및 `big=true` 폭발 스폰 권장. |
+| 3 | `sprites.cpp:218` | `renderHitboxIndicator()` 가 항상 렌더링됨. 디버그 빌드에서만 보이도록 `#ifdef GALAXY_DEBUG_HITBOX` 조건부 컴파일 또는 `Player::showHitbox` 플래그 제어 검토. |
+| 4 | `particles.cpp:12` | `rand01()`이 `std::rand()` 사용 — 낮은 품질의 PRNG. `<random>` + `std::mt19937` 또는 `std::uniform_real_distribution`으로 교체 권장. |
+| 5 | `game.cpp:305` | `!player_->active \|\| player_->lives <= 0` — `damagePlayer()`에서 `lives <= 0`이 되면 `active = false`도 동시에 설정되므로 `lives <= 0` 조건이 중복. Minor 코드 정리 권장. |
+
+---
+
+### v4 헤더-구현 일관성 검증
+
+| 헤더 | 선언 | 구현 확인 |
+|------|------|-----------|
+| `particles.h` | `spawnExplosion`, `updateParticles`, `renderParticles` | ✅ 전부 구현 (`particles.cpp`) |
+| `sprites.h` | `renderHitboxIndicator(renderer, cx, cy, radius)` | ✅ 구현 일치 (`sprites.cpp:218`) |
+| `collision.h` | `checkBulletEnemyCollision(..., ParticleSystem* ps)` | ✅ 시그니처 일치 (`collision.cpp:65`) |
+| `collision.h` | `checkPlayerEnemyCollision(..., ParticleSystem* ps)` | ✅ 시그니처 일치 (`collision.cpp:121`) |
+| `menu.h` | `handleHighScoreEvent(const SDL_Event&)` | ✅ 구현 일치 (`menu.cpp:91`) |
+| `menu.h` | `renderHighScore(renderer, font, hiScore)` | ✅ 구현 일치 (`menu.cpp:101`) |
+| `game.h` | `ParticleSystem* particles_ = nullptr` | ✅ 멤버 선언 및 `init()`에서 할당 |
+
+### v4 GameState::HIGH_SCORE 흐름 검증
+
+| 검사 항목 | 결과 |
+|-----------|------|
+| `handleEvents()` — TITLE 상태에서 HIGH_SCORE 선택 → 전환 | ✅ `game.cpp:227` |
+| `handleEvents()` — HIGH_SCORE 상태에서 ESC/SPACE/RETURN → TITLE 복귀 | ✅ `game.cpp:233–237` |
+| `update()` — HIGH_SCORE 상태에서 게임플레이 로직 스킵 | ✅ `game.cpp:267–269` |
+| `update()` — `updateBackground()` 는 HIGH_SCORE에서도 계속 실행 | ✅ (스크롤 배경 유지) |
+| `render()` — HIGH_SCORE 상태에서 `renderHighScore()` 호출 | ✅ `game.cpp:325–329` |
+| `renderMenu()` — 타이틀에서 HI-SCORE 값 표시 | ✅ `menu.cpp:84–86` |
+| `MenuOption::HIGH_SCORE = 1`, `COUNT = 3` 정합성 | ✅ `menu.h:12–16` |
+
+### v4 수정 사항 요약
+
+| 파일 | 수정 내용 | 심각도 |
+|------|-----------|--------|
+| `src/particles.h` | `Particle` 구조체에 `float initialSize` 필드 추가 | 🟠 Major |
+| `src/particles.cpp` | 전역 `initialSizes[]` 배열 제거, `p.initialSize` 사용으로 교체 | 🟠 Major |
+| `src/game.cpp` | `STAGE_CLEAR` 상태에서 `updateParticles()` 호출 보장 | 🟡 Minor |
+
+
+
+---
+
 ## 전체 품질 평가
 
-**v3 점수: 9.0 / 10** (v2 대비 +0.5 — Kenney 통합으로 에셋 완전성 향상)
+**v4 점수: 9.5 / 10** (v3 대비 +0.5 — 파티클 시스템 Major 버그 수정, HIGH_SCORE 흐름 완성)
 
 ### 강점
 - 오브젝트 풀 패턴(`BulletPool`, `EnemyPool`, `PowerUpPool`)으로 런타임 동적 할당 없음

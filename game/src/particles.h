@@ -13,6 +13,7 @@ struct Particle {
     float age;          // elapsed time since spawn
     Uint8 r, g, b;      // current RGB (interpolated from yellow → orange → grey)
     float size;         // rendered size in pixels (shrinks over time)
+    float initialSize;  // original size at spawn (used to compute shrink over lifetime)
     bool  active = false;
 };
 

@@ -9,6 +9,7 @@
 #include "enemy.h"
 #include "hud.h"
 #include "menu.h"
+#include "particles.h"
 #include "player.h"
 #include "powerup.h"
 #include "stage.h"
@@ -104,6 +105,7 @@ bool Game::init() {
     background_ = new Background();
     menu_ = new Menu();
     shipSelect_ = new ShipSelect();
+    particles_ = new ParticleSystem();
     assets_ = new AssetManager();
     audio_ = new AudioManager();
 
@@ -116,6 +118,7 @@ bool Game::init() {
     for (auto& b : bullets_->pool) b.active = false;
     for (auto& e : enemies_->pool) e.active = false;
     for (auto& p : powerUps_->pool) p.active = false;
+    for (auto& p : particles_->pool) p.active = false;
     boss_->active = false;
 
     state_ = GameState::TITLE;
@@ -188,6 +191,7 @@ void Game::shutdown() {
     delete enemies_; enemies_ = nullptr;
     delete bullets_; bullets_ = nullptr;
     delete player_; player_ = nullptr;
+    delete particles_; particles_ = nullptr;
 
     if (font_) {
         TTF_CloseFont(font_);
@@ -220,9 +224,16 @@ void Game::handleEvents() {
             GameState next = handleMenuEvent(*menu_, e);
             if (next == GameState::SHIP_SELECT) {
                 state_ = GameState::SHIP_SELECT;
+            } else if (next == GameState::HIGH_SCORE) {
+                state_ = GameState::HIGH_SCORE;
             } else if (next == GameState::QUIT) {
                 running_ = false;
                 return;
+            }
+        } else if (state_ == GameState::HIGH_SCORE) {
+            GameState next = handleHighScoreEvent(e);
+            if (next == GameState::TITLE) {
+                state_ = GameState::TITLE;
             }
         } else if (state_ == GameState::SHIP_SELECT) {
             ShipType outShip = selectedShip_;
@@ -253,8 +264,17 @@ void Game::update(float dt) {
         updateMenu(*menu_, dt);
         return;
     }
+    if (state_ == GameState::HIGH_SCORE) {
+        return;
+    }
     if (state_ == GameState::SHIP_SELECT) {
         updateShipSelect(*shipSelect_, dt);
+        return;
+    }
+    // Update particles during STAGE_CLEAR so explosion effects keep animating
+    // on the clear screen; other gameplay systems are paused.
+    if (state_ == GameState::STAGE_CLEAR) {
+        updateParticles(*particles_, dt);
         return;
     }
     if (state_ != GameState::PLAYING) {
@@ -266,11 +286,12 @@ void Game::update(float dt) {
     updateEnemies(*enemies_, dt, *bullets_, player_->center());
     updateBoss(*boss_, dt, *bullets_, player_->center());
     updateBullets(*bullets_, dt);
+    updateParticles(*particles_, dt);
     updatePowerUps(*powerUps_, dt);
 
-    checkBulletEnemyCollision(*bullets_, *enemies_, *player_, *powerUps_, audio_);
+    checkBulletEnemyCollision(*bullets_, *enemies_, *player_, *powerUps_, audio_, particles_);
     checkBulletPlayerCollision(*bullets_, *player_, audio_);
-    checkPlayerEnemyCollision(*player_, *enemies_, audio_);
+    checkPlayerEnemyCollision(*player_, *enemies_, audio_, particles_);
     checkBulletBossCollision(*bullets_, *boss_, *player_, audio_);
     checkPowerUpPickup(*player_, *powerUps_, audio_);
 
@@ -303,7 +324,12 @@ void Game::render() {
     renderBackground(renderer_, *assets_, *background_);
 
     if (state_ == GameState::TITLE) {
-        renderMenu(renderer_, *assets_, font_, *menu_);
+        renderMenu(renderer_, *assets_, font_, *menu_, hiScore_);
+        SDL_RenderPresent(renderer_);
+        return;
+    }
+    if (state_ == GameState::HIGH_SCORE) {
+        renderHighScore(renderer_, font_, hiScore_);
         SDL_RenderPresent(renderer_);
         return;
     }
@@ -317,6 +343,7 @@ void Game::render() {
     renderBoss(renderer_, *assets_, *boss_);
     renderPowerUps(renderer_, *assets_, *powerUps_);
     renderPlayer(renderer_, *assets_, *player_);
+    renderParticles(renderer_, *particles_);
     renderBullets(renderer_, *assets_, *bullets_);
 
     if (state_ == GameState::PLAYING) {

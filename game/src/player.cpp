@@ -327,6 +327,9 @@ void renderPlayer(SDL_Renderer* renderer, const AssetManager& assets, const Play
                        p.shipType, p.invincibleTimer > 0.0f, p.animFrame);
     renderEngineExhaust(renderer, assets, static_cast<int>(p.pos.x), static_cast<int>(p.pos.y),
                         28, p.animFrame);
+    // Draw hitbox indicator (visible through invincibility flash)
+    const Vec2 c = p.center();
+    renderHitboxIndicator(renderer, static_cast<int>(c.x), static_cast<int>(c.y), p.hitRadius);
 }
 
 } // namespace galaxy

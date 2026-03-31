@@ -215,6 +215,38 @@ void renderPlayerSprite(SDL_Renderer* renderer, const AssetManager& assets,
     }
 }
 
+void renderHitboxIndicator(SDL_Renderer* renderer, int cx, int cy, float radius) {
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    const float pi = 3.14159265f;
+    const float innerRadius = radius * 0.5f;
+
+    // Outer ring
+    SDL_SetRenderDrawColor(renderer, 0, 255, 255, 180);
+    for (int angle = 0; angle < 360; angle += 10) {
+        const float rad = static_cast<float>(angle) * pi / 180.0f;
+        const int px = cx + static_cast<int>(radius * std::cos(rad));
+        const int py = cy + static_cast<int>(radius * std::sin(rad));
+        SDL_RenderDrawPoint(renderer, px, py);
+    }
+
+    // Inner ring
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 100);
+    for (int angle = 0; angle < 360; angle += 10) {
+        const float rad = static_cast<float>(angle) * pi / 180.0f;
+        const int px = cx + static_cast<int>(innerRadius * std::cos(rad));
+        const int py = cy + static_cast<int>(innerRadius * std::sin(rad));
+        SDL_RenderDrawPoint(renderer, px, py);
+    }
+
+    // Center point
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_Rect center{cx - 1, cy - 1, 2, 2};
+    SDL_RenderFillRect(renderer, &center);
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+}
+
 void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
                        int x, int y, EnemyType type, bool lockedOn) {
     SDL_Texture* tex = assets.get(enemyKey(type));
