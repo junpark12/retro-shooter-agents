@@ -183,9 +183,13 @@ Workflow를 시도하지 않고 바로 Pillow로 가는 것은 금지됩니다.
 
 Workflow 실패 사유 예시:
 - download-assets.yml workflow가 리포에 없는 경우
-- workflow_dispatch 트리거 권한이 없는 경우
+- workflow_dispatch 트리거 권한이 없는 경우 **(403 Forbidden — Coding Agent 토큰 제한)**
 - workflow가 실행되었으나 conclusion이 "failure"인 경우
 - artifact 다운로드에 실패한 경우
+
+> **참고**: 2026년 3월 현재, Coding Agent의 GitHub 토큰에는 `actions: write` 권한이 없어
+> `workflow_dispatch` 트리거 시 403 Forbidden이 발생합니다.
+> 이 경우 Pillow 폴백은 정당한 선택입니다.
 
 위 경우에만:
 - Python + Pillow로 프로그래매틱 스프라이트를 생성합니다
