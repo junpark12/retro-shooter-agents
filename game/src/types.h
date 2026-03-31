@@ -16,6 +16,7 @@ constexpr int MAX_ENEMIES       = 64;
 constexpr int MAX_POWERUPS      = 16;
 constexpr int MAX_STARS         = 128;
 constexpr int MAX_LOCK_TARGETS  = 8;     // max simultaneous lock-on targets
+constexpr int MAX_PARTICLES     = 256;   // particle pool for explosion effects
 
 // ─── Score / life system ──────────────────────────────────────────────────────
 constexpr int SCORE_PER_EXTRA_LIFE = 100000; // 1UP every 100k points
@@ -35,6 +36,7 @@ constexpr Color COLOR_BLUE    = { 64, 128, 255 };
 // ─── Game state ───────────────────────────────────────────────────────────────
 enum class GameState {
     TITLE,
+    HIGH_SCORE,   // high score display screen
     SHIP_SELECT,  // ship selection screen
     PLAYING,
     STAGE_CLEAR,

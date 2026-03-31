@@ -3,8 +3,11 @@
 #include "hud.h"
 #include "sprites.h"
 
+#include <algorithm>
 #include <array>
 #include <cmath>
+#include <iomanip>
+#include <sstream>
 #include <string>
 
 namespace galaxy {
@@ -36,6 +39,9 @@ GameState handleMenuEvent(Menu& m, const SDL_Event& e) {
         if (m.selectedOption == static_cast<int>(MenuOption::START)) {
             return GameState::SHIP_SELECT;
         }
+        if (m.selectedOption == static_cast<int>(MenuOption::HIGH_SCORE)) {
+            return GameState::HIGH_SCORE;
+        }
         return GameState::QUIT;
     }
     if (key == SDL_SCANCODE_ESCAPE) {
@@ -44,7 +50,7 @@ GameState handleMenuEvent(Menu& m, const SDL_Event& e) {
     return GameState::TITLE;
 }
 
-void renderMenu(SDL_Renderer* renderer, const AssetManager&, TTF_Font* font, const Menu& m) {
+void renderMenu(SDL_Renderer* renderer, const AssetManager&, TTF_Font* font, const Menu& m, int hiScore) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 20, 255);
     SDL_Rect bg{0, 0, SCREEN_W, SCREEN_H};
     SDL_RenderFillRect(renderer, &bg);
@@ -62,16 +68,48 @@ void renderMenu(SDL_Renderer* renderer, const AssetManager&, TTF_Font* font, con
     renderText(renderer, font, "BULLET HELL SHOOTER", 128, titleY + 34, SDL_Color{0, 255, 255, 255});
 
     const bool startSel = m.selectedOption == static_cast<int>(MenuOption::START);
+    const bool highSel = m.selectedOption == static_cast<int>(MenuOption::HIGH_SCORE);
     const bool quitSel = m.selectedOption == static_cast<int>(MenuOption::QUIT);
-    renderText(renderer, font, "START", 196, 320, startSel ? SDL_Color{255, 232, 0, 255} : SDL_Color{255, 255, 255, 255});
-    renderText(renderer, font, "QUIT", 204, 356, quitSel ? SDL_Color{255, 232, 0, 255} : SDL_Color{255, 255, 255, 255});
+    renderText(renderer, font, "START", 196, 300, startSel ? SDL_Color{255, 232, 0, 255} : SDL_Color{255, 255, 255, 255});
+    renderText(renderer, font, "HIGH SCORE", 156, 336, highSel ? SDL_Color{255, 232, 0, 255} : SDL_Color{255, 255, 255, 255});
+    renderText(renderer, font, "QUIT", 204, 372, quitSel ? SDL_Color{255, 232, 0, 255} : SDL_Color{255, 255, 255, 255});
 
     if (m.blinkVisible) {
-        renderText(renderer, font, ">", 176, startSel ? 320 : 356, SDL_Color{255, 232, 0, 255});
+        const int cursorY = (m.selectedOption == static_cast<int>(MenuOption::START)) ? 300
+                          : (m.selectedOption == static_cast<int>(MenuOption::HIGH_SCORE)) ? 336
+                                                                                            : 372;
+        renderText(renderer, font, ">", 136, cursorY, SDL_Color{255, 232, 0, 255});
     }
 
+    std::ostringstream oss;
+    oss << "HI-SCORE " << std::setw(6) << std::setfill('0') << std::max(0, hiScore);
+    renderText(renderer, font, oss.str(), 124, SCREEN_H - 46, SDL_Color{220, 220, 220, 255});
     renderText(renderer, font, "PRESS SPACE TO START", 120, 420, SDL_Color{220, 220, 220, 255});
     renderText(renderer, font, "C 2026 GALAXY STORM TEAM", 118, SCREEN_H - 24, SDL_Color{130, 130, 130, 255});
+}
+
+GameState handleHighScoreEvent(const SDL_Event& e) {
+    if (e.type != SDL_KEYDOWN) return GameState::HIGH_SCORE;
+    const SDL_Scancode key = e.key.keysym.scancode;
+    if (key == SDL_SCANCODE_ESCAPE || key == SDL_SCANCODE_BACKSPACE ||
+        key == SDL_SCANCODE_RETURN || key == SDL_SCANCODE_SPACE) {
+        return GameState::TITLE;
+    }
+    return GameState::HIGH_SCORE;
+}
+
+void renderHighScore(SDL_Renderer* renderer, TTF_Font* font, int hiScore) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 20, 255);
+    SDL_Rect bg{0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &bg);
+
+    renderText(renderer, font, "HIGH SCORE", 146, 80, SDL_Color{255, 232, 0, 255});
+
+    std::ostringstream oss;
+    oss << std::setw(8) << std::setfill('0') << std::max(0, hiScore);
+    renderText(renderer, font, oss.str(), 142, 200, SDL_Color{255, 255, 255, 255});
+
+    renderText(renderer, font, "PRESS ANY KEY TO RETURN", 80, 450, SDL_Color{220, 220, 220, 255});
 }
 
 void updateShipSelect(ShipSelect& ss, float dt) {

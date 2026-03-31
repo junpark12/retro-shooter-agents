@@ -6,6 +6,7 @@
 #include "player.h"
 #include "powerup.h"
 #include "audio.h"
+#include "particles.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -63,7 +64,7 @@ void damagePlayer(Player& player, int dmg) {
 
 void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
                                Player& player, PowerUpPool& powerUps,
-                               AudioManager* audio) {
+                               AudioManager* audio, ParticleSystem* ps) {
     for (Bullet& b : bullets.pool) {
         if (!b.active || b.owner != BulletOwner::PLAYER) continue;
         Rect bb = b.worldBounds();
@@ -82,6 +83,10 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
                 e.active = false;
                 player.score += scoreForEnemy(e.type);
                 if (audio) audio->playSFX(SFX_EXPLODE_SMALL);
+                if (ps) {
+                    spawnExplosion(*ps, e.center(),
+                                   e.type == EnemyType::LARGE || e.type == EnemyType::ARMORED);
+                }
 
                 if (shouldDrop(e.type)) {
                     spawnPowerUp(powerUps, {e.pos.x + e.bounds.w * 0.5f - 10.0f, e.pos.y}, randomDrop());
@@ -113,7 +118,8 @@ void checkBulletPlayerCollision(BulletPool& bullets, Player& player, AudioManage
     }
 }
 
-void checkPlayerEnemyCollision(Player& player, EnemyPool& enemies, AudioManager* audio) {
+void checkPlayerEnemyCollision(Player& player, EnemyPool& enemies,
+                               AudioManager* audio, ParticleSystem* ps) {
     if (!player.active) return;
     if (player.invincibleTimer > 0.0f || player.shieldTimer > 0.0f) return;
 
@@ -123,6 +129,7 @@ void checkPlayerEnemyCollision(Player& player, EnemyPool& enemies, AudioManager*
         if (!rectsOverlap(pb, e.worldBounds())) continue;
 
         e.active = false;
+        if (ps) spawnExplosion(*ps, e.center(), false);
         if (audio) audio->playSFX(SFX_PLAYER_HIT);
         damagePlayer(player, 1);
         break;

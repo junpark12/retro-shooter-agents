@@ -9,9 +9,10 @@ namespace galaxy {
 // ─── Menu ─────────────────────────────────────────────────────────────────────
 
 enum class MenuOption {
-    START = 0,
-    QUIT  = 1,
-    COUNT = 2
+    START       = 0,
+    HIGH_SCORE  = 1,
+    QUIT        = 2,
+    COUNT       = 3
 };
 
 struct Menu {
@@ -35,14 +36,23 @@ void updateMenu(Menu& m, float dt);
 
 // Handle a single SDL event for menu navigation.
 // Returns the GameState to transition to:
-//   - GameState::SHIP_SELECT if the player selected START
-//   - GameState::QUIT        if QUIT selected
-//   - GameState::TITLE       otherwise (no transition)
+//   - GameState::SHIP_SELECT  if the player selected START
+//   - GameState::HIGH_SCORE   if the player selected HIGH SCORE
+//   - GameState::QUIT         if QUIT selected
+//   - GameState::TITLE        otherwise (no transition)
 GameState handleMenuEvent(Menu& m, const SDL_Event& e);
 
 // Render the title screen with SDL2_ttf text and asset sprites.
+// hiScore is the current all-time high score to display.
 void renderMenu(SDL_Renderer* renderer, const AssetManager& assets,
-                TTF_Font* font, const Menu& m);
+                TTF_Font* font, const Menu& m, int hiScore = 0);
+
+// Handle a single SDL event on the high score screen.
+// Returns GameState::TITLE when the player presses back.
+GameState handleHighScoreEvent(const SDL_Event& e);
+
+// Render the high score screen.
+void renderHighScore(SDL_Renderer* renderer, TTF_Font* font, int hiScore);
 
 // Update ship select screen.
 void updateShipSelect(ShipSelect& ss, float dt);

@@ -28,6 +28,7 @@ set(SOURCES
     src/hud.cpp
     src/menu.cpp
     src/background.cpp
+    src/particles.cpp
 )
 
 # Headers live in src/ (alongside .cpp files)
