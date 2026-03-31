@@ -59,6 +59,50 @@ jobs:
             done
           done
 
+      - name: Update asset history
+        run: |
+          HISTORY_FILE="game/assets/asset-history.json"
+          REQUEST_FILE="game/assets/asset-request.json"
+
+          # Initialize history file if it doesn't exist
+          if [ ! -f "$HISTORY_FILE" ]; then
+            echo '{"downloaded":[]}' > "$HISTORY_FILE"
+          fi
+
+          # Append each asset entry from request to history
+          TODAY=$(date -u +%Y-%m-%d)
+          REQUESTS='${{ steps.request.outputs.requests }}'
+
+          echo "$REQUESTS" | jq -c '.assets[]' | while read -r item; do
+            CATEGORY=$(echo "$item" | jq -r '.category')
+            URLS=$(echo "$item" | jq -c '.urls')
+            LICENSE=$(echo "$item" | jq -r '.license // "unknown"')
+            SOURCE=$(echo "$item" | jq -r '.source // "unknown"')
+
+            # Check if any URL already exists in history to avoid duplicates
+            DOMINATED=false
+            for url in $(echo "$URLS" | jq -r '.[]'); do
+              if jq -e --arg u "$url" '.downloaded[] | select(.urls[] == $u)' "$HISTORY_FILE" > /dev/null 2>&1; then
+                DOMINATED=true
+                break
+              fi
+            done
+
+            if [ "$DOMINATED" = false ]; then
+              # Append new entry to history
+              jq --argjson urls "$URLS" \
+                 --arg cat "$CATEGORY" \
+                 --arg lic "$LICENSE" \
+                 --arg src "$SOURCE" \
+                 --arg date "$TODAY" \
+                 '.downloaded += [{"category": $cat, "urls": $urls, "source": $src, "license": $lic, "date": $date}]' \
+                 "$HISTORY_FILE" > "${HISTORY_FILE}.tmp" && mv "${HISTORY_FILE}.tmp" "$HISTORY_FILE"
+              echo "📝 Added to history: $SOURCE ($CATEGORY)"
+            else
+              echo "⏭️ Already in history: $SOURCE ($CATEGORY)"
+            fi
+          done
+
       - name: Commit downloaded assets to branch
         run: |
           git config user.name "github-actions[bot]"

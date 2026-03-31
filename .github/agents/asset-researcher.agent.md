@@ -59,15 +59,43 @@ GitHub Actions workflow가 에셋을 자동 다운로드하도록 합니다.
 
 ## 역할
 
-1. **인터넷 검색** — `fetch` 도구로 에셋 사이트를 직접 탐색
-2. **코드 분석** — `read`/`search`로 현재 코드에서 필요한 에셋 파악
-3. **asset-request.json 생성** — 검색 결과의 다운로드 URL을 JSON으로 정리
-4. **CREDITS.md 작성** — 라이선스 정보 문서화
-5. **사용자에게 안내** — commit & push (또는 PR merge) 방법 안내
+1. **🔴 중복 확인 (최우선)** — `game/assets/asset-history.json`을 먼저 읽고, 이미 다운로드된 에셋은 건너뛰기
+2. **인터넷 검색** — `fetch` 도구로 에셋 사이트를 직접 탐색
+3. **코드 분석** — `read`/`search`로 현재 코드에서 필요한 에셋 파악
+4. **asset-request.json 생성** — 검색 결과의 다운로드 URL을 JSON으로 정리 (이력에 없는 것만!)
+5. **CREDITS.md 작성** — 라이선스 정보 문서화
+6. **사용자에게 안내** — commit & push (또는 PR merge) 방법 안내
 
 ---
 
 ## 에셋 검색 방법 (fetch 도구 활용)
+
+### 🔴 검색 전 중복 확인 (필수!)
+
+에셋을 검색하기 **전에** 반드시 `game/assets/asset-history.json`을 확인하세요.
+이 파일에는 이전에 다운로드한 에셋 이력이 기록되어 있습니다.
+
+```json
+// asset-history.json 예시
+{
+  "downloaded": [
+    {
+      "category": "sprites/player",
+      "urls": ["https://kenney.nl/.../kenney_space-shooter-redux.zip"],
+      "source": "Kenney.nl",
+      "license": "CC0",
+      "date": "2026-03-30"
+    }
+  ]
+}
+```
+
+**확인 규칙:**
+- `read` 도구로 `game/assets/asset-history.json`을 읽으세요
+- 파일이 없으면 → 이전 다운로드 이력 없음, 자유롭게 검색
+- 파일이 있으면 → `downloaded[].urls`에 포함된 URL은 **asset-request.json에 넣지 마세요**
+- 같은 source + category 조합도 중복으로 간주하세요 (URL이 달라도)
+- 이력에 없는 에셋만 asset-request.json에 포함하세요
 
 ### 검색 순서
 1. **Kenney.nl** (CC0, 최우선) — `fetch("https://kenney.nl/assets")`
