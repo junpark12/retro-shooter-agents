@@ -62,6 +62,15 @@ private:
     AudioManager* audio_        = nullptr;
     TTF_Font*     font_         = nullptr;
     bool          bossMusicPlaying_ = false;
+    int           hiScore_          = 0;   // all-time high score (persisted)
+
+    // ── Persistence helpers ───────────────────────────────────────────────────
+
+    // Load hi score from hi_score.dat; sets hiScore_ = 0 if file missing.
+    void loadHiScore();
+
+    // Write hiScore_ to hi_score.dat.
+    void saveHiScore();
 
     // ── Per-frame helpers ─────────────────────────────────────────────────────
 

@@ -50,10 +50,13 @@ void renderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x,
     }
 }
 
-void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* font, const Player& player, int stageNum) {
+void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* font, const Player& player, int stageNum, int hiScore) {
     char scoreBuf[64];
     std::snprintf(scoreBuf, sizeof(scoreBuf), "SCORE: %07d", std::max(0, player.score));
     renderText(renderer, font, scoreBuf, 10, 8, {255, 255, 255, 255});
+    char hiScoreBuf[64];
+    std::snprintf(hiScoreBuf, sizeof(hiScoreBuf), "HI:%07d", std::max(0, hiScore));
+    renderText(renderer, font, hiScoreBuf, SCREEN_W - 130, 8, {255, 220, 80, 255});
 
     char stageBuf[32];
     std::snprintf(stageBuf, sizeof(stageBuf), "STAGE %d", std::max(1, stageNum));
@@ -104,6 +107,9 @@ void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* fon
         SDL_RenderFillRect(renderer, &fillRect);
     }
     renderText(renderer, font, "PWR", SCREEN_W - 156, SCREEN_H - 26, {255, 255, 255, 255});
+    char pwrLvlBuf[8];
+    std::snprintf(pwrLvlBuf, sizeof(pwrLvlBuf), "Lv%d", std::clamp(player.powerLevel, 1, 4));
+    renderText(renderer, font, pwrLvlBuf, SCREEN_W - 126, SCREEN_H - 26, {255, 100, 255, 255});
 
     if (player.shieldTimer > 0.0f) {
         const float ratio = std::clamp(player.shieldTimer / 5.0f, 0.0f, 1.0f);

@@ -1,6 +1,7 @@
 #include "bullet.h"
 #include "sprites.h"
 
+#include <cstdlib>
 #include <cmath>
 
 namespace galaxy {
@@ -19,14 +20,14 @@ void fireBullet(BulletPool& bp, Vec2 pos, Vec2 vel, BulletOwner owner, int damag
         b.homingTarget = {};
         b.angle = std::atan2(vel.y, vel.x);
         b.angularVel = 0.0f;
-        b.colorIdx = (owner == BulletOwner::PLAYER) ? 0 : 1;
+        b.colorIdx = (owner == BulletOwner::PLAYER) ? 0 : (std::rand() % 4);
 
         if (owner == BulletOwner::PLAYER) {
             b.bounds = {0.0f, 0.0f, 4.0f, 12.0f};
             b.hitRadius = 2.0f;
         } else {
-            b.bounds = {0.0f, 0.0f, 6.0f, 6.0f};
-            b.hitRadius = 3.0f;
+            b.bounds = {0.0f, 0.0f, 10.0f, 10.0f};
+            b.hitRadius = 5.0f;
         }
         return;
     }
