@@ -83,7 +83,7 @@ void renderMenu(SDL_Renderer* renderer, const AssetManager&, TTF_Font* font, con
 
     std::ostringstream oss;
     oss << "HI-SCORE " << std::setw(6) << std::setfill('0') << std::max(0, hiScore);
-    renderText(renderer, font, oss.str(), 124, SCREEN_H - 46, SDL_Color{220, 220, 220, 255});
+    renderText(renderer, font, oss.str().c_str(), 124, SCREEN_H - 46, SDL_Color{220, 220, 220, 255});
     renderText(renderer, font, "PRESS SPACE TO START", 120, 420, SDL_Color{220, 220, 220, 255});
     renderText(renderer, font, "C 2026 GALAXY STORM TEAM", 118, SCREEN_H - 24, SDL_Color{130, 130, 130, 255});
 }
@@ -107,7 +107,7 @@ void renderHighScore(SDL_Renderer* renderer, TTF_Font* font, int hiScore) {
 
     std::ostringstream oss;
     oss << std::setw(8) << std::setfill('0') << std::max(0, hiScore);
-    renderText(renderer, font, oss.str(), 142, 200, SDL_Color{255, 255, 255, 255});
+    renderText(renderer, font, oss.str().c_str(), 142, 200, SDL_Color{255, 255, 255, 255});
 
     renderText(renderer, font, "PRESS ANY KEY TO RETURN", 80, 450, SDL_Color{220, 220, 220, 255});
 }
