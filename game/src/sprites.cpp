@@ -181,7 +181,7 @@ void renderPlayerSprite(SDL_Renderer* renderer, const AssetManager& assets,
                         int x, int y, ShipType ship, bool invincible, int animFrame) {
     SDL_Texture* tex = assets.get(playerKey(ship));
     const int bob = static_cast<int>(std::sin(animFrame * 0.7f) * 2.0f);
-    SDL_Rect dst{x, y + bob, 28, 36};
+    SDL_Rect dst{x, y + bob, 48, 48};
 
     if (tex) {
         if (invincible && (animFrame % 2 == 0)) {
@@ -202,11 +202,11 @@ void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
                        int x, int y, EnemyType type, bool lockedOn) {
     SDL_Texture* tex = assets.get(enemyKey(type));
     SDL_Rect dst{};
-    if (type == EnemyType::SMALL) dst = {x, y, 16, 16};
-    else if (type == EnemyType::MEDIUM) dst = {x, y, 24, 24};
-    else if (type == EnemyType::LARGE) dst = {x, y, 32, 28};
-    else if (type == EnemyType::FAST) dst = {x, y, 20, 20};
-    else dst = {x, y, 36, 30};
+    if (type == EnemyType::SMALL) dst = {x, y, 24, 24};
+    else if (type == EnemyType::MEDIUM) dst = {x, y, 32, 32};
+    else if (type == EnemyType::LARGE) dst = {x, y, 48, 40};
+    else if (type == EnemyType::FAST) dst = {x, y, 28, 24};
+    else dst = {x, y, 40, 36};
 
     if (tex) {
         SDL_RenderCopy(renderer, tex, nullptr, &dst);
@@ -248,8 +248,8 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
     SDL_Texture* tex = (owner == BulletOwner::PLAYER)
         ? assets.get(SPR_BULLET_PLAYER)
         : assets.get(SPR_BULLET_ENEMY);
-    SDL_Rect dst = (owner == BulletOwner::PLAYER) ? SDL_Rect{x, y, 8, 12}
-                                                   : SDL_Rect{x, y, 8, 8};
+    SDL_Rect dst = (owner == BulletOwner::PLAYER) ? SDL_Rect{x, y, 9, 36}
+                                                   : SDL_Rect{x, y, 9, 36};
 
     if (tex) {
         if (owner == BulletOwner::PLAYER) {
@@ -341,7 +341,7 @@ void renderBombFlash(SDL_Renderer* renderer, float bombTimer) {
 void renderShipPreview(SDL_Renderer* renderer, const AssetManager& assets,
                        int x, int y, ShipType ship, bool selected) {
     SDL_Texture* tex = assets.get(playerKey(ship));
-    SDL_Rect dst = selected ? SDL_Rect{x - 8, y - 8, 56, 72} : SDL_Rect{x, y, 48, 64};
+    SDL_Rect dst = selected ? SDL_Rect{x - 8, y - 8, 72, 72} : SDL_Rect{x, y, 64, 64};
     if (tex) {
         SDL_RenderCopy(renderer, tex, nullptr, &dst);
     } else {
@@ -356,6 +356,32 @@ void renderShipPreview(SDL_Renderer* renderer, const AssetManager& assets,
         setColor(renderer, COLOR_YELLOW);
         SDL_Rect border{dst.x - 4, dst.y - 4, dst.w + 8, dst.h + 8};
         SDL_RenderDrawRect(renderer, &border);
+    }
+}
+
+void renderEngineExhaust(SDL_Renderer* renderer, const AssetManager& assets,
+                         int shipX, int shipY, int shipW, int fireFrame) {
+    static constexpr std::array<const char*, 8> fireKeys = {
+        SPR_ENGINE_FIRE_0, SPR_ENGINE_FIRE_1, SPR_ENGINE_FIRE_2, SPR_ENGINE_FIRE_3,
+        SPR_ENGINE_FIRE_4, SPR_ENGINE_FIRE_5, SPR_ENGINE_FIRE_6, SPR_ENGINE_FIRE_7
+    };
+    const int idx = std::clamp(fireFrame % 8, 0, 7);
+    SDL_Texture* tex = assets.get(fireKeys[idx]);
+
+    const int fw = 20, fh = 24;
+    const int fx = shipX + shipW / 2 - fw / 2;
+    const int fy = shipY + 36;
+    SDL_Rect dst{fx, fy, fw, fh};
+
+    if (tex) {
+        SDL_SetTextureAlphaMod(tex, 200);
+        SDL_RenderCopy(renderer, tex, nullptr, &dst);
+        SDL_SetTextureAlphaMod(tex, 255);
+    } else {
+        setColor(renderer, COLOR_ORANGE);
+        fill(renderer, fx + 6, fy, 8, 12);
+        setColor(renderer, COLOR_YELLOW);
+        fill(renderer, fx + 8, fy + 2, 4, 6);
     }
 }
 

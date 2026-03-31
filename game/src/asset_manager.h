@@ -38,41 +38,62 @@ struct AssetManager {
 };
 
 // ─── Sprite key constants ─────────────────────────────────────────────────────
-// Player ships
-constexpr const char* SPR_PLAYER_BAGON  = "player/ship_bagon";
-constexpr const char* SPR_PLAYER_DAMUL  = "player/ship_damul";
-constexpr const char* SPR_PLAYER_GUNEX  = "player/ship_gunex";
+// Player ships (Kenney assets)
+constexpr const char* SPR_PLAYER_BAGON  = "player/ship_bagon_k";
+constexpr const char* SPR_PLAYER_DAMUL  = "player/ship_damul_k";
+constexpr const char* SPR_PLAYER_GUNEX  = "player/ship_gunex_k";
+// Player damage states
+constexpr const char* SPR_PLAYER_DAMAGE_1 = "player/ship_damage1";
+constexpr const char* SPR_PLAYER_DAMAGE_2 = "player/ship_damage2";
+constexpr const char* SPR_PLAYER_DAMAGE_3 = "player/ship_damage3";
 
-// Enemies
-constexpr const char* SPR_ENEMY_SMALL   = "enemies/enemy_small";
-constexpr const char* SPR_ENEMY_MEDIUM  = "enemies/enemy_medium";
-constexpr const char* SPR_ENEMY_LARGE   = "enemies/enemy_large";
-constexpr const char* SPR_ENEMY_FAST    = "enemies/enemy_fast";
-constexpr const char* SPR_ENEMY_ARMORED = "enemies/enemy_armored";
+// Enemies (Kenney assets)
+constexpr const char* SPR_ENEMY_SMALL   = "enemies/enemy_small_k";
+constexpr const char* SPR_ENEMY_MEDIUM  = "enemies/enemy_medium_k";
+constexpr const char* SPR_ENEMY_LARGE   = "enemies/enemy_large_k";
+constexpr const char* SPR_ENEMY_FAST    = "enemies/enemy_fast_k";
+constexpr const char* SPR_ENEMY_ARMORED = "enemies/enemy_armored_k";
+constexpr const char* SPR_ENEMY_UFO_BLUE = "enemies/enemy_ufo_blue";
+constexpr const char* SPR_ENEMY_UFO_RED  = "enemies/enemy_ufo_red";
 
 // Bosses
 constexpr const char* SPR_BOSS_1        = "bosses/boss_1";
 constexpr const char* SPR_BOSS_2        = "bosses/boss_2";
 constexpr const char* SPR_BOSS_3        = "bosses/boss_3";
 
-// Bullets
-constexpr const char* SPR_BULLET_PLAYER = "bullets/bullet_player";
-constexpr const char* SPR_BULLET_ENEMY  = "bullets/bullet_enemy";
-constexpr const char* SPR_BULLET_LASER  = "bullets/bullet_laser";
+// Bullets / Lasers (Kenney assets)
+constexpr const char* SPR_BULLET_PLAYER = "bullets/laser_player";
+constexpr const char* SPR_BULLET_ENEMY  = "bullets/laser_enemy";
+constexpr const char* SPR_BULLET_LASER  = "bullets/laser_weapon";
+constexpr const char* SPR_BULLET_PLAYER_WIDE = "bullets/laser_player_wide";
 
 // Effects
 constexpr const char* SPR_EXPLOSION_0   = "effects/explosion_0";
 constexpr const char* SPR_EXPLOSION_1   = "effects/explosion_1";
 constexpr const char* SPR_EXPLOSION_2   = "effects/explosion_2";
 constexpr const char* SPR_EXPLOSION_3   = "effects/explosion_3";
+// Engine exhaust fire animation frames (8 frames, index 0-7)
+constexpr const char* SPR_ENGINE_FIRE_0 = "effects/engine_fire00";
+constexpr const char* SPR_ENGINE_FIRE_1 = "effects/engine_fire01";
+constexpr const char* SPR_ENGINE_FIRE_2 = "effects/engine_fire02";
+constexpr const char* SPR_ENGINE_FIRE_3 = "effects/engine_fire03";
+constexpr const char* SPR_ENGINE_FIRE_4 = "effects/engine_fire04";
+constexpr const char* SPR_ENGINE_FIRE_5 = "effects/engine_fire05";
+constexpr const char* SPR_ENGINE_FIRE_6 = "effects/engine_fire06";
+constexpr const char* SPR_ENGINE_FIRE_7 = "effects/engine_fire07";
+// Meteor obstacles
+constexpr const char* SPR_METEOR_BROWN_BIG  = "effects/meteor_brown_big";
+constexpr const char* SPR_METEOR_BROWN_MED  = "effects/meteor_brown_med";
+constexpr const char* SPR_METEOR_GREY_BIG   = "effects/meteor_grey_big";
+constexpr const char* SPR_METEOR_GREY_SMALL = "effects/meteor_grey_small";
 
-// Power-ups
-constexpr const char* SPR_POWERUP_SPREAD  = "powerups/powerup_spread";
-constexpr const char* SPR_POWERUP_LASER   = "powerups/powerup_laser";
-constexpr const char* SPR_POWERUP_MISSILE = "powerups/powerup_missile";
-constexpr const char* SPR_POWERUP_SHIELD  = "powerups/powerup_shield";
-constexpr const char* SPR_POWERUP_BOMB    = "powerups/powerup_bomb";
-constexpr const char* SPR_POWERUP_POWER   = "powerups/powerup_power";
+// Power-ups (Kenney assets)
+constexpr const char* SPR_POWERUP_SPREAD  = "powerups/powerup_spread_k";
+constexpr const char* SPR_POWERUP_LASER   = "powerups/powerup_laser_k";
+constexpr const char* SPR_POWERUP_MISSILE = "powerups/powerup_missile_k";
+constexpr const char* SPR_POWERUP_SHIELD  = "powerups/powerup_shield_k";
+constexpr const char* SPR_POWERUP_BOMB    = "powerups/powerup_bomb_k";
+constexpr const char* SPR_POWERUP_POWER   = "powerups/powerup_power_k";
 
 // Backgrounds
 constexpr const char* SPR_BG_SPACE        = "backgrounds/space_bg";
