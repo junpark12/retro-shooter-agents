@@ -55,23 +55,48 @@ constexpr const char* SPR_ENEMY_FAST    = "enemies/enemy_fast_k";
 constexpr const char* SPR_ENEMY_ARMORED = "enemies/enemy_armored_k";
 constexpr const char* SPR_ENEMY_UFO_BLUE = "enemies/enemy_ufo_blue";
 constexpr const char* SPR_ENEMY_UFO_RED  = "enemies/enemy_ufo_red";
+// Extra enemy ship variants (Kenney Space Shooter Extension)
+constexpr const char* SPR_ENEMY_SHIP_1  = "enemies/spaceShips_001";
+constexpr const char* SPR_ENEMY_SHIP_2  = "enemies/spaceShips_002";
+constexpr const char* SPR_ENEMY_SHIP_3  = "enemies/spaceShips_003";
+constexpr const char* SPR_ENEMY_SHIP_4  = "enemies/spaceShips_004";
+constexpr const char* SPR_ENEMY_SHIP_5  = "enemies/spaceShips_005";
 
-// Bosses
-constexpr const char* SPR_BOSS_1        = "bosses/boss_1";
-constexpr const char* SPR_BOSS_2        = "bosses/boss_2";
-constexpr const char* SPR_BOSS_3        = "bosses/boss_3";
+// Bosses (200 Starships / Wisedawn CC0 — large-scale boss candidates)
+constexpr const char* SPR_BOSS_1        = "bosses/ship_20";
+constexpr const char* SPR_BOSS_2        = "bosses/ship_80";
+constexpr const char* SPR_BOSS_3        = "bosses/ship_180";
+// Fallback boss sprites (procedural, Python/Pillow)
+constexpr const char* SPR_BOSS_1_FB     = "bosses/boss_1";
+constexpr const char* SPR_BOSS_2_FB     = "bosses/boss_2";
+constexpr const char* SPR_BOSS_3_FB     = "bosses/boss_3";
 
 // Bullets / Lasers (Kenney assets)
 constexpr const char* SPR_BULLET_PLAYER = "bullets/laser_player";
 constexpr const char* SPR_BULLET_ENEMY  = "bullets/laser_enemy";
 constexpr const char* SPR_BULLET_LASER  = "bullets/laser_weapon";
 constexpr const char* SPR_BULLET_PLAYER_WIDE = "bullets/laser_player_wide";
+// Bullet-strip sprites (Bonsaiheldin / CC0): each strip is a single glow-orb bullet.
+// spr_bullet_strip  → blue/violet glow
+// spr_bullet_strip02 → green glow
+// spr_bullet_strip03 → yellow/gold glow
+// spr_bullet_strip04 → red/orange glow (if different)
+constexpr const char* SPR_BULLET_STRIP_BLUE   = "bullets/spr_bullet_strip";
+constexpr const char* SPR_BULLET_STRIP_GREEN  = "bullets/spr_bullet_strip02";
+constexpr const char* SPR_BULLET_STRIP_YELLOW = "bullets/spr_bullet_strip03";
+constexpr const char* SPR_BULLET_STRIP_RED    = "bullets/spr_bullet_strip04";
 
 // Effects
 constexpr const char* SPR_EXPLOSION_0   = "effects/explosion_0";
 constexpr const char* SPR_EXPLOSION_1   = "effects/explosion_1";
 constexpr const char* SPR_EXPLOSION_2   = "effects/explosion_2";
 constexpr const char* SPR_EXPLOSION_3   = "effects/explosion_3";
+// M484ExplosionSet1 sprite sheet (Master484 / CC0).
+// Layout: 3 sections wide × 3 sections tall; each section is one animation type.
+//   Columns: yellow/orange (0), blue/purple (1), red/pink (2)
+//   Rows:    large-ring (0), medium (1), small (2)
+// Frame size: 48×48 px; 8 frames per animation row.
+constexpr const char* SPR_EXPLOSION_SHEET  = "effects/M484ExplosionSet1";
 // Engine exhaust fire animation frames (8 frames, index 0-7)
 constexpr const char* SPR_ENGINE_FIRE_0 = "effects/engine_fire00";
 constexpr const char* SPR_ENGINE_FIRE_1 = "effects/engine_fire01";

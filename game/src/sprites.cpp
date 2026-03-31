@@ -43,6 +43,21 @@ const char* bossKey(int stageNum) {
     return SPR_BOSS_3;
 }
 
+const char* bossFallbackKey(int stageNum) {
+    if (stageNum == 1) return SPR_BOSS_1_FB;
+    if (stageNum == 2) return SPR_BOSS_2_FB;
+    return SPR_BOSS_3_FB;
+}
+
+const char* enemyBulletStripKey(int colorIdx) {
+    switch (colorIdx % 4) {
+        case 0: return SPR_BULLET_STRIP_BLUE;
+        case 1: return SPR_BULLET_STRIP_RED;
+        case 2: return SPR_BULLET_STRIP_YELLOW;
+        default: return SPR_BULLET_STRIP_GREEN;
+    }
+}
+
 const char* explosionKey(int frame) {
     static constexpr std::array<const char*, 4> keys = {
         SPR_EXPLOSION_0, SPR_EXPLOSION_1, SPR_EXPLOSION_2, SPR_EXPLOSION_3
@@ -224,9 +239,12 @@ void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
 void renderBossSprite(SDL_Renderer* renderer, const AssetManager& assets,
                       int x, int y, int stageNum, bool lockedOn, int phase) {
     SDL_Texture* tex = assets.get(bossKey(stageNum));
+    if (!tex) {
+        tex = assets.get(bossFallbackKey(stageNum));
+    }
     SDL_Rect dst = (stageNum == 1) ? SDL_Rect{x, y, 64, 48}
                    : (stageNum == 2) ? SDL_Rect{x, y, 72, 56}
-                                     : SDL_Rect{x, y, 80, 64};
+                                      : SDL_Rect{x, y, 80, 64};
 
     if (tex) {
         if (phase >= 3) SDL_SetTextureColorMod(tex, 255, 120, 120);
@@ -245,24 +263,53 @@ void renderBossSprite(SDL_Renderer* renderer, const AssetManager& assets,
 
 void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
                         int x, int y, BulletOwner owner, int colorIdx) {
-    SDL_Texture* tex = (owner == BulletOwner::PLAYER)
-        ? assets.get(SPR_BULLET_PLAYER)
-        : assets.get(SPR_BULLET_ENEMY);
-    SDL_Rect dst = (owner == BulletOwner::PLAYER) ? SDL_Rect{x, y, 9, 36}
-                                                   : SDL_Rect{x, y, 9, 36};
+    SDL_Texture* tex = nullptr;
+    SDL_Rect dst{};
+    SDL_Rect src{};
+    SDL_Rect* srcPtr = nullptr;
+    bool usingStrip = false;
+
+    if (owner == BulletOwner::PLAYER) {
+        tex = assets.get(SPR_BULLET_PLAYER);
+        dst = SDL_Rect{x, y, 9, 36};
+    } else {
+        tex = assets.get(enemyBulletStripKey(colorIdx));
+        if (tex) {
+            int texW = 0;
+            int texH = 0;
+            SDL_QueryTexture(tex, nullptr, nullptr, &texW, &texH);
+            if (texW > 0 && texH > 0) {
+                const int orbW = std::max(1, texW / 3);
+                src = SDL_Rect{0, 0, orbW, texH};
+                srcPtr = &src;
+                dst = SDL_Rect{x, y, 12, 12};
+                usingStrip = true;
+            }
+        }
+
+        if (!usingStrip) {
+            tex = assets.get(SPR_BULLET_ENEMY);
+            dst = SDL_Rect{x, y, 9, 36};
+            srcPtr = nullptr;
+        }
+    }
 
     if (tex) {
         if (owner == BulletOwner::PLAYER) {
             SDL_SetTextureColorMod(tex, 120, 255, 255);
         } else {
-            switch (colorIdx % 4) {
-                case 0: SDL_SetTextureColorMod(tex, 255, 0, 255); break;
-                case 1: SDL_SetTextureColorMod(tex, 255, 40, 40); break;
-                case 2: SDL_SetTextureColorMod(tex, 255, 230, 80); break;
-                default: SDL_SetTextureColorMod(tex, 80, 255, 80); break;
+            if (usingStrip) {
+                SDL_SetTextureColorMod(tex, 255, 255, 255);
+            } else {
+                switch (colorIdx % 4) {
+                    case 0: SDL_SetTextureColorMod(tex, 255, 0, 255); break;
+                    case 1: SDL_SetTextureColorMod(tex, 255, 40, 40); break;
+                    case 2: SDL_SetTextureColorMod(tex, 255, 230, 80); break;
+                    default: SDL_SetTextureColorMod(tex, 80, 255, 80); break;
+                }
             }
         }
-        SDL_RenderCopy(renderer, tex, nullptr, &dst);
+        SDL_RenderCopy(renderer, tex, srcPtr, &dst);
         SDL_SetTextureColorMod(tex, 255, 255, 255);
     } else {
         renderBulletPrimitive(renderer, x, y, owner, colorIdx);
@@ -281,9 +328,44 @@ void renderPowerUpSprite(SDL_Renderer* renderer, const AssetManager& assets, int
 
 void renderExplosion(SDL_Renderer* renderer, const AssetManager& assets,
                      int x, int y, int frame, bool big) {
-    SDL_Texture* tex = assets.get(explosionKey(frame));
+    SDL_Texture* sheetTex = assets.get(SPR_EXPLOSION_SHEET);
+    const int animFrame = std::clamp(frame, 0, 7);
     const int size = big ? 64 : 32;
     SDL_Rect dst{x - size / 2, y - size / 2, size, size};
+
+    if (sheetTex) {
+        int sheetW = 0;
+        int sheetH = 0;
+        SDL_QueryTexture(sheetTex, nullptr, nullptr, &sheetW, &sheetH);
+
+        if (sheetW > 0 && sheetH > 0) {
+            const int sectionW = sheetW / 3;
+            const int sectionH = sheetH / 3;
+            const int frameW = sectionW / 8;
+            const int frameH = sectionH / 4;
+            if (sectionW > 0 && sectionH > 0 && frameW > 0 && frameH > 0) {
+                const int sectionCol = big ? 0 : (animFrame % 3);
+                const int sectionRow = big ? 0 : 1;
+                const int frameCol = animFrame;
+                const int frameRow = 0;
+
+                SDL_Rect src{
+                    sectionCol * sectionW + frameCol * frameW,
+                    sectionRow * sectionH + frameRow * frameH,
+                    frameW,
+                    frameH
+                };
+
+                const Uint8 alpha = static_cast<Uint8>(std::max(8, 255 - animFrame * 32));
+                SDL_SetTextureAlphaMod(sheetTex, alpha);
+                SDL_RenderCopy(renderer, sheetTex, &src, &dst);
+                SDL_SetTextureAlphaMod(sheetTex, 255);
+                return;
+            }
+        }
+    }
+
+    SDL_Texture* tex = assets.get(explosionKey(frame));
 
     if (tex) {
         SDL_RenderCopy(renderer, tex, nullptr, &dst);

@@ -26,22 +26,37 @@ bool AssetManager::init(SDL_Renderer* r) {
     load(SPR_ENEMY_UFO_BLUE, "assets/sprites/enemies/enemy_ufo_blue.png");
     load(SPR_ENEMY_UFO_RED,  "assets/sprites/enemies/enemy_ufo_red.png");
 
-    // Bosses
-    load(SPR_BOSS_1,        "assets/sprites/bosses/boss_1.png");
-    load(SPR_BOSS_2,        "assets/sprites/bosses/boss_2.png");
-    load(SPR_BOSS_3,        "assets/sprites/bosses/boss_3.png");
+    // Bosses (200 Starships + fallback set)
+    load(SPR_BOSS_1,        "assets/sprites/bosses/ship_20.png");
+    load(SPR_BOSS_2,        "assets/sprites/bosses/ship_80.png");
+    load(SPR_BOSS_3,        "assets/sprites/bosses/ship_180.png");
+    load(SPR_BOSS_1_FB,     "assets/sprites/bosses/boss_1.png");
+    load(SPR_BOSS_2_FB,     "assets/sprites/bosses/boss_2.png");
+    load(SPR_BOSS_3_FB,     "assets/sprites/bosses/boss_3.png");
+
+    // Extra enemy ship variants
+    load(SPR_ENEMY_SHIP_1,  "assets/sprites/enemies/spaceShips_001.png");
+    load(SPR_ENEMY_SHIP_2,  "assets/sprites/enemies/spaceShips_002.png");
+    load(SPR_ENEMY_SHIP_3,  "assets/sprites/enemies/spaceShips_003.png");
+    load(SPR_ENEMY_SHIP_4,  "assets/sprites/enemies/spaceShips_004.png");
+    load(SPR_ENEMY_SHIP_5,  "assets/sprites/enemies/spaceShips_005.png");
 
     // Bullets / Lasers (Kenney)
     load(SPR_BULLET_PLAYER,      "assets/sprites/bullets/laser_player.png");
     load(SPR_BULLET_PLAYER_WIDE, "assets/sprites/bullets/laser_player_wide.png");
     load(SPR_BULLET_ENEMY,       "assets/sprites/bullets/laser_enemy.png");
     load(SPR_BULLET_LASER,       "assets/sprites/bullets/laser_weapon.png");
+    load(SPR_BULLET_STRIP_BLUE,   "assets/sprites/bullets/spr_bullet_strip.png");
+    load(SPR_BULLET_STRIP_GREEN,  "assets/sprites/bullets/spr_bullet_strip02.png");
+    load(SPR_BULLET_STRIP_YELLOW, "assets/sprites/bullets/spr_bullet_strip03.png");
+    load(SPR_BULLET_STRIP_RED,    "assets/sprites/bullets/spr_bullet_strip04.png");
 
     // Explosions
     load(SPR_EXPLOSION_0, "assets/sprites/effects/explosion_0.png");
     load(SPR_EXPLOSION_1, "assets/sprites/effects/explosion_1.png");
     load(SPR_EXPLOSION_2, "assets/sprites/effects/explosion_2.png");
     load(SPR_EXPLOSION_3, "assets/sprites/effects/explosion_3.png");
+    load(SPR_EXPLOSION_SHEET, "assets/sprites/effects/M484ExplosionSet1.png");
 
     // Engine fire animation frames (Kenney)
     load(SPR_ENGINE_FIRE_0, "assets/sprites/effects/engine_fire00.png");
