@@ -178,3 +178,9 @@ The files below are requested via `asset-request.json` and will be downloaded by
 | `https://opengameart.org/sites/default/files/Space%20Bass_0.ogg` | OpenGameArt | Fupi | CC0 | Boss/tense stage BGM |
 | `https://opengameart.org/sites/default/files/The%20Essential%20Retro%20Video%20Game%20Sound%20Effects%20Collection%20%5B512%20sounds%5D.zip` | OpenGameArt | SubspaceAudio | CC0 | Laser/explosion/UI SFX bank |
 | `https://opengameart.org/sites/default/files/100-CC0-SFX_0.zip` | OpenGameArt | rubberduck | CC0 | General-purpose SFX bank |
+| `https://opengameart.org/sites/default/files/200Starships.zip` | OpenGameArt | Wisedawn | CC0 | Boss-scale ship candidates and enemy variants |
+| `https://opengameart.org/sites/default/files/spr_bullet_strip.png` | OpenGameArt | Bonsaiheldin | CC0 | Bullet strip set 1 |
+| `https://opengameart.org/sites/default/files/spr_bullet_strip02.png` | OpenGameArt | Bonsaiheldin | CC0 | Bullet strip set 2 |
+| `https://opengameart.org/sites/default/files/spr_bullet_strip03.png` | OpenGameArt | Bonsaiheldin | CC0 | Bullet strip set 3 |
+| `https://opengameart.org/sites/default/files/spr_bullet_strip04.png` | OpenGameArt | Bonsaiheldin | CC0 | Bullet strip set 4 |
+| `https://opengameart.org/sites/default/files/M484ExplosionSet1.png` | OpenGameArt | Master484 | CC0 | Ship destruction / explosion sprite sheet |
