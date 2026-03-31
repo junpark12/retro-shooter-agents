@@ -179,6 +179,21 @@ tools:
 7. **상태 머신**: `TITLE → SHIP_SELECT → PLAYING → STAGE_CLEAR → GAMEOVER → VICTORY`
 8. **탄막 시스템**: BulletPattern 클래스로 다양한 탄막 패턴 생성
 
+## 🚨 에셋 사용 규칙 (필수)
+
+**`game/assets/` 디렉토리에 이미 다운로드된 외부 에셋이 있으면 반드시 우선 사용하세요.**
+
+서브에이전트(`@developer`, `@ui-designer`)에게도 이 규칙을 전달하세요:
+
+- ✅ `game/assets/sprites/`에 PNG가 있으면 → SDL2_image로 로드하여 사용
+- ✅ `game/assets/bgm/`에 OGG/WAV가 있으면 → SDL2_mixer로 BGM 재생
+- ✅ `game/assets/sfx/`에 WAV가 있으면 → SDL2_mixer로 SFX 재생
+- ✅ `game/assets/fonts/`에 TTF가 있으면 → SDL2_ttf로 텍스트 렌더링
+- ❌ 외부 에셋이 존재하는데 Pillow/프리미티브로 새로 생성 금지
+- ❌ 에셋 파일을 무시하고 하드코딩 금지
+
+**에셋이 없는 경우에만** SDL2 프리미티브 fallback을 사용합니다.
+
 ## 모듈 구조
 
 ```
