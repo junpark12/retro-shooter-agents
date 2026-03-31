@@ -1,6 +1,7 @@
 name: Download Game Assets
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - '**'
