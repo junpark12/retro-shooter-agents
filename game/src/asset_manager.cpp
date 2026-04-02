@@ -27,12 +27,13 @@ bool AssetManager::init(SDL_Renderer* r) {
     load(SPR_ENEMY_UFO_RED,  "assets/sprites/enemies/enemy_ufo_red.png");
 
     // Bosses (200 Starships + fallback set)
-    load(SPR_BOSS_1,        "assets/sprites/bosses/ship_20.png");
-    load(SPR_BOSS_2,        "assets/sprites/bosses/ship_80.png");
-    load(SPR_BOSS_3,        "assets/sprites/bosses/ship_180.png");
+    load(SPR_BOSS_1,        "assets/sprites/bosses_extra/og_001_0.png");
+    load(SPR_BOSS_2,        "assets/sprites/bosses_extra/og_002_1.png");
+    load(SPR_BOSS_3,        "assets/sprites/bosses_extra/Titan_0.png");
     load(SPR_BOSS_1_FB,     "assets/sprites/bosses/boss_1.png");
     load(SPR_BOSS_2_FB,     "assets/sprites/bosses/boss_2.png");
     load(SPR_BOSS_3_FB,     "assets/sprites/bosses/boss_3.png");
+    load(SPR_BOSS_MISSILE,  "assets/sprites/boss_missiles/missile.png");
 
     // Extra enemy ship variants
     load(SPR_ENEMY_SHIP_1,  "assets/sprites/enemies/spaceShips_001.png");

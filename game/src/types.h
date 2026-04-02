@@ -72,7 +72,8 @@ enum class PowerUpType {
 
 enum class BulletOwner {
     PLAYER,
-    ENEMY
+    ENEMY,
+    BOSS
 };
 
 // ─── Bullet patterns (Bullet Hell patterns) ───────────────────────────────────

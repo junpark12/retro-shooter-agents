@@ -51,7 +51,7 @@ GameState handleMenuEvent(Menu& m, const SDL_Event& e) {
 }
 
 void renderMenu(SDL_Renderer* renderer, const AssetManager&, TTF_Font* font, const Menu& m, int hiScore) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 20, 255);
+    SDL_SetRenderDrawColor(renderer, 35, 5, 10, 255);
     SDL_Rect bg{0, 0, SCREEN_W, SCREEN_H};
     SDL_RenderFillRect(renderer, &bg);
 
@@ -84,7 +84,15 @@ void renderMenu(SDL_Renderer* renderer, const AssetManager&, TTF_Font* font, con
     std::ostringstream oss;
     oss << "HI-SCORE " << std::setw(6) << std::setfill('0') << std::max(0, hiScore);
     renderText(renderer, font, oss.str().c_str(), 124, SCREEN_H - 46, SDL_Color{220, 220, 220, 255});
-    renderText(renderer, font, "PRESS SPACE TO START", 120, 420, SDL_Color{220, 220, 220, 255});
+    renderText(renderer, font, "PRESS SPACE TO START", 120, 404, SDL_Color{220, 220, 220, 255});
+    
+    // Controls guide
+    renderText(renderer, font, "- CONTROLS -", 154, 430, SDL_Color{255, 220, 0, 255});
+    renderText(renderer, font, "MOVE  : ARROWS / WASD", 90, 452, SDL_Color{160, 210, 255, 255});
+    renderText(renderer, font, "FIRE  : SPACE / X", 90, 468, SDL_Color{160, 210, 255, 255});
+    renderText(renderer, font, "LOCK  : Z", 90, 484, SDL_Color{160, 210, 255, 255});
+    renderText(renderer, font, "BOMB  : C", 90, 500, SDL_Color{160, 210, 255, 255});
+    renderText(renderer, font, "CHARGE: HOLD SPACE/X", 90, 516, SDL_Color{160, 210, 255, 255});
     renderText(renderer, font, "C 2026 GALAXY STORM TEAM", 118, SCREEN_H - 24, SDL_Color{130, 130, 130, 255});
 }
 

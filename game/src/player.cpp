@@ -178,7 +178,7 @@ void initPlayer(Player& p, ShipType ship) {
     p.active = true;
     p.shipType = ship;
     p.pos = {SCREEN_W * 0.5f - 14.0f, SCREEN_H - 90.0f};
-    p.bounds = {4.0f, 6.0f, 20.0f, 24.0f};
+    p.bounds = {14.0f, 12.0f, 20.0f, 24.0f};
     p.hp = 3;
     p.lives = 3;
     p.score = 0;

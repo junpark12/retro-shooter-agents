@@ -25,6 +25,9 @@ void fireBullet(BulletPool& bp, Vec2 pos, Vec2 vel, BulletOwner owner, int damag
         if (owner == BulletOwner::PLAYER) {
             b.bounds = {0.0f, 0.0f, 4.0f, 12.0f};
             b.hitRadius = 2.0f;
+        } else if (owner == BulletOwner::BOSS) {
+            b.bounds = {0.0f, 0.0f, 14.0f, 28.0f};
+            b.hitRadius = 7.0f;
         } else {
             b.bounds = {0.0f, 0.0f, 10.0f, 10.0f};
             b.hitRadius = 5.0f;
@@ -93,7 +96,7 @@ void renderBullets(SDL_Renderer* renderer, const AssetManager& assets, const Bul
 
 void clearEnemyBullets(BulletPool& bp) {
     for (Bullet& b : bp.pool) {
-        if (b.active && b.owner == BulletOwner::ENEMY) {
+        if (b.active && (b.owner == BulletOwner::ENEMY || b.owner == BulletOwner::BOSS)) {
             b.active = false;
         }
     }

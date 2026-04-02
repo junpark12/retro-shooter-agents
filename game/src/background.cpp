@@ -48,13 +48,15 @@ void updateBackground(Background& bg, float dt) {
 void renderBackground(SDL_Renderer* renderer, const AssetManager& assets, const Background& bg) {
     SDL_Texture* bgTex = assets.get(SPR_BG_SPACE);
     if (bgTex) {
+        SDL_SetTextureColorMod(bgTex, 220, 80, 80);
         const int scroll = static_cast<int>(bg.nebulaScrollY) % SCREEN_H;
         SDL_Rect top{0, scroll - SCREEN_H, SCREEN_W, SCREEN_H};
         SDL_Rect bottom{0, scroll, SCREEN_W, SCREEN_H};
         SDL_RenderCopy(renderer, bgTex, nullptr, &top);
         SDL_RenderCopy(renderer, bgTex, nullptr, &bottom);
+        SDL_SetTextureColorMod(bgTex, 255, 255, 255);
     } else {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 20, 255);
+        SDL_SetRenderDrawColor(renderer, 35, 5, 10, 255);
         SDL_Rect fill{0, 0, SCREEN_W, SCREEN_H};
         SDL_RenderFillRect(renderer, &fill);
     }
