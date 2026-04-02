@@ -29,8 +29,8 @@ void fireBullet(BulletPool& bp, Vec2 pos, Vec2 vel, BulletOwner owner, int damag
             b.bounds = {0.0f, 0.0f, 14.0f, 28.0f};
             b.hitRadius = 7.0f;
         } else {
-            b.bounds = {0.0f, 0.0f, 10.0f, 10.0f};
-            b.hitRadius = 5.0f;
+            b.bounds = {0.0f, 0.0f, 20.0f, 20.0f};
+            b.hitRadius = 10.0f;
         }
         return;
     }
