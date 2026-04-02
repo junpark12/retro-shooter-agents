@@ -61,6 +61,18 @@
 
 ---
 
+## Additional Boss Assets (2026-04-02)
+
+| File | Source | Author | License | Usage |
+|------|--------|--------|---------|-------|
+| `sprites/bosses_extra/Titan_0.png` | [OpenGameArt - Titan battlecruiser](https://opengameart.org/content/titan-battlecruiser) | kanadaj (based on kit by Skorpio) | CC-BY-SA 3.0 | Boss candidate ship (large battlecruiser) |
+| `sprites/bosses_extra/og_001_0.png` | [OpenGameArt - Ship Sprites](https://opengameart.org/content/ship-sprites-0) | Prime_8 | CC0 | Boss candidate ship variant |
+| `sprites/bosses_extra/og_002_1.png` | [OpenGameArt - Ship Sprites](https://opengameart.org/content/ship-sprites-0) | Prime_8 | CC0 | Boss candidate ship variant |
+| `sprites/bosses_extra/og_003_0.png` | [OpenGameArt - Ship Sprites](https://opengameart.org/content/ship-sprites-0) | Prime_8 | CC0 | Boss candidate ship variant |
+| `sprites/boss_missiles/*` | [OpenGameArt - SpaceShip Set](https://opengameart.org/content/spaceship-set) | The_Scientist___ | CC0 | Boss missile sprite source (zip contains missile sprite) |
+
+---
+
 ## ⚡ Sprites — Power-Ups
 
 | 파일 | 출처 | 작성자 | 라이선스 |

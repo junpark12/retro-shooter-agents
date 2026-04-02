@@ -1,0 +1,23 @@
+{
+  "assets": [
+    {
+      "category": "sprites/bosses_extra",
+      "urls": [
+        "https://opengameart.org/sites/default/files/Titan_0.png",
+        "https://opengameart.org/sites/default/files/og_001_0.png",
+        "https://opengameart.org/sites/default/files/og_002_1.png",
+        "https://opengameart.org/sites/default/files/og_003_0.png"
+      ],
+      "source": "OpenGameArt",
+      "license": "CC-BY-SA 3.0 + CC0"
+    },
+    {
+      "category": "sprites/boss_missiles",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceShip%20Sprites.zip"
+      ],
+      "source": "OpenGameArt",
+      "license": "CC0"
+    }
+  ]
+}
