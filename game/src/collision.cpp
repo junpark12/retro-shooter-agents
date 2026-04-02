@@ -107,7 +107,7 @@ void checkBulletPlayerCollision(BulletPool& bullets, Player& player, AudioManage
 
     Vec2 pc = player.center();
     for (Bullet& b : bullets.pool) {
-        if (!b.active || b.owner != BulletOwner::ENEMY) continue;
+        if (!b.active || (b.owner != BulletOwner::ENEMY && b.owner != BulletOwner::BOSS)) continue;
         const Vec2 bc = b.center();
         if (!circlesOverlap(pc.x, pc.y, player.hitRadius, bc.x, bc.y, b.hitRadius)) continue;
 

@@ -176,9 +176,9 @@ void renderBulletPrimitive(SDL_Renderer* renderer, int x, int y, BulletOwner own
         else if (colorIdx % 4 == 1) setColor(renderer, COLOR_RED);
         else if (colorIdx % 4 == 2) setColor(renderer, COLOR_YELLOW);
         else setColor(renderer, COLOR_GREEN);
-        drawFilledCircle(renderer, x + 5, y + 5, 6);
+        drawFilledCircle(renderer, x + 7, y + 7, 8);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
-        SDL_RenderDrawPoint(renderer, x + 5, y + 5);
+        SDL_RenderDrawPoint(renderer, x + 7, y + 7);
     }
 }
 
@@ -276,9 +276,9 @@ void renderBossSprite(SDL_Renderer* renderer, const AssetManager& assets,
     if (!tex) {
         tex = assets.get(bossFallbackKey(stageNum));
     }
-    SDL_Rect dst = (stageNum == 1) ? SDL_Rect{x, y, 64, 48}
-                   : (stageNum == 2) ? SDL_Rect{x, y, 72, 56}
-                                      : SDL_Rect{x, y, 80, 64};
+    SDL_Rect dst = (stageNum == 1) ? SDL_Rect{x, y, 160, 120}
+                   : (stageNum == 2) ? SDL_Rect{x, y, 180, 140}
+                                       : SDL_Rect{x, y, 200, 160};
 
     if (tex) {
         if (phase >= 3) SDL_SetTextureColorMod(tex, 255, 120, 120);
@@ -306,6 +306,9 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
     if (owner == BulletOwner::PLAYER) {
         tex = assets.get(SPR_BULLET_PLAYER);
         dst = SDL_Rect{x, y, 9, 36};
+    } else if (owner == BulletOwner::BOSS) {
+        tex = assets.get(SPR_BOSS_MISSILE);
+        dst = SDL_Rect{x - 8, y - 16, 24, 48};
     } else {
         tex = assets.get(enemyBulletStripKey(colorIdx));
         if (tex) {
@@ -316,14 +319,14 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
                 const int orbW = std::max(1, texW / 3);
                 src = SDL_Rect{0, 0, orbW, texH};
                 srcPtr = &src;
-                dst = SDL_Rect{x - 2, y - 2, 14, 14};
+                dst = SDL_Rect{x - 5, y - 5, 22, 22};
                 usingStrip = true;
             }
         }
 
         if (!usingStrip) {
             tex = assets.get(SPR_BULLET_ENEMY);
-            dst = SDL_Rect{x - 2, y - 2, 14, 14};
+            dst = SDL_Rect{x - 5, y - 5, 22, 22};
             srcPtr = nullptr;
         }
     }
@@ -331,6 +334,8 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
     if (tex) {
         if (owner == BulletOwner::PLAYER) {
             SDL_SetTextureColorMod(tex, 120, 255, 255);
+        } else if (owner == BulletOwner::BOSS) {
+            SDL_SetTextureColorMod(tex, 255, 120, 120);
         } else {
             if (usingStrip) {
                 switch (colorIdx % 4) {

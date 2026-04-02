@@ -12,6 +12,7 @@
 #include "particles.h"
 #include "player.h"
 #include "powerup.h"
+#include "sprites.h"
 #include "stage.h"
 
 #include <SDL_image.h>
@@ -282,6 +283,15 @@ void Game::update(float dt) {
     }
 
     updatePlayer(*player_, dt, *bullets_, *enemies_);
+    // Detect bomb activation edge: start screen shake
+    if (player_->bombActive && !prevBombActive_) {
+        screenShakeTimer_ = 0.35f;
+    }
+    prevBombActive_ = player_->bombActive;
+    if (screenShakeTimer_ > 0.0f) {
+        screenShakeTimer_ -= dt;
+        if (screenShakeTimer_ < 0.0f) screenShakeTimer_ = 0.0f;
+    }
     updateStage(*stage_, dt, *enemies_, *boss_);
     updateEnemies(*enemies_, dt, *bullets_, player_->center());
     updateBoss(*boss_, dt, *bullets_, player_->center());
@@ -339,12 +349,31 @@ void Game::render() {
         return;
     }
 
+    // Apply screen shake offset when bomb is active
+    if (screenShakeTimer_ > 0.0f) {
+        const float intensity = 10.0f * (screenShakeTimer_ / 0.35f);
+        const int ox = static_cast<int>((std::rand() % static_cast<int>(intensity * 2 + 1)) - intensity);
+        const int oy = static_cast<int>((std::rand() % static_cast<int>(intensity * 2 + 1)) - intensity);
+        SDL_Rect viewport{ox, oy, SCREEN_W, SCREEN_H};
+        SDL_RenderSetViewport(renderer_, &viewport);
+    }
+
     renderEnemies(renderer_, *assets_, *enemies_);
     renderBoss(renderer_, *assets_, *boss_);
     renderPowerUps(renderer_, *assets_, *powerUps_);
     renderPlayer(renderer_, *assets_, *player_);
     renderParticles(renderer_, *particles_);
     renderBullets(renderer_, *assets_, *bullets_);
+
+    // Reset viewport after shake
+    if (screenShakeTimer_ > 0.0f) {
+        SDL_RenderSetViewport(renderer_, nullptr);
+    }
+
+    // Bomb flash overlay
+    if (player_->bombActive) {
+        renderBombFlash(renderer_, player_->bombTimer);
+    }
 
     if (state_ == GameState::PLAYING) {
         renderHUD(renderer_, *assets_, font_, *player_, stageNum_, hiScore_);

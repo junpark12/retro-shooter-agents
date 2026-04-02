@@ -20,21 +20,21 @@ void initBoss(Boss& b, int stageNum) {
     b.attackTimer = 0.6f;
     b.moveTimer = 0.0f;
     b.active = true;
-    b.pos = {SCREEN_W * 0.5f - 36.0f, 48.0f};
+    b.pos = {SCREEN_W * 0.5f - 80.0f, 48.0f};
     b.vel = {0.0f, 0.0f};
 
     switch (stageNum) {
         case 1:
             b.maxHp = 30;
-            b.bounds = {0.0f, 0.0f, 64.0f, 48.0f};
+            b.bounds = {0.0f, 0.0f, 160.0f, 120.0f};
             break;
         case 2:
             b.maxHp = 50;
-            b.bounds = {0.0f, 0.0f, 72.0f, 56.0f};
+            b.bounds = {0.0f, 0.0f, 180.0f, 140.0f};
             break;
         default:
             b.maxHp = 80;
-            b.bounds = {0.0f, 0.0f, 80.0f, 64.0f};
+            b.bounds = {0.0f, 0.0f, 200.0f, 160.0f};
             break;
     }
     b.hp = b.maxHp;
@@ -81,44 +81,44 @@ void updateBoss(Boss& b, float dt, BulletPool& bullets, Vec2 playerPos) {
     if (b.attackTimer <= 0.0f) {
         if (b.stageNum == 1) {
             if (b.phase == 1) {
-                firePattern(bullets, BulletPattern::CIRCLE_8, origin, playerPos, b.patternAngle, 220.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::CIRCLE_8, origin, playerPos, b.patternAngle, 220.0f * bulletMul, 1, BulletOwner::BOSS);
             } else if (b.phase == 2) {
-                firePattern(bullets, BulletPattern::AIMED_SPREAD, origin, playerPos, 0.0f, 260.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::AIMED_SPREAD, origin, playerPos, 0.0f, 260.0f * bulletMul, 1, BulletOwner::BOSS);
             } else {
-                firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 250.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 170.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 250.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 170.0f * bulletMul, 1, BulletOwner::BOSS);
             }
             b.attackTimer = (b.phase == 1 ? 1.0f : b.phase == 2 ? 0.8f : 0.55f) / speedMul;
         } else if (b.stageNum == 2) {
             if (b.phase == 1) {
-                firePattern(bullets, BulletPattern::SPIRAL_CCW, origin, playerPos, b.patternAngle, 230.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::SPIRAL_CCW, origin, playerPos, b.patternAngle, 230.0f * bulletMul, 1, BulletOwner::BOSS);
             } else if (b.phase == 2) {
-                firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 240.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::AIMED, origin, playerPos, 0.0f, 300.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 240.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::AIMED, origin, playerPos, 0.0f, 300.0f * bulletMul, 1, BulletOwner::BOSS);
             } else {
-                firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 180.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::RANDOM_SPREAD, origin, playerPos, -PI * 0.5f, 250.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 180.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::RANDOM_SPREAD, origin, playerPos, -PI * 0.5f, 250.0f * bulletMul, 1, BulletOwner::BOSS);
             }
             b.attackTimer = (b.phase == 1 ? 0.95f : b.phase == 2 ? 0.75f : 0.5f) / speedMul;
         } else {
             if (b.phase == 1) {
-                firePattern(bullets, BulletPattern::AIMED_SPREAD, origin, playerPos, 0.0f, 270.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::AIMED_SPREAD, origin, playerPos, 0.0f, 270.0f * bulletMul, 1, BulletOwner::BOSS);
             } else if (b.phase == 2) {
-                firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 240.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 230.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 240.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 230.0f * bulletMul, 1, BulletOwner::BOSS);
             } else {
-                firePattern(bullets, BulletPattern::SINGLE, origin, playerPos, 0.0f, 280.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::SPREAD_3, origin, playerPos, -PI * 0.5f, 280.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::SPREAD_5, origin, playerPos, -PI * 0.5f, 260.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::CIRCLE_8, origin, playerPos, b.patternAngle, 220.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 170.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 240.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::SPIRAL_CCW, origin, playerPos, b.patternAngle, 240.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::AIMED, origin, playerPos, 0.0f, 320.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::AIMED_SPREAD, origin, playerPos, 0.0f, 290.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 230.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::RANDOM_SPREAD, origin, playerPos, -PI * 0.5f, 260.0f * bulletMul, 1, BulletOwner::ENEMY);
-                firePattern(bullets, BulletPattern::HOMING, origin, playerPos, -PI * 0.5f, 220.0f * bulletMul, 1, BulletOwner::ENEMY);
+                firePattern(bullets, BulletPattern::SINGLE, origin, playerPos, 0.0f, 280.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::SPREAD_3, origin, playerPos, -PI * 0.5f, 280.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::SPREAD_5, origin, playerPos, -PI * 0.5f, 260.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::CIRCLE_8, origin, playerPos, b.patternAngle, 220.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 170.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 240.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::SPIRAL_CCW, origin, playerPos, b.patternAngle, 240.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::AIMED, origin, playerPos, 0.0f, 320.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::AIMED_SPREAD, origin, playerPos, 0.0f, 290.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 230.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::RANDOM_SPREAD, origin, playerPos, -PI * 0.5f, 260.0f * bulletMul, 1, BulletOwner::BOSS);
+                firePattern(bullets, BulletPattern::HOMING, origin, playerPos, -PI * 0.5f, 220.0f * bulletMul, 1, BulletOwner::BOSS);
             }
             b.attackTimer = (b.phase == 1 ? 0.85f : b.phase == 2 ? 0.60f : 0.38f) / speedMul;
         }

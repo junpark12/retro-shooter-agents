@@ -65,6 +65,8 @@ private:
     ParticleSystem* particles_  = nullptr;
     bool          bossMusicPlaying_ = false;
     int           hiScore_          = 0;   // all-time high score (persisted)
+    float         screenShakeTimer_     = 0.0f;  // > 0 while bomb screen shake is active
+    bool          prevBombActive_       = false;  // previous frame bomb state (for edge detection)
 
     // ── Persistence helpers ───────────────────────────────────────────────────
 

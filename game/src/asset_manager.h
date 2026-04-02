@@ -70,6 +70,8 @@ constexpr const char* SPR_BOSS_3        = "bosses/ship_180";
 constexpr const char* SPR_BOSS_1_FB     = "bosses/boss_1";
 constexpr const char* SPR_BOSS_2_FB     = "bosses/boss_2";
 constexpr const char* SPR_BOSS_3_FB     = "bosses/boss_3";
+// Boss missile sprite (boss_missiles directory)
+constexpr const char* SPR_BOSS_MISSILE  = "boss_missiles/missile";
 
 // Bullets / Lasers (Kenney assets)
 constexpr const char* SPR_BULLET_PLAYER = "bullets/laser_player";
