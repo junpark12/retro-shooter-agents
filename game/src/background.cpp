@@ -48,7 +48,7 @@ void updateBackground(Background& bg, float dt) {
 void renderBackground(SDL_Renderer* renderer, const AssetManager& assets, const Background& bg) {
     SDL_Texture* bgTex = assets.get(SPR_BG_SPACE);
     if (bgTex) {
-        SDL_SetTextureColorMod(bgTex, 220, 80, 80);
+        SDL_SetTextureColorMod(bgTex, 255, 30, 30);
         const int scroll = static_cast<int>(bg.nebulaScrollY) % SCREEN_H;
         SDL_Rect top{0, scroll - SCREEN_H, SCREEN_W, SCREEN_H};
         SDL_Rect bottom{0, scroll, SCREEN_W, SCREEN_H};
@@ -56,7 +56,7 @@ void renderBackground(SDL_Renderer* renderer, const AssetManager& assets, const 
         SDL_RenderCopy(renderer, bgTex, nullptr, &bottom);
         SDL_SetTextureColorMod(bgTex, 255, 255, 255);
     } else {
-        SDL_SetRenderDrawColor(renderer, 35, 5, 10, 255);
+        SDL_SetRenderDrawColor(renderer, 90, 5, 10, 255);
         SDL_Rect fill{0, 0, SCREEN_W, SCREEN_H};
         SDL_RenderFillRect(renderer, &fill);
     }
@@ -69,17 +69,17 @@ void renderBackground(SDL_Renderer* renderer, const AssetManager& assets, const 
 
         Uint8 r = b, g = b, bl = b;
         if (s.colorVariant == 1) {
-            r = 0;
-            g = static_cast<Uint8>(std::max<int>(40, (200 * b) / 255));
-            bl = static_cast<Uint8>(std::max<int>(40, (255 * b) / 255));
+            r = b;
+            g = static_cast<Uint8>((50 * b) / 255);
+            bl = static_cast<Uint8>((50 * b) / 255);
         } else if (s.colorVariant == 2) {
-            r = static_cast<Uint8>((100 * b) / 255);
-            g = static_cast<Uint8>((150 * b) / 255);
-            bl = b;
+            r = b;
+            g = static_cast<Uint8>((80 * b) / 255);
+            bl = static_cast<Uint8>((30 * b) / 255);
         } else if (s.colorVariant == 3) {
             r = b;
-            g = b;
-            bl = static_cast<Uint8>((150 * b) / 255);
+            g = static_cast<Uint8>((b * 3) / 4);
+            bl = static_cast<Uint8>(b / 2);
         }
 
         SDL_Rect px{static_cast<int>(s.pos.x), static_cast<int>(s.pos.y), size, size};

@@ -171,14 +171,19 @@ void renderBulletPrimitive(SDL_Renderer* renderer, int x, int y, BulletOwner own
         drawFilledCircle(renderer, x + 3, y + 3, 3);
         setColor(renderer, COLOR_WHITE);
         fill(renderer, x + 2, y - 2, 2, 4);
+    } else if (owner == BulletOwner::BOSS) {
+        SDL_SetRenderDrawColor(renderer, 255, 230, 0, 255);
+        drawFilledCircle(renderer, x + 7, y + 14, 12);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderDrawPoint(renderer, x + 7, y + 14);
     } else {
         if (colorIdx % 4 == 0) setColor(renderer, COLOR_MAGENTA);
         else if (colorIdx % 4 == 1) setColor(renderer, COLOR_RED);
         else if (colorIdx % 4 == 2) setColor(renderer, COLOR_YELLOW);
         else setColor(renderer, COLOR_GREEN);
-        drawFilledCircle(renderer, x + 7, y + 7, 8);
+        drawFilledCircle(renderer, x + 10, y + 20, 16);
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 200);
-        SDL_RenderDrawPoint(renderer, x + 7, y + 7);
+        SDL_RenderDrawPoint(renderer, x + 10, y + 20);
     }
 }
 
@@ -319,14 +324,14 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
                 const int orbW = std::max(1, texW / 3);
                 src = SDL_Rect{0, 0, orbW, texH};
                 srcPtr = &src;
-                dst = SDL_Rect{x - 5, y - 5, 22, 22};
+                dst = SDL_Rect{x - 10, y - 20, 20, 40};
                 usingStrip = true;
             }
         }
 
         if (!usingStrip) {
             tex = assets.get(SPR_BULLET_ENEMY);
-            dst = SDL_Rect{x - 5, y - 5, 22, 22};
+            dst = SDL_Rect{x - 10, y - 20, 20, 40};
             srcPtr = nullptr;
         }
     }
@@ -335,7 +340,7 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
         if (owner == BulletOwner::PLAYER) {
             SDL_SetTextureColorMod(tex, 120, 255, 255);
         } else if (owner == BulletOwner::BOSS) {
-            SDL_SetTextureColorMod(tex, 255, 120, 120);
+            SDL_SetTextureColorMod(tex, 255, 230, 0);
         } else {
             if (usingStrip) {
                 switch (colorIdx % 4) {
@@ -353,7 +358,11 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
                 }
             }
         }
-        SDL_RenderCopy(renderer, tex, srcPtr, &dst);
+        if (owner == BulletOwner::ENEMY && usingStrip) {
+            SDL_RenderCopyEx(renderer, tex, srcPtr, &dst, 90.0, nullptr, SDL_FLIP_NONE);
+        } else {
+            SDL_RenderCopy(renderer, tex, srcPtr, &dst);
+        }
         SDL_SetTextureColorMod(tex, 255, 255, 255);
     } else {
         renderBulletPrimitive(renderer, x, y, owner, colorIdx);

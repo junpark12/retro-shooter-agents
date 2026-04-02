@@ -202,13 +202,13 @@ void initPlayer(Player& p, ShipType ship) {
 
     switch (ship) {
         case ShipType::BAGON:
-            p.hitRadius = 3.0f;
+            p.hitRadius = 5.0f;
             break;
         case ShipType::DAMUL:
-            p.hitRadius = 4.0f;
+            p.hitRadius = 6.0f;
             break;
         case ShipType::GUNEX:
-            p.hitRadius = 5.0f;
+            p.hitRadius = 7.0f;
             break;
     }
 }
