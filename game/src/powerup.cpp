@@ -29,6 +29,12 @@ void updatePowerUps(PowerUpPool& pp, float dt, Vec2 playerPos) {
         if (dist < POWERUP_MAGNET_RADIUS && dist > 1.0f) {
             Vec2 dir = toPlayer.normalized();
             p.vel = dir * POWERUP_MAGNET_SPEED;
+        } else {
+            // Outside magnet range: reset to default fall velocity.
+            // Without this reset, p.vel would retain the previous magnet
+            // direction, causing the powerup to fly off-screen (including
+            // upward, which bypasses the lower-bounds deactivation check).
+            p.vel = {0.0f, POWERUP_FALL_SPEED};
         }
 
         p.pos += p.vel * dt;
