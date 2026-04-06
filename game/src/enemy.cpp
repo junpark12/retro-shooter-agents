@@ -60,13 +60,14 @@ void setupEnemyStats(Enemy& e, EnemyType type) {
 }
 }
 
-void spawnEnemy(EnemyPool& ep, EnemyType type, Vec2 pos) {
+Enemy* spawnEnemy(EnemyPool& ep, EnemyType type, Vec2 pos) {
     for (Enemy& e : ep.pool) {
         if (e.active) continue;
         setupEnemyStats(e, type);
         e.pos = pos;
-        return;
+        return &e;
     }
+    return nullptr;
 }
 
 void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos) {
