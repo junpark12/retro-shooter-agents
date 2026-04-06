@@ -562,6 +562,8 @@ void renderExplosion(SDL_Renderer* renderer, const AssetManager& assets,
     const int pCount = 10 + std::clamp(frame, 0, 7) * 2;
     const int radius = (big ? 10 : 6) + frame * 3;
     const Uint8 alpha = static_cast<Uint8>(std::max(0, 220 - frame * 24));
+    SDL_BlendMode prevBlendMode = SDL_BLENDMODE_NONE;
+    SDL_GetRenderDrawBlendMode(renderer, &prevBlendMode);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     setColor(renderer, (frame < 4) ? COLOR_YELLOW : COLOR_ORANGE, alpha);
     for (int i = 0; i < pCount; ++i) {
@@ -570,7 +572,7 @@ void renderExplosion(SDL_Renderer* renderer, const AssetManager& assets,
         const int py = y + static_cast<int>(std::sin(a) * radius);
         fill(renderer, px, py, big ? 3 : 2, big ? 3 : 2);
     }
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderDrawBlendMode(renderer, prevBlendMode);
 }
 
 void renderLockOnReticle(SDL_Renderer* renderer, int x, int y, int w, int h, float timer) {

@@ -79,13 +79,10 @@ void updateStage(Stage& s, float dt, EnemyPool& enemies, Boss& boss) {
             float x = laneGap * (s.spawnedInWave + 1) - 16.0f;
             if (wave.type == EnemyType::LARGE) x += (s.spawnedInWave % 2 == 0) ? -40.0f : 40.0f;
             if (wave.type == EnemyType::FAST) x = (s.spawnedInWave % 2 == 0) ? 12.0f : SCREEN_W - 30.0f;
-            spawnEnemy(enemies, wave.type, {x, -36.0f - (s.spawnedInWave % 3) * 24.0f});
-            for (Enemy& e : enemies.pool) {
-                if (e.active && e.type == wave.type && e.moveTimer <= 0.0001f) {
-                    // Apply wave-specific fire pattern to newly spawned enemy.
-                    e.firePattern = wave.pattern;
-                    break;
-                }
+            Enemy* spawned = spawnEnemy(enemies, wave.type, {x, -36.0f - (s.spawnedInWave % 3) * 24.0f});
+            if (spawned) {
+                // Apply wave-specific fire pattern directly to the spawned enemy.
+                spawned->firePattern = wave.pattern;
             }
             s.spawnedInWave++;
             s.spawnTimer = wave.spawnInterval;

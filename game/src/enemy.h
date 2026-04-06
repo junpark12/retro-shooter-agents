@@ -25,7 +25,8 @@ struct EnemyPool {
 };
 
 // Activate the first inactive enemy at the given position.
-void spawnEnemy(EnemyPool& ep, EnemyType type, Vec2 pos);
+// Returns a pointer to the newly spawned Enemy, or nullptr if the pool is full.
+Enemy* spawnEnemy(EnemyPool& ep, EnemyType type, Vec2 pos);
 
 // Update all active enemies: movement patterns and shooting.
 // Player position is used for LARGE/FAST enemy tracking.
