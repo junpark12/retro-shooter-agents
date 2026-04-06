@@ -120,6 +120,17 @@ void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* fon
         SDL_SetRenderDrawColor(renderer, 80, 180, 255, 255);
         SDL_RenderFillRect(renderer, &shieldFill);
     }
+
+    if (player.sidecarActive) {
+        const float ratio = std::clamp(player.sidecarTimer / 30.0f, 0.0f, 1.0f);
+        SDL_Rect scFrame{8, 38, SCREEN_W - 16, 8};
+        SDL_Rect scFill{9, 39, static_cast<int>((SCREEN_W - 18) * ratio), 6};
+        SDL_SetRenderDrawColor(renderer, 60, 140, 255, 255);
+        SDL_RenderDrawRect(renderer, &scFrame);
+        SDL_SetRenderDrawColor(renderer, 120, 200, 255, 255);
+        SDL_RenderFillRect(renderer, &scFill);
+        renderText(renderer, font, "SC", 8, 38, {120, 200, 255, 255});
+    }
 }
 
 void renderBossHP(SDL_Renderer* renderer, TTF_Font* font, int currentHp, int maxHp, int phase) {

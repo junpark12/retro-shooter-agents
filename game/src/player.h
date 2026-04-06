@@ -43,6 +43,11 @@ struct Player : Entity {
     bool       bombActive      = false;
     float      bombTimer       = 0.0f;  // bomb screen-clear duration
 
+    // Sidecar companion system (SIDECAR power-up)
+    bool       sidecarActive   = false;
+    float      sidecarTimer    = 0.0f;  // countdown from 30s
+    float      sidecarFireTimer= 0.0f;  // fire cooldown for sidecar auto-shot
+
     // Sprite animation
     int        animFrame       = 0;
     float      animTimer       = 0.0f;

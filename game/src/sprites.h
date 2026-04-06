@@ -63,6 +63,11 @@ void renderShipPreview(SDL_Renderer* renderer, const AssetManager& assets,
 void renderEngineExhaust(SDL_Renderer* renderer, const AssetManager& assets,
                          int shipX, int shipY, int shipW, int fireFrame);
 
+// Sidecar companion ships rendered on both sides of the player.
+// Only drawn when player.sidecarActive == true.
+void renderSidecars(SDL_Renderer* renderer, const AssetManager& assets,
+                    int playerX, int playerY, int animFrame);
+
 // ─── Fallback primitive renderers (used when no texture is available) ─────────
 void renderPlayerPrimitive(SDL_Renderer* renderer, int x, int y, ShipType ship);
 void renderEnemyPrimitive(SDL_Renderer* renderer, int x, int y, EnemyType type);

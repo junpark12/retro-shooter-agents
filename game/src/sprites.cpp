@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <cstdint>
 
 namespace galaxy {
 
@@ -15,6 +16,135 @@ void drawFilledCircle(SDL_Renderer* renderer, int cx, int cy, int radius) {
         const int span = static_cast<int>(std::sqrt(static_cast<float>(radius * radius - dy * dy)));
         SDL_RenderDrawLine(renderer, cx - span, cy + dy, cx + span, cy + dy);
     }
+}
+
+// 3x5 pixel font bitmap: each char is 3 columns x 5 rows, LSB = leftmost pixel
+// bit layout per row: bit0=left, bit1=mid, bit2=right
+struct Glyph { uint8_t rows[5]; };
+
+static const Glyph& glyphFor(char c) {
+    // A-Z subset needed
+    static const Glyph glyphs[] = {
+        // 'A' (index 0)
+        {0b010, 0b101, 0b111, 0b101, 0b101},
+        // 'B'
+        {0b110, 0b101, 0b110, 0b101, 0b110},
+        // 'C'
+        {0b011, 0b100, 0b100, 0b100, 0b011},
+        // 'D' (index 3)
+        {0b110, 0b101, 0b101, 0b101, 0b110},
+        // 'E'
+        {0b111, 0b100, 0b110, 0b100, 0b111},
+        // 'F' (5)
+        {0b111, 0b100, 0b110, 0b100, 0b100},
+        // 'G' (6)
+        {0b011, 0b100, 0b101, 0b101, 0b011},
+        // 'H' (7)
+        {0b101, 0b101, 0b111, 0b101, 0b101},
+        // 'I' (8)
+        {0b111, 0b010, 0b010, 0b010, 0b111},
+        // 'J' (9)
+        {0b111, 0b001, 0b001, 0b101, 0b010},
+        // 'K' (10)
+        {0b101, 0b101, 0b110, 0b101, 0b101},
+        // 'L' (11)
+        {0b100, 0b100, 0b100, 0b100, 0b111},
+        // 'M' (12)
+        {0b101, 0b111, 0b101, 0b101, 0b101},
+        // 'N' (13)
+        {0b101, 0b111, 0b111, 0b101, 0b101},
+        // 'O' (14)
+        {0b010, 0b101, 0b101, 0b101, 0b010},
+        // 'P' (15)
+        {0b110, 0b101, 0b110, 0b100, 0b100},
+        // 'Q' (16)
+        {0b010, 0b101, 0b101, 0b011, 0b001},
+        // 'R' (17)
+        {0b110, 0b101, 0b110, 0b101, 0b101},
+        // 'S' (18)
+        {0b011, 0b100, 0b010, 0b001, 0b110},
+        // 'T' (19)
+        {0b111, 0b010, 0b010, 0b010, 0b010},
+        // 'U' (20)
+        {0b101, 0b101, 0b101, 0b101, 0b010},
+        // 'V' (21)
+        {0b101, 0b101, 0b101, 0b010, 0b010},
+        // 'W' (22)
+        {0b101, 0b101, 0b111, 0b111, 0b101},
+        // 'X' (23)
+        {0b101, 0b101, 0b010, 0b101, 0b101},
+        // 'Y' (24)
+        {0b101, 0b101, 0b010, 0b010, 0b010},
+        // 'Z' (25)
+        {0b111, 0b001, 0b010, 0b100, 0b111},
+    };
+    if (c >= 'A' && c <= 'Z') return glyphs[c - 'A'];
+    static const Glyph fallback = {0b111, 0b101, 0b101, 0b101, 0b111};
+    return fallback;
+}
+
+// Draw a single 3x5 glyph at pixel position (px, py)
+void drawGlyph(SDL_Renderer* r, int px, int py, char c) {
+    const auto& g = glyphFor(c);
+    for (int row = 0; row < 5; ++row) {
+        for (int col = 0; col < 3; ++col) {
+            if (g.rows[row] & (1 << col)) {
+                SDL_RenderDrawPoint(r, px + col, py + row);
+            }
+        }
+    }
+}
+
+// Draw a string of uppercase letters starting at (px, py)
+void drawLabel(SDL_Renderer* r, int px, int py, const char* text) {
+    int x = px;
+    for (const char* p = text; *p; ++p) {
+        drawGlyph(r, x, py, *p);
+        x += 4;  // 3px char + 1px gap
+    }
+}
+
+const char* powerUpLabel(PowerUpType type) {
+    switch (type) {
+        case PowerUpType::SPREAD: return "SPR";
+        case PowerUpType::LASER: return "LAS";
+        case PowerUpType::MISSILE: return "MSL";
+        case PowerUpType::SHIELD: return "SHL";
+        case PowerUpType::BOMB: return "BOM";
+        case PowerUpType::POWER: return "UP";
+        case PowerUpType::SIDECAR: return "SC";
+    }
+    return nullptr;
+}
+
+void setPowerUpLabelColor(SDL_Renderer* renderer, PowerUpType type) {
+    switch (type) {
+        case PowerUpType::SPREAD: SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255); break;
+        case PowerUpType::LASER: SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255); break;
+        case PowerUpType::MISSILE: SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); break;
+        case PowerUpType::SHIELD: SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); break;
+        case PowerUpType::BOMB: SDL_SetRenderDrawColor(renderer, 255, 165, 0, 255); break;
+        case PowerUpType::POWER: SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255); break;
+        case PowerUpType::SIDECAR: SDL_SetRenderDrawColor(renderer, 120, 200, 255, 255); break;
+    }
+}
+
+void renderPowerUpLabel(SDL_Renderer* renderer, int x, int y, PowerUpType type) {
+    const char* label = powerUpLabel(type);
+    if (!label) return;
+
+    int len = 0;
+    for (const char* p = label; *p; ++p) ++len;
+    const int labelW = len > 0 ? (len - 1) * 4 + 3 : 0;
+    const int lx = x + 12 - labelW / 2;
+    const int ly = y + 10;
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+    drawLabel(renderer, lx, ly, label);
+    setPowerUpLabelColor(renderer, type);
+    drawLabel(renderer, lx - 1, ly - 1, label);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 }
 
 const char* playerKey(ShipType ship) {
@@ -73,6 +203,7 @@ const char* powerUpKey(PowerUpType type) {
         case PowerUpType::SHIELD: return SPR_POWERUP_SHIELD;
         case PowerUpType::BOMB: return SPR_POWERUP_BOMB;
         case PowerUpType::POWER: return SPR_POWERUP_POWER;
+        case PowerUpType::SIDECAR: return SPR_POWERUP_POWER;
     }
     return SPR_POWERUP_POWER;
 }
@@ -195,8 +326,10 @@ void renderPowerUpPrimitive(SDL_Renderer* renderer, int x, int y, PowerUpType ty
         case PowerUpType::SHIELD: setColor(renderer, COLOR_WHITE); break;
         case PowerUpType::BOMB: setColor(renderer, COLOR_ORANGE); break;
         case PowerUpType::POWER: setColor(renderer, COLOR_MAGENTA); break;
+        case PowerUpType::SIDECAR: SDL_SetRenderDrawColor(renderer, 120, 200, 255, 255); break;
     }
     drawFilledCircle(renderer, x + 12, y + 12, 10);
+    renderPowerUpLabel(renderer, x, y, type);
 }
 
 void renderPlayerSprite(SDL_Renderer* renderer, const AssetManager& assets,
@@ -374,6 +507,7 @@ void renderPowerUpSprite(SDL_Renderer* renderer, const AssetManager& assets, int
     SDL_Rect dst{x, y, 24, 24};
     if (tex) {
         SDL_RenderCopy(renderer, tex, nullptr, &dst);
+        renderPowerUpLabel(renderer, x, y, type);
     } else {
         renderPowerUpPrimitive(renderer, x, y, type);
     }
@@ -518,6 +652,43 @@ void renderEngineExhaust(SDL_Renderer* renderer, const AssetManager& assets,
         setColor(renderer, COLOR_YELLOW);
         fill(renderer, fx + 8, fy + 2, 4, 6);
     }
+}
+
+void renderSidecars(SDL_Renderer* renderer, const AssetManager& assets,
+                    int playerX, int playerY, int animFrame) {
+    (void)assets;
+    // Sidecar companion ships: small cyan triangular ships on left and right
+    // Left sidecar at (playerX - 18, playerY + 4)
+    // Right sidecar at (playerX + 34, playerY + 4)
+    const int bob = static_cast<int>(std::sin(animFrame * 0.7f) * 2.0f);
+
+    // Pulsing effect to indicate timed power-up
+    const Uint8 alpha = static_cast<Uint8>(180 + 75 * std::sin(animFrame * 0.5f));
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    // Left sidecar
+    int lx = playerX - 18;
+    int ly = playerY + 4 + bob;
+    SDL_SetRenderDrawColor(renderer, 100, 200, 255, alpha);
+    // Small triangle pointing up (5x8)
+    for (int i = 0; i < 8; ++i) {
+        SDL_RenderDrawLine(renderer, lx + 2 - i / 3, ly + i, lx + 2 + i / 3, ly + i);
+    }
+    // Cockpit highlight
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, alpha);
+    fill(renderer, lx + 1, ly + 1, 2, 2);
+
+    // Right sidecar
+    int rx = playerX + 34;
+    int ry = playerY + 4 + bob;
+    SDL_SetRenderDrawColor(renderer, 100, 200, 255, alpha);
+    for (int i = 0; i < 8; ++i) {
+        SDL_RenderDrawLine(renderer, rx + 2 - i / 3, ry + i, rx + 2 + i / 3, ry + i);
+    }
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, alpha);
+    fill(renderer, rx + 1, ry + 1, 2, 2);
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 }
 
 } // namespace galaxy

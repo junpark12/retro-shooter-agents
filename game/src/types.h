@@ -67,7 +67,8 @@ enum class PowerUpType {
     MISSILE,   // homing missiles
     SHIELD,    // temporary invincibility bubble
     BOMB,      // extra bomb stock
-    POWER      // increase power level
+    POWER,     // increase power level
+    SIDECAR    // side companion ship (auto-fires for 30 seconds, rare drop)
 };
 
 enum class BulletOwner {
