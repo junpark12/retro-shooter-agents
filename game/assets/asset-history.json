@@ -60,6 +60,24 @@
       "source": "OpenGameArt",
       "license": "CC0",
       "date": "2026-04-02"
+    },
+    {
+      "category": "bgm/background",
+      "urls": [
+        "https://opengameart.org/sites/default/files/OutThere_0.ogg"
+      ],
+      "source": "OpenGameArt",
+      "license": "CC0",
+      "date": "2026-04-06"
+    },
+    {
+      "category": "bgm/stage",
+      "urls": [
+        "https://opengameart.org/sites/default/files/through%20space.ogg"
+      ],
+      "source": "OpenGameArt",
+      "license": "CC-BY-SA 3.0",
+      "date": "2026-04-06"
     }
   ]
 }
