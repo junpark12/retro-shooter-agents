@@ -33,6 +33,8 @@ const char* stageBgmKey(int stageNum) {
     switch (stageNum) {
         case 1: return BGM_STAGE_1;
         case 2: return BGM_STAGE_2;
+        case 3: return BGM_STAGE_3;
+        case 4: return BGM_STAGE_2;
         default: return BGM_STAGE_3;
     }
 }
@@ -406,7 +408,7 @@ void Game::startStage(int num) {
 
 void Game::onStageClear() {
     stageNum_++;
-    if (stageNum_ > 3) {
+    if (stageNum_ > 5) {
         state_ = GameState::VICTORY;
         saveHiScore();
         if (audio_) audio_->playBGM(BGM_VICTORY);

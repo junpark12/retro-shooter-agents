@@ -33,6 +33,29 @@ constexpr Wave STAGE3_WAVES[] = {
     {EnemyType::MEDIUM, 10, 0.32f, BulletPattern::SPIRAL_CW,  0.3f},
 };
 
+constexpr Wave STAGE4_WAVES[] = {
+    {EnemyType::FAST, 9, 0.18f, BulletPattern::SPIRAL_CCW,     0.0f},
+    {EnemyType::MEDIUM, 8, 0.34f, BulletPattern::CIRCLE_16,    0.8f},
+    {EnemyType::LARGE, 4, 0.55f, BulletPattern::CURTAIN,       0.7f},
+    {EnemyType::SMALL, 10, 0.16f, BulletPattern::SPREAD_5,     0.5f},
+    {EnemyType::FAST, 10, 0.15f, BulletPattern::AIMED_SPREAD,  0.4f},
+    {EnemyType::ARMORED, 4, 0.85f, BulletPattern::CIRCLE_16,   0.6f},
+    {EnemyType::MEDIUM, 9, 0.28f, BulletPattern::SPIRAL_CCW,   0.4f},
+    {EnemyType::LARGE, 5, 0.52f, BulletPattern::CURTAIN,       0.3f},
+};
+
+constexpr Wave STAGE5_WAVES[] = {
+    {EnemyType::FAST, 12, 0.14f, BulletPattern::AIMED,         0.0f},
+    {EnemyType::MEDIUM, 12, 0.26f, BulletPattern::SPIRAL_CW,   0.6f},
+    {EnemyType::LARGE, 6, 0.48f, BulletPattern::CIRCLE_16,     0.7f},
+    {EnemyType::ARMORED, 5, 0.72f, BulletPattern::CURTAIN,     0.6f},
+    {EnemyType::SMALL, 14, 0.13f, BulletPattern::RANDOM_SPREAD,0.4f},
+    {EnemyType::FAST, 12, 0.12f, BulletPattern::SPIRAL_CCW,    0.3f},
+    {EnemyType::MEDIUM, 13, 0.22f, BulletPattern::AIMED_SPREAD,0.3f},
+    {EnemyType::LARGE, 7, 0.44f, BulletPattern::CIRCLE_16,     0.3f},
+    {EnemyType::ARMORED, 6, 0.68f, BulletPattern::CURTAIN,     0.2f},
+};
+
 const Wave* getWavesForStage(int stageNum, int& outCount) {
     switch (stageNum) {
         case 1:
@@ -41,9 +64,15 @@ const Wave* getWavesForStage(int stageNum, int& outCount) {
         case 2:
             outCount = static_cast<int>(sizeof(STAGE2_WAVES) / sizeof(STAGE2_WAVES[0]));
             return STAGE2_WAVES;
-        default:
+        case 3:
             outCount = static_cast<int>(sizeof(STAGE3_WAVES) / sizeof(STAGE3_WAVES[0]));
             return STAGE3_WAVES;
+        case 4:
+            outCount = static_cast<int>(sizeof(STAGE4_WAVES) / sizeof(STAGE4_WAVES[0]));
+            return STAGE4_WAVES;
+        default:
+            outCount = static_cast<int>(sizeof(STAGE5_WAVES) / sizeof(STAGE5_WAVES[0]));
+            return STAGE5_WAVES;
     }
 }
 }
