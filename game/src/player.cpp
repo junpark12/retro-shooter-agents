@@ -194,6 +194,9 @@ void initPlayer(Player& p, ShipType ship) {
     p.chargeReady = false;
     p.bombActive = false;
     p.bombTimer = 0.0f;
+    p.sidecarActive = false;
+    p.sidecarTimer = 0.0f;
+    p.sidecarFireTimer = 0.0f;
     p.lockOnActive = false;
     p.lockOnTimer = 0.0f;
     p.animFrame = 0;
@@ -244,6 +247,21 @@ void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies) 
     p.fireTimer = std::max(0.0f, p.fireTimer - dt);
     p.invincibleTimer = std::max(0.0f, p.invincibleTimer - dt);
     p.shieldTimer = std::max(0.0f, p.shieldTimer - dt);
+    if (p.sidecarActive) {
+        p.sidecarTimer -= dt;
+        if (p.sidecarTimer <= 0.0f) {
+            p.sidecarActive = false;
+            p.sidecarTimer = 0.0f;
+        }
+    }
+    p.sidecarFireTimer = std::max(0.0f, p.sidecarFireTimer - dt);
+    if (p.sidecarActive && p.sidecarFireTimer <= 0.0f) {
+        fireBullet(bullets, {p.pos.x - 10.0f, p.pos.y + 8.0f}, {0.0f, -600.0f},
+                   BulletOwner::PLAYER, 3);
+        fireBullet(bullets, {p.pos.x + 38.0f, p.pos.y + 8.0f}, {0.0f, -600.0f},
+                   BulletOwner::PLAYER, 3);
+        p.sidecarFireTimer = 0.15f;
+    }
     p.animTimer += dt;
     if (p.animTimer >= 0.1f) {
         p.animTimer = 0.0f;
@@ -325,6 +343,9 @@ void renderPlayer(SDL_Renderer* renderer, const AssetManager& assets, const Play
     if (!p.active) return;
     renderPlayerSprite(renderer, assets, static_cast<int>(p.pos.x), static_cast<int>(p.pos.y),
                        p.shipType, p.invincibleTimer > 0.0f, p.animFrame);
+    if (p.sidecarActive) {
+        renderSidecars(renderer, assets, static_cast<int>(p.pos.x), static_cast<int>(p.pos.y), p.animFrame);
+    }
     renderEngineExhaust(renderer, assets, static_cast<int>(p.pos.x), static_cast<int>(p.pos.y),
                         28, p.animFrame);
     // Draw hitbox indicator (visible through invincibility flash)

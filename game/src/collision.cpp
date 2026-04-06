@@ -15,14 +15,14 @@ namespace galaxy {
 
 namespace {
 PowerUpType randomDrop() {
-    switch (std::rand() % 6) {
-        case 0: return PowerUpType::SPREAD;
-        case 1: return PowerUpType::LASER;
-        case 2: return PowerUpType::MISSILE;
-        case 3: return PowerUpType::SHIELD;
-        case 4: return PowerUpType::BOMB;
-        default: return PowerUpType::POWER;
-    }
+    int r = std::rand() % 100;
+    if (r < 5)  return PowerUpType::SIDECAR;  // 5% rare
+    if (r < 20) return PowerUpType::POWER;
+    if (r < 35) return PowerUpType::BOMB;
+    if (r < 50) return PowerUpType::SHIELD;
+    if (r < 68) return PowerUpType::MISSILE;
+    if (r < 84) return PowerUpType::LASER;
+    return PowerUpType::SPREAD;
 }
 
 int scoreForEnemy(EnemyType t) {
@@ -187,6 +187,11 @@ void checkPowerUpPickup(Player& player, PowerUpPool& powerUps, AudioManager* aud
                 break;
             case PowerUpType::POWER:
                 player.powerLevel = std::min(4, player.powerLevel + 1);
+                break;
+            case PowerUpType::SIDECAR:
+                player.sidecarActive = true;
+                player.sidecarTimer = 30.0f;
+                player.sidecarFireTimer = 0.0f;
                 break;
         }
     }
