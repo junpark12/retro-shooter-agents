@@ -31,10 +31,12 @@ void updatePowerUps(PowerUpPool& pp, float dt) {
 }
 
 void renderPowerUps(SDL_Renderer* renderer, const AssetManager& assets, const PowerUpPool& pp) {
-    (void)assets;
     for (const PowerUp& p : pp.pool) {
         if (!p.active) continue;
-        renderPowerUpPrimitive(renderer, static_cast<int>(p.pos.x), static_cast<int>(p.pos.y), p.type);
+        renderPowerUpSprite(renderer, assets,
+                            static_cast<int>(p.pos.x),
+                            static_cast<int>(p.pos.y),
+                            p.type);
     }
 }
 

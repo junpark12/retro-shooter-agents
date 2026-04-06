@@ -139,10 +139,12 @@ void renderPowerUpLabel(SDL_Renderer* renderer, int x, int y, PowerUpType type) 
     const int lx = x + 12 - labelW / 2;
     const int ly = y + 10;
 
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
     drawLabel(renderer, lx, ly, label);
     setPowerUpLabelColor(renderer, type);
     drawLabel(renderer, lx - 1, ly - 1, label);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 }
 
 const char* playerKey(ShipType ship) {
