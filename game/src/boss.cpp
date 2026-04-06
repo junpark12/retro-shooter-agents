@@ -60,6 +60,10 @@ void updateBoss(Boss& b, float dt, BulletPool& bullets, Vec2 playerPos) {
 
     b.moveTimer += dt;
     b.attackTimer -= dt;
+    if (b.hitFlashTimer > 0.0f) {
+        b.hitFlashTimer -= dt;
+        if (b.hitFlashTimer < 0.0f) b.hitFlashTimer = 0.0f;
+    }
 
     if (b.hp <= b.maxHp / 3) b.phase = 3;
     else if (b.hp <= b.maxHp * 2 / 3) b.phase = 2;
@@ -176,7 +180,7 @@ void updateBoss(Boss& b, float dt, BulletPool& bullets, Vec2 playerPos) {
 
 void renderBoss(SDL_Renderer* renderer, const AssetManager& assets, const Boss& b) {
     if (!b.active) return;
-    renderBossSprite(renderer, assets, static_cast<int>(b.pos.x), static_cast<int>(b.pos.y), b.stageNum, b.lockedOn, b.phase);
+    renderBossSprite(renderer, assets, static_cast<int>(b.pos.x), static_cast<int>(b.pos.y), b.stageNum, b.lockedOn, b.phase, b.hitFlashTimer > 0.0f);
 }
 
 } // namespace galaxy

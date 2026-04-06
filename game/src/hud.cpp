@@ -33,6 +33,8 @@ void renderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x,
         SDL_Rect dst{x, y, surf->w, surf->h};
         SDL_FreeSurface(surf);
         if (!tex) return;
+        SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
+        SDL_SetTextureAlphaMod(tex, color.a);
         SDL_RenderCopy(renderer, tex, nullptr, &dst);
         SDL_DestroyTexture(tex);
         return;
@@ -50,9 +52,11 @@ void renderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x,
     }
 }
 
-void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* font, const Player& player, int stageNum, int hiScore) {
+void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* font, const Player& player,
+               int stageNum, int hiScore, int displayScore) {
+    const int scoreToShow = (displayScore >= 0) ? displayScore : player.score;
     char scoreBuf[64];
-    std::snprintf(scoreBuf, sizeof(scoreBuf), "SCORE: %07d", std::max(0, player.score));
+    std::snprintf(scoreBuf, sizeof(scoreBuf), "SCORE: %07d", std::max(0, scoreToShow));
     renderText(renderer, font, scoreBuf, 10, 8, {255, 255, 255, 255});
     char hiScoreBuf[64];
     std::snprintf(hiScoreBuf, sizeof(hiScoreBuf), "HI:%07d", std::max(0, hiScore));
@@ -130,6 +134,60 @@ void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* fon
         SDL_SetRenderDrawColor(renderer, 120, 200, 255, 255);
         SDL_RenderFillRect(renderer, &scFill);
         renderText(renderer, font, "SC", 8, 38, {120, 200, 255, 255});
+    }
+}
+
+void renderBossWarning(SDL_Renderer* renderer, TTF_Font* font, float warningTimer) {
+    SDL_BlendMode prevBlend = SDL_BLENDMODE_NONE;
+    SDL_GetRenderDrawBlendMode(renderer, &prevBlend);
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 150);
+    SDL_Rect overlay = {0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &overlay);
+
+    const bool showText = (static_cast<int>(warningTimer * 8.0f) % 2 == 0);
+    if (showText) {
+        renderText(renderer, font, "WARNING", SCREEN_W / 2 - 78, SCREEN_H / 2 - 30, {255, 30, 30, 255});
+        renderText(renderer, font, "BOSS INCOMING", SCREEN_W / 2 - 118, SCREEN_H / 2 + 8, {255, 180, 0, 255});
+    }
+
+    SDL_SetRenderDrawColor(renderer, 255, 30, 30, showText ? 200 : 80);
+    SDL_Rect border1 = {0, 0, SCREEN_W, 4};
+    SDL_Rect border2 = {0, SCREEN_H - 4, SCREEN_W, 4};
+    SDL_Rect border3 = {0, 0, 4, SCREEN_H};
+    SDL_Rect border4 = {SCREEN_W - 4, 0, 4, SCREEN_H};
+    SDL_RenderFillRect(renderer, &border1);
+    SDL_RenderFillRect(renderer, &border2);
+    SDL_RenderFillRect(renderer, &border3);
+    SDL_RenderFillRect(renderer, &border4);
+
+    SDL_SetRenderDrawBlendMode(renderer, prevBlend);
+}
+
+void renderFloatingTexts(SDL_Renderer* renderer, TTF_Font* font, const FloatingText* texts, int count) {
+    if (!texts || count <= 0) return;
+
+    for (int i = 0; i < count; ++i) {
+        const FloatingText& ft = texts[i];
+        if (!ft.active || ft.lifetime <= 0.0f) continue;
+
+        const float progress = std::clamp(ft.age / ft.lifetime, 0.0f, 1.0f);
+        const Uint8 alpha = static_cast<Uint8>(255.0f * (1.0f - progress));
+
+        char buf[32];
+        std::snprintf(buf, sizeof(buf), "+%d", ft.value);
+
+        SDL_Color color{};
+        if (ft.value >= 10000) {
+            color = {255, 255, 100, alpha};
+        } else if (ft.value >= 500) {
+            color = {255, 200, 50, alpha};
+        } else {
+            color = {255, 255, 255, alpha};
+        }
+
+        renderText(renderer, font, buf, static_cast<int>(ft.pos.x), static_cast<int>(ft.pos.y), color);
     }
 }
 

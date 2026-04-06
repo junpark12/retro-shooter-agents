@@ -37,6 +37,7 @@ bool AudioManager::init() {
     loadSound(SFX_SHIELD_DOWN, "assets/sfx/sfx_shield_down.ogg");
     loadSound(SFX_LASER_ALT,   "assets/sfx/sfx_laser_alt.ogg");
     loadSound(SFX_ZAP,         "assets/sfx/sfx_zap.ogg");
+    loadSound(SFX_BOSS_WARNING,"assets/sfx/sfx_alarm_loop1.wav");
 
     setBGMVolume(bgmVolume);
     setSFXVolume(sfxVolume);

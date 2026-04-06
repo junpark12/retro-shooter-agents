@@ -87,6 +87,8 @@ void initStage(Stage& s, int num) {
     s.bossSpawned = false;
     s.stageCleared = false;
     s.bossDelay = 3.0f;
+    s.bossWarningActive = false;
+    s.bossWarningTimer = 0.0f;
 }
 
 void updateStage(Stage& s, float dt, EnemyPool& enemies, Boss& boss) {
@@ -128,8 +130,18 @@ void updateStage(Stage& s, float dt, EnemyPool& enemies, Boss& boss) {
 
     if (!s.bossSpawned) {
         if (!allEnemiesDefeated(enemies)) return;
+
+        // Activate warning when boss delay starts (only once)
+        if (!s.bossWarningActive && !s.bossSpawned) {
+            s.bossWarningActive = true;
+            s.bossWarningTimer = s.bossDelay;
+        }
+
         s.bossDelay -= dt;
+        s.bossWarningTimer = s.bossDelay;
         if (s.bossDelay > 0.0f) return;
+
+        s.bossWarningActive = false;
         initBoss(boss, s.stageNum);
         s.bossSpawned = true;
         return;

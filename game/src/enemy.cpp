@@ -77,6 +77,10 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
         e.moveTimer += dt;
         e.fireTimer -= dt;
         e.patternTimer += dt;
+        if (e.hitFlashTimer > 0.0f) {
+            e.hitFlashTimer -= dt;
+            if (e.hitFlashTimer < 0.0f) e.hitFlashTimer = 0.0f;
+        }
 
         switch (e.type) {
             case EnemyType::SMALL:
@@ -131,7 +135,7 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
 void renderEnemies(SDL_Renderer* renderer, const AssetManager& assets, const EnemyPool& ep) {
     for (const Enemy& e : ep.pool) {
         if (!e.active) continue;
-        renderEnemySprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type, e.lockedOn);
+        renderEnemySprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type, e.lockedOn, e.hitFlashTimer > 0.0f);
     }
 }
 

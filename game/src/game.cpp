@@ -21,6 +21,7 @@
 
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 #include <fstream>
 #include <string>
 
@@ -42,6 +43,20 @@ const char* stageBgmKey(int stageNum) {
 
 Game::Game() = default;
 Game::~Game() = default;
+
+void Game::spawnFloatingText(Vec2 pos, int value) {
+    for (auto& ft : floatingTexts_) {
+        if (!ft.active) {
+            ft.pos      = pos;
+            ft.vel      = -60.0f;
+            ft.lifetime = 1.0f;
+            ft.age      = 0.0f;
+            ft.value    = value;
+            ft.active   = true;
+            return;
+        }
+    }
+}
 
 void Game::loadHiScore() {
     std::ifstream in("hi_score.dat");
@@ -128,6 +143,8 @@ bool Game::init() {
     running_ = true;
     stageNum_ = 1;
     bossMusicPlaying_ = false;
+    prevBossWarningActive_ = false;
+    displayScore_ = 0;
     return true;
 }
 
@@ -285,6 +302,11 @@ void Game::update(float dt) {
     }
 
     updatePlayer(*player_, dt, *bullets_, *enemies_);
+    // Animate display score toward actual score
+    if (displayScore_ < player_->score) {
+        int delta = std::max(1, (player_->score - displayScore_) / 8);
+        displayScore_ = std::min(player_->score, displayScore_ + delta);
+    }
     // Detect bomb activation edge: start screen shake
     if (player_->bombActive && !prevBombActive_) {
         screenShakeTimer_ = 0.35f;
@@ -299,9 +321,36 @@ void Game::update(float dt) {
     updateBoss(*boss_, dt, *bullets_, player_->center());
     updateBullets(*bullets_, dt);
     updateParticles(*particles_, dt);
-    updatePowerUps(*powerUps_, dt);
+    updatePowerUps(*powerUps_, dt, player_->center());
+
+    // Update floating score texts
+    for (auto& ft : floatingTexts_) {
+        if (!ft.active) continue;
+        ft.age += dt;
+        ft.pos.y += ft.vel * dt;
+        if (ft.age >= ft.lifetime) ft.active = false;
+    }
+
+    bool prevActive[MAX_ENEMIES];
+    Vec2 prevPos[MAX_ENEMIES];
+    int prevPointValue[MAX_ENEMIES];
+    for (int i = 0; i < MAX_ENEMIES; ++i) {
+        prevActive[i] = enemies_->pool[i].active;
+        prevPos[i] = enemies_->pool[i].pos;
+        prevPointValue[i] = enemies_->pool[i].pointValue;
+    }
 
     checkBulletEnemyCollision(*bullets_, *enemies_, *player_, *powerUps_, audio_, particles_);
+    for (int i = 0; i < MAX_ENEMIES; ++i) {
+        if (prevActive[i] && !enemies_->pool[i].active) {
+            spawnFloatingText(prevPos[i], prevPointValue[i]);
+        }
+    }
+    const bool bossWarningStarted = stage_->bossWarningActive && !prevBossWarningActive_;
+    if (bossWarningStarted) {
+        if (audio_) audio_->playSFX(SFX_BOSS_WARNING);
+    }
+    prevBossWarningActive_ = stage_->bossWarningActive;
     checkBulletPlayerCollision(*bullets_, *player_, audio_);
     checkPlayerEnemyCollision(*player_, *enemies_, audio_, particles_);
     checkBulletBossCollision(*bullets_, *boss_, *player_, audio_);
@@ -378,10 +427,14 @@ void Game::render() {
     }
 
     if (state_ == GameState::PLAYING) {
-        renderHUD(renderer_, *assets_, font_, *player_, stageNum_, hiScore_);
+        renderHUD(renderer_, *assets_, font_, *player_, stageNum_, hiScore_, displayScore_);
         if (boss_->active) {
             renderBossHP(renderer_, font_, boss_->hp, boss_->maxHp, boss_->phase);
         }
+        if (stage_ && stage_->bossWarningActive) {
+            renderBossWarning(renderer_, font_, stage_->bossWarningTimer);
+        }
+        renderFloatingTexts(renderer_, font_, floatingTexts_, MAX_FLOATING_TEXTS);
     } else if (state_ == GameState::STAGE_CLEAR) {
         renderStageClear(renderer_, font_, stageNum_ - 1, player_->score);
     } else if (state_ == GameState::GAMEOVER) {
@@ -401,6 +454,9 @@ void Game::startStage(int num) {
     for (auto& p : powerUps_->pool) p.active = false;
     boss_->active = false;
     bossMusicPlaying_ = false;
+    prevBossWarningActive_ = false;
+    displayScore_ = player_->score;
+    for (auto& ft : floatingTexts_) ft.active = false;
 
     initStage(*stage_, num);
     if (audio_) audio_->playBGM(stageBgmKey(num));

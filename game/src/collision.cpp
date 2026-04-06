@@ -75,6 +75,9 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
             if (!rectsOverlap(bb, e.worldBounds())) continue;
 
             e.hp -= b.damage;
+            if (e.hp > 0) {
+                e.hitFlashTimer = HIT_FLASH_DURATION;
+            }
             if (!isLaser) {
                 b.active = false;
             }
@@ -146,6 +149,9 @@ void checkBulletBossCollision(BulletPool& bullets, Boss& boss, Player& player,
         if (!rectsOverlap(bb, b.worldBounds())) continue;
 
         boss.hp -= b.damage;
+        if (boss.hp > 0) {
+            boss.hitFlashTimer = HIT_FLASH_DURATION;
+        }
         if (player.powerType != PowerUpType::LASER) {
             b.active = false;
         }

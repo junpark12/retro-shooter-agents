@@ -386,7 +386,7 @@ void renderHitboxIndicator(SDL_Renderer* renderer, int cx, int cy, float radius)
 }
 
 void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
-                       int x, int y, EnemyType type, bool lockedOn) {
+                       int x, int y, EnemyType type, bool lockedOn, bool hitFlash) {
     SDL_Texture* tex = assets.get(enemyKey(type));
     SDL_Rect dst{};
     if (type == EnemyType::SMALL) dst = {x, y, 24, 24};
@@ -401,6 +401,15 @@ void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
         renderEnemyPrimitive(renderer, x, y, type);
     }
 
+    if (hitFlash) {
+        SDL_BlendMode prevBlend = SDL_BLENDMODE_NONE;
+        SDL_GetRenderDrawBlendMode(renderer, &prevBlend);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 180);
+        SDL_RenderFillRect(renderer, &dst);
+        SDL_SetRenderDrawBlendMode(renderer, prevBlend);
+    }
+
     if (lockedOn) {
         setColor(renderer, COLOR_RED);
         SDL_Rect lock = {dst.x - 2, dst.y - 2, dst.w + 4, dst.h + 4};
@@ -409,7 +418,7 @@ void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
 }
 
 void renderBossSprite(SDL_Renderer* renderer, const AssetManager& assets,
-                      int x, int y, int stageNum, bool lockedOn, int phase) {
+                      int x, int y, int stageNum, bool lockedOn, int phase, bool hitFlash) {
     SDL_Texture* tex = assets.get(bossKey(stageNum));
     if (!tex) {
         tex = assets.get(bossFallbackKey(stageNum));
@@ -426,6 +435,15 @@ void renderBossSprite(SDL_Renderer* renderer, const AssetManager& assets,
         SDL_SetTextureColorMod(tex, 255, 255, 255);
     } else {
         renderBossPrimitive(renderer, x, y, stageNum);
+    }
+
+    if (hitFlash) {
+        SDL_BlendMode prevBlend = SDL_BLENDMODE_NONE;
+        SDL_GetRenderDrawBlendMode(renderer, &prevBlend);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_ADD);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 170);
+        SDL_RenderFillRect(renderer, &dst);
+        SDL_SetRenderDrawBlendMode(renderer, prevBlend);
     }
 
     if (lockedOn) {
