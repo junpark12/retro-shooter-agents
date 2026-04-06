@@ -21,7 +21,9 @@ struct PowerUpPool {
 void spawnPowerUp(PowerUpPool& pp, Vec2 pos, PowerUpType type);
 
 // Move all active power-ups downward and deactivate when off-screen.
-void updatePowerUps(PowerUpPool& pp, float dt);
+// playerPos is used for magnet attraction: if a power-up is within
+// POWERUP_MAGNET_RADIUS of the player, it accelerates toward them.
+void updatePowerUps(PowerUpPool& pp, float dt, Vec2 playerPos);
 
 // Render all active power-ups.
 void renderPowerUps(SDL_Renderer* renderer, const AssetManager& assets,

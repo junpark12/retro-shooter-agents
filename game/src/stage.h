@@ -26,6 +26,10 @@ struct Stage {
     bool  bossSpawned   = false;
     bool  stageCleared  = false;
     float bossDelay     = 0.0f;    // countdown before boss appears after all waves
+
+    // Boss warning: shown before boss appears (bossDelay active and not yet spawned).
+    bool  bossWarningActive = false;  // true while WARNING overlay is displayed
+    float bossWarningTimer  = 0.0f;   // mirrors bossDelay for warning animation phase
 };
 
 // Initialise the stage: reset counters, set wave table for stageNum.

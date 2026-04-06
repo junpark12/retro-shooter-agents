@@ -83,5 +83,6 @@ constexpr const char* SFX_SHIELD_UP     = "sfx_shield_up";
 constexpr const char* SFX_SHIELD_DOWN   = "sfx_shield_down";
 constexpr const char* SFX_LASER_ALT     = "sfx_laser_alt";
 constexpr const char* SFX_ZAP           = "sfx_zap";
+constexpr const char* SFX_BOSS_WARNING  = "sfx_boss_warning"; // siren/alert before boss spawns
 
 } // namespace galaxy

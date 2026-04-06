@@ -15,6 +15,10 @@ struct Entity {
     // Hitbox radius for circular collision (Bullet Hell small hitbox).
     float hitRadius = 4.0f;
 
+    // Hit flash: counts down from HIT_FLASH_DURATION when entity takes damage.
+    // While > 0, sprite is rendered with a white color modulation.
+    float hitFlashTimer = 0.0f;
+
     // Returns the world-space AABB (pos + bounds offset).
     Rect worldBounds() const {
         return { pos.x + bounds.x, pos.y + bounds.y, bounds.w, bounds.h };

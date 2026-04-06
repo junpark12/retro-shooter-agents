@@ -68,6 +68,12 @@ private:
     float         screenShakeTimer_     = 0.0f;  // > 0 while bomb screen shake is active
     bool          prevBombActive_       = false;  // previous frame bomb state (for edge detection)
 
+    // Floating score texts spawned above killed enemies.
+    FloatingText  floatingTexts_[MAX_FLOATING_TEXTS] = {};
+
+    // Animated (count-up) display score; lerps toward player_->score each frame.
+    int           displayScore_ = 0;
+
     // ── Persistence helpers ───────────────────────────────────────────────────
 
     // Load hi score from hi_score.dat; sets hiScore_ = 0 if file missing.
@@ -96,6 +102,9 @@ private:
 
     // Called when the player's life count reaches zero.
     void onGameOver();
+
+    // Spawn a floating "+value" text at the given position.
+    void spawnFloatingText(Vec2 pos, int value);
 };
 
 } // namespace galaxy

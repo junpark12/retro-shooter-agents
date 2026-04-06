@@ -26,14 +26,17 @@ void renderPlayerSprite(SDL_Renderer* renderer, const AssetManager& assets,
 void renderHitboxIndicator(SDL_Renderer* renderer, int cx, int cy, float radius);
 
 // Enemy sprite; shape and colour vary by type.
+// hitFlash: when true, the sprite is rendered with a white color modulation.
 void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
-                       int x, int y, EnemyType type, bool lockedOn = false);
+                       int x, int y, EnemyType type, bool lockedOn = false,
+                       bool hitFlash = false);
 
 // Boss sprite differs by stage number (1–3).
 // Optionally draws a lock-on ring overlay.
+// hitFlash: when true, the sprite is rendered with a white color modulation.
 void renderBossSprite(SDL_Renderer* renderer, const AssetManager& assets,
                       int x, int y, int stageNum, bool lockedOn = false,
-                      int phase = 1);
+                      int phase = 1, bool hitFlash = false);
 
 // Bullet sprite. colorIdx selects a color variant (0–3) for Bullet Hell variety.
 void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,

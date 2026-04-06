@@ -17,9 +17,18 @@ constexpr int MAX_POWERUPS      = 16;
 constexpr int MAX_STARS         = 128;
 constexpr int MAX_LOCK_TARGETS  = 8;     // max simultaneous lock-on targets
 constexpr int MAX_PARTICLES     = 256;   // particle pool for explosion effects
+constexpr int MAX_FLOATING_TEXTS = 32;   // floating score text pool
 
 // ─── Score / life system ──────────────────────────────────────────────────────
 constexpr int SCORE_PER_EXTRA_LIFE = 100000; // 1UP every 100k points
+
+// ─── Hit flash ────────────────────────────────────────────────────────────────
+constexpr float HIT_FLASH_DURATION = 0.05f; // seconds of white flash on damage
+
+// ─── Powerup magnet ───────────────────────────────────────────────────────────
+constexpr float POWERUP_MAGNET_RADIUS = 120.0f; // pixels; powerup homes to player within this radius
+constexpr float POWERUP_MAGNET_SPEED  = 300.0f; // pixels/sec when attracted
+constexpr float POWERUP_FALL_SPEED    = 60.0f;  // default fall speed (reduced for easier pickup)
 
 // ─── 90s neon colour palette ─────────────────────────────────────────────────
 struct Color { Uint8 r, g, b; };
@@ -134,5 +143,16 @@ inline bool circlesOverlap(float ax, float ay, float ar, float bx, float by, flo
     float radSum = ar + br;
     return dist2 < radSum * radSum;
 }
+
+// ─── Floating score text ──────────────────────────────────────────────────────
+// Displayed briefly above a killed enemy showing how many points were earned.
+struct FloatingText {
+    Vec2  pos;
+    float vel      = -60.0f; // upward drift in pixels/sec
+    float lifetime = 1.0f;   // total display duration (seconds)
+    float age      = 0.0f;
+    int   value    = 0;      // score value to display
+    bool  active   = false;
+};
 
 } // namespace galaxy
