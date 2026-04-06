@@ -226,3 +226,12 @@ OFL 글꼴을 포함한 소프트웨어를 판매 가능.
 | `spaceShips_001-005.png` | `asset_manager.cpp` | SPR_ENEMY_SHIP_1~5 키로 로드. 향후 웨이브별 적 변종으로 활용 가능 |
 | `M484ExplosionSet1.png` | `sprites.cpp renderExplosion()` | SDL_QueryTexture로 시트 크기 동적 계산. 3×3 섹션(색상×크기), 8프레임 애니메이션 |
 | `spr_bullet_strip*.png` | `sprites.cpp renderBulletSprite()` | 적 탄막의 colorIdx에 따라 청/녹/황/적 글로우 orb 사용. laser_enemy.png를 fallback으로 유지 |
+
+---
+
+## 🎵 Pending BGM Requests (2026-04-06)
+
+| 파일(예정) | 출처 | 작성자 | 라이선스 | 비고 |
+|------|------|--------|----------|------|
+| `bgm/OutThere_0.ogg` | [OpenGameArt - Space Music: Out There](https://opengameart.org/content/space-music-out-there) | yd | CC0 | 배경/타이틀용 앰비언트 |
+| `bgm/through_space.ogg` | [OpenGameArt - Through Space](https://opengameart.org/content/through-space) | maxstack | CC-BY-SA 3.0 | 스테이지 진행용 신스 트랙 |
