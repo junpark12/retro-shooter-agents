@@ -17,6 +17,7 @@ struct Enemy : Entity {
     int       patternPhase = 0;     // current phase in complex pattern
     bool      lockedOn    = false;  // true when player has locked onto this enemy
     int       colorVariant = 0;     // sprite color variant
+    int       maxHp       = 1;      // maximum HP at spawn; used for HP bar ratio
 };
 
 // Fixed-size pool.

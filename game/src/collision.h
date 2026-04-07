@@ -30,7 +30,8 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
 // Enemy bullets vs player: uses circular hitbox (Bullet Hell standard).
 // Deducts player HP if not invincible/shielded. Plays hit SFX.
 void checkBulletPlayerCollision(BulletPool& bullets, Player& player,
-                                 AudioManager* audio = nullptr);
+                                 AudioManager* audio = nullptr,
+                                 ParticleSystem* ps = nullptr);
 
 // Enemy bodies vs player: AABB collision, deducts player HP on contact.
 // Spawns particle explosion into ps if non-null.

@@ -49,6 +49,92 @@ void spawnExplosion(ParticleSystem& ps, Vec2 center, bool big) {
     }
 }
 
+void spawnMuzzleFlash(ParticleSystem& ps, Vec2 muzzlePos, bool charged) {
+    const int spawnCount = charged ? static_cast<int>(randRange(10.0f, 17.0f))
+                                   : static_cast<int>(randRange(4.0f, 9.0f));
+
+    int spawned = 0;
+    for (int i = 0; i < MAX_PARTICLES && spawned < spawnCount; ++i) {
+        Particle& p = ps.pool[i];
+        if (p.active) continue;
+
+        const float angle = randRange(-2.1f, -1.05f);  // mostly upward, slight side spread
+        const float speed = randRange(100.0f, 300.0f);
+        const float size = charged ? randRange(3.0f, 5.0f) : randRange(2.0f, 4.0f);
+        const float spread = charged ? 5.0f : 3.0f;
+
+        p.active = true;
+        p.pos = {muzzlePos.x + randRange(-spread, spread), muzzlePos.y + randRange(-spread, spread)};
+        p.vel = {std::cos(angle) * speed, std::sin(angle) * speed};
+        p.lifetime = randRange(0.08f, 0.15f);
+        p.age = 0.0f;
+        if (charged) {
+            p.r = 255;
+            p.g = static_cast<Uint8>(randRange(150.0f, 230.0f));
+            p.b = static_cast<Uint8>(randRange(20.0f, 80.0f));
+        } else {
+            p.r = 255;
+            p.g = static_cast<Uint8>(randRange(220.0f, 255.0f));
+            p.b = static_cast<Uint8>(randRange(180.0f, 255.0f));
+        }
+        p.size = size;
+        p.initialSize = size;
+        spawned++;
+    }
+}
+
+void spawnHitSpark(ParticleSystem& ps, Vec2 hitPos, Uint8 r, Uint8 g, Uint8 b) {
+    const int spawnCount = static_cast<int>(randRange(3.0f, 7.0f));
+
+    int spawned = 0;
+    for (int i = 0; i < MAX_PARTICLES && spawned < spawnCount; ++i) {
+        Particle& p = ps.pool[i];
+        if (p.active) continue;
+
+        const float angle = randRange(0.0f, 6.2831853f);
+        const float speed = randRange(80.0f, 200.0f);
+        const float size = randRange(1.0f, 3.0f);
+
+        p.active = true;
+        p.pos = hitPos;
+        p.vel = {std::cos(angle) * speed, std::sin(angle) * speed};
+        p.lifetime = randRange(0.1f, 0.2f);
+        p.age = 0.0f;
+        p.r = r;
+        p.g = g;
+        p.b = b;
+        p.size = size;
+        p.initialSize = size;
+        spawned++;
+    }
+}
+
+void spawnGrazeSpark(ParticleSystem& ps, Vec2 pos) {
+    const int spawnCount = static_cast<int>(randRange(3.0f, 6.0f));
+
+    int spawned = 0;
+    for (int i = 0; i < MAX_PARTICLES && spawned < spawnCount; ++i) {
+        Particle& p = ps.pool[i];
+        if (p.active) continue;
+
+        const float angle = randRange(0.0f, 6.2831853f);
+        const float speed = randRange(70.0f, 140.0f);
+        const float size = randRange(1.0f, 2.0f);
+
+        p.active = true;
+        p.pos = {pos.x + randRange(-2.0f, 2.0f), pos.y + randRange(-2.0f, 2.0f)};
+        p.vel = {std::cos(angle) * speed, std::sin(angle) * speed};
+        p.lifetime = randRange(0.12f, 0.18f);
+        p.age = 0.0f;
+        p.r = 100;
+        p.g = 200;
+        p.b = 255;
+        p.size = size;
+        p.initialSize = size;
+        spawned++;
+    }
+}
+
 void updateParticles(ParticleSystem& ps, float dt) {
     for (int i = 0; i < MAX_PARTICLES; ++i) {
         Particle& p = ps.pool[i];

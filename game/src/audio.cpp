@@ -45,9 +45,15 @@ bool AudioManager::init() {
     loadSound(SFX_POWERUP_SHIELD, "assets/sfx/sfx_shield_up.ogg");
     loadSound(SFX_POWERUP_BOMB,   "assets/sfx/sfx_sounds_powerup1.wav");
     loadSound(SFX_POWERUP_MAGNET, "assets/sfx/sfx_sounds_powerup3.wav");
+    loadSound(SFX_POWERUP_SPREAD,  "assets/sfx/sfx_sounds_powerup2.wav");
+    loadSound(SFX_POWERUP_LASER,   "assets/sfx/sfx_sounds_powerup5.wav");
+    loadSound(SFX_POWERUP_MISSILE, "assets/sfx/sfx_sounds_powerup7.wav");
     // Combo and warning sounds
     loadSound(SFX_COMBO,   "assets/sfx/sfx_sounds_fanfare1.wav");
     loadSound(SFX_WARNING, "assets/sfx/sfx_alarm_loop1.wav");
+    loadSound(SFX_GRAZE,     "assets/sfx/sfx_sounds_Blip1.wav");
+    loadSound(SFX_PAUSE_IN,  "assets/sfx/sfx_sounds_pause1_in.wav");
+    loadSound(SFX_PAUSE_OUT, "assets/sfx/sfx_sounds_pause1_out.wav");
 
     setBGMVolume(bgmVolume);
     setSFXVolume(sfxVolume);

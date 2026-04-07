@@ -2,6 +2,7 @@
 
 #include "bullet.h"
 #include "enemy.h"
+#include "particles.h"
 #include "sprites.h"
 
 #include <algorithm>
@@ -14,7 +15,7 @@ namespace galaxy {
 namespace {
 constexpr float PI = 3.14159265f;
 constexpr float MOVE_SPEED = 280.0f;
-constexpr float CHARGE_TIME = 1.5f;
+constexpr float CHARGE_TIME = 1.0f;
 constexpr float LOCK_ACQUIRE_INTERVAL = 0.08f;
 constexpr float BOMB_DURATION = 2.0f;
 
@@ -63,8 +64,11 @@ void collectNearestTargets(Player& p, EnemyPool& enemies) {
     }
 }
 
-void firePrimary(Player& p, BulletPool& bullets) {
+void firePrimary(Player& p, BulletPool& bullets, ParticleSystem* ps) {
     const Vec2 muzzle{p.pos.x + 14.0f, p.pos.y};
+    if (ps) {
+        spawnMuzzleFlash(*ps, muzzle, false);
+    }
     const int level = std::clamp(p.powerLevel, 1, 4);
 
     switch (p.shipType) {
@@ -148,8 +152,11 @@ void firePrimary(Player& p, BulletPool& bullets) {
     }
 }
 
-void fireCharge(Player& p, BulletPool& bullets) {
+void fireCharge(Player& p, BulletPool& bullets, ParticleSystem* ps) {
     const Vec2 c = p.center();
+    if (ps) {
+        spawnMuzzleFlash(*ps, {c.x, c.y - 12.0f}, true);
+    }
     switch (p.shipType) {
         case ShipType::BAGON:
             fireBullet(bullets, {c.x - 2.0f, c.y - 14.0f}, {0.0f, -1000.0f}, BulletOwner::PLAYER, 8);
@@ -200,6 +207,9 @@ void initPlayer(Player& p, ShipType ship) {
     p.magnetTimer = 0.0f;
     p.comboCount = 0;
     p.comboTimer = 0.0f;
+    p.grazeCount = 0;
+    p.grazeFlashTimer = 0.0f;
+    p.grazeScore = 0;
     p.scoreMultiplier = 1.0f;
     p.lockOnActive = false;
     p.lockOnTimer = 0.0f;
@@ -220,7 +230,7 @@ void initPlayer(Player& p, ShipType ship) {
     }
 }
 
-void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies) {
+void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies, ParticleSystem* ps) {
     if (!p.active) return;
 
     const Uint8* keys = SDL_GetKeyboardState(nullptr);
@@ -251,6 +261,7 @@ void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies) 
     p.fireTimer = std::max(0.0f, p.fireTimer - dt);
     p.invincibleTimer = std::max(0.0f, p.invincibleTimer - dt);
     p.shieldTimer = std::max(0.0f, p.shieldTimer - dt);
+    p.grazeFlashTimer = std::max(0.0f, p.grazeFlashTimer - dt);
     p.magnetTimer = std::max(0.0f, p.magnetTimer - dt);
     if (p.comboTimer > 0.0f) {
         p.comboTimer -= dt;
@@ -309,13 +320,13 @@ void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies) 
         }
 
         if (p.fireTimer <= 0.0f) {
-            firePrimary(p, bullets);
+            firePrimary(p, bullets, ps);
         }
     }
 
     if (!fireHeld && prevFireHeld) {
         if (p.chargeReady) {
-            fireCharge(p, bullets);
+            fireCharge(p, bullets, ps);
         }
         p.chargeTimer = 0.0f;
         p.chargeReady = false;

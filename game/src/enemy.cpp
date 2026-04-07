@@ -21,30 +21,35 @@ void setupEnemyStats(Enemy& e, EnemyType type) {
         case EnemyType::SMALL:
             e.bounds = {0.0f, 0.0f, 16.0f, 16.0f};
             e.hp = 1;
+            e.maxHp = 1;
             e.pointValue = 100;
             e.vel.y = 140.0f;
             break;
         case EnemyType::MEDIUM:
             e.bounds = {0.0f, 0.0f, 24.0f, 24.0f};
             e.hp = 3;
+            e.maxHp = 3;
             e.pointValue = 300;
             e.vel.y = 110.0f;
             break;
         case EnemyType::LARGE:
             e.bounds = {0.0f, 0.0f, 32.0f, 28.0f};
             e.hp = 5;
+            e.maxHp = 5;
             e.pointValue = 500;
             e.vel.y = 70.0f;
             break;
         case EnemyType::FAST:
             e.bounds = {0.0f, 0.0f, 18.0f, 18.0f};
             e.hp = 2;
+            e.maxHp = 2;
             e.pointValue = 200;
             e.vel = {(std::rand() % 2 == 0) ? -130.0f : 130.0f, 180.0f};
             break;
         case EnemyType::ARMORED:
             e.bounds = {0.0f, 0.0f, 36.0f, 32.0f};
             e.hp = 10;
+            e.maxHp = 10;
             e.pointValue = 700;
             e.vel = {0.0f, 75.0f};
             break;
@@ -132,6 +137,10 @@ void renderEnemies(SDL_Renderer* renderer, const AssetManager& assets, const Ene
     for (const Enemy& e : ep.pool) {
         if (!e.active) continue;
         renderEnemySprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type, e.lockedOn);
+        if (e.type == EnemyType::ARMORED && e.hp < e.maxHp) {
+            renderEnemyHPBar(renderer, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y),
+                             40, e.hp, e.maxHp);
+        }
     }
 }
 

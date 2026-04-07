@@ -296,6 +296,20 @@ CMakeFiles/GalaxyStorm.dir/src/background.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GalaxyStorm.dir/src/background.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/background.cpp -o CMakeFiles/GalaxyStorm.dir/src/background.cpp.s
 
+CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o: CMakeFiles/GalaxyStorm.dir/flags.make
+CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o: /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/particles.cpp
+CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o -MF CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o.d -o CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o -c /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/particles.cpp
+
+CMakeFiles/GalaxyStorm.dir/src/particles.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/GalaxyStorm.dir/src/particles.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/particles.cpp > CMakeFiles/GalaxyStorm.dir/src/particles.cpp.i
+
+CMakeFiles/GalaxyStorm.dir/src/particles.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/GalaxyStorm.dir/src/particles.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/particles.cpp -o CMakeFiles/GalaxyStorm.dir/src/particles.cpp.s
+
 # Object files for target GalaxyStorm
 GalaxyStorm_OBJECTS = \
 "CMakeFiles/GalaxyStorm.dir/src/main.cpp.o" \
@@ -313,7 +327,8 @@ GalaxyStorm_OBJECTS = \
 "CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o" \
 "CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o" \
-"CMakeFiles/GalaxyStorm.dir/src/background.cpp.o"
+"CMakeFiles/GalaxyStorm.dir/src/background.cpp.o" \
+"CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o"
 
 # External object files for target GalaxyStorm
 GalaxyStorm_EXTERNAL_OBJECTS =
@@ -334,6 +349,7 @@ GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/background.cpp.o
+GalaxyStorm: CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/build.make
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/compiler_depend.ts
 GalaxyStorm: /usr/lib/x86_64-linux-gnu/libSDL2.so
@@ -342,7 +358,7 @@ GalaxyStorm: /usr/lib/x86_64-linux-gnu/libSDL2_image.so
 GalaxyStorm: /usr/lib/x86_64-linux-gnu/libSDL2_mixer.so
 GalaxyStorm: /usr/lib/x86_64-linux-gnu/libSDL2_ttf.so
 GalaxyStorm: CMakeFiles/GalaxyStorm.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable GalaxyStorm"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Linking CXX executable GalaxyStorm"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/GalaxyStorm.dir/link.txt --verbose=$(VERBOSE)
 	/usr/local/bin/cmake -E copy_directory /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/assets /home/runner/work/retro-shooter-agents/retro-shooter-agents/game/build_test/assets
 
