@@ -87,6 +87,10 @@ void initStage(Stage& s, int num) {
     s.bossSpawned = false;
     s.stageCleared = false;
     s.bossDelay = 3.0f;
+    s.checkpointWave = 0;
+    s.checkpointReached = false;
+    s.bossWarningActive = false;
+    s.bossWarningTimer = 0.0f;
 }
 
 void updateStage(Stage& s, float dt, EnemyPool& enemies, Boss& boss) {
@@ -119,6 +123,10 @@ void updateStage(Stage& s, float dt, EnemyPool& enemies, Boss& boss) {
 
         if (s.spawnedInWave >= wave.count && allEnemiesDefeated(enemies)) {
             s.waveIndex++;
+            if (!s.checkpointReached && s.waveIndex >= waveCount / 2) {
+                s.checkpointWave = s.waveIndex;
+                s.checkpointReached = true;
+            }
             s.spawnedInWave = 0;
             s.spawnTimer = 0.0f;
             s.waveDelay = 0.0f;
@@ -129,8 +137,21 @@ void updateStage(Stage& s, float dt, EnemyPool& enemies, Boss& boss) {
     if (!s.bossSpawned) {
         if (!allEnemiesDefeated(enemies)) return;
         s.bossDelay -= dt;
+        if (!s.bossWarningActive && s.bossDelay < 2.5f) {
+            s.bossWarningActive = true;
+            s.bossWarningTimer = 2.5f;
+        }
+        if (s.bossWarningActive) {
+            s.bossWarningTimer = s.bossDelay;
+            if (s.bossWarningTimer <= 0.0f) {
+                s.bossWarningActive = false;
+                s.bossWarningTimer = 0.0f;
+            }
+        }
         if (s.bossDelay > 0.0f) return;
         initBoss(boss, s.stageNum);
+        s.bossWarningActive = false;
+        s.bossWarningTimer = 0.0f;
         s.bossSpawned = true;
         return;
     }

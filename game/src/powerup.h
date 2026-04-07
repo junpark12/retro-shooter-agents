@@ -20,8 +20,9 @@ struct PowerUpPool {
 // Activate the first inactive power-up at the given position.
 void spawnPowerUp(PowerUpPool& pp, Vec2 pos, PowerUpType type);
 
-// Move all active power-ups downward and deactivate when off-screen.
-void updatePowerUps(PowerUpPool& pp, float dt);
+// Move all active power-ups and deactivate when off-screen.
+// When magnetPos is non-null, active power-ups are pulled toward it.
+void updatePowerUps(PowerUpPool& pp, float dt, const Vec2* magnetPos = nullptr);
 
 // Render all active power-ups.
 void renderPowerUps(SDL_Renderer* renderer, const AssetManager& assets,

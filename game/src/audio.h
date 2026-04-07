@@ -83,5 +83,17 @@ constexpr const char* SFX_SHIELD_UP     = "sfx_shield_up";
 constexpr const char* SFX_SHIELD_DOWN   = "sfx_shield_down";
 constexpr const char* SFX_LASER_ALT     = "sfx_laser_alt";
 constexpr const char* SFX_ZAP           = "sfx_zap";
+// Varied explosion SFX for different enemy types
+constexpr const char* SFX_EXPLODE_MED1  = "sfx_explode_med1";
+constexpr const char* SFX_EXPLODE_MED2  = "sfx_explode_med2";
+constexpr const char* SFX_EXPLODE_MED3  = "sfx_explode_med3";
+// Power-up type-specific pickup sounds
+constexpr const char* SFX_POWERUP_SHIELD = "sfx_powerup_shield";
+constexpr const char* SFX_POWERUP_BOMB   = "sfx_powerup_bomb";
+constexpr const char* SFX_POWERUP_MAGNET = "sfx_powerup_magnet";
+// Combo milestone sound
+constexpr const char* SFX_COMBO         = "sfx_combo";
+// Boss warning sound
+constexpr const char* SFX_WARNING       = "sfx_warning";
 
 } // namespace galaxy

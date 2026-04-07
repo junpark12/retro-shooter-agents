@@ -197,6 +197,10 @@ void initPlayer(Player& p, ShipType ship) {
     p.sidecarActive = false;
     p.sidecarTimer = 0.0f;
     p.sidecarFireTimer = 0.0f;
+    p.magnetTimer = 0.0f;
+    p.comboCount = 0;
+    p.comboTimer = 0.0f;
+    p.scoreMultiplier = 1.0f;
     p.lockOnActive = false;
     p.lockOnTimer = 0.0f;
     p.animFrame = 0;
@@ -247,6 +251,15 @@ void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies) 
     p.fireTimer = std::max(0.0f, p.fireTimer - dt);
     p.invincibleTimer = std::max(0.0f, p.invincibleTimer - dt);
     p.shieldTimer = std::max(0.0f, p.shieldTimer - dt);
+    p.magnetTimer = std::max(0.0f, p.magnetTimer - dt);
+    if (p.comboTimer > 0.0f) {
+        p.comboTimer -= dt;
+        if (p.comboTimer <= 0.0f) {
+            p.comboCount = 0;
+            p.comboTimer = 0.0f;
+            p.scoreMultiplier = 1.0f;
+        }
+    }
     if (p.sidecarActive) {
         p.sidecarTimer -= dt;
         if (p.sidecarTimer <= 0.0f) {
