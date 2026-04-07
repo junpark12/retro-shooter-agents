@@ -250,6 +250,35 @@ void Game::handleEvents() {
             } else if (next == GameState::TITLE) {
                 state_ = GameState::TITLE;
             }
+        } else if (state_ == GameState::CONTINUE) {
+            if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_RETURN) {
+                player_->lives = 1;
+                player_->hp = 3;
+                player_->active = true;
+                player_->pos = {SCREEN_W * 0.5f - 14.0f, SCREEN_H - 90.0f};
+                player_->invincibleTimer = 2.0f;
+
+                for (auto& en : enemies_->pool) en.active = false;
+                for (auto& b : bullets_->pool) b.active = false;
+                for (auto& p : powerUps_->pool) p.active = false;
+                boss_->active = false;
+                bossMusicPlaying_ = false;
+
+                stage_->waveIndex = stage_->checkpointWave;
+                stage_->spawnedInWave = 0;
+                stage_->spawnTimer = 0.0f;
+                stage_->waveDelay = 0.0f;
+                stage_->bossSpawned = false;
+                stage_->stageCleared = false;
+                stage_->bossWarningActive = false;
+                stage_->bossWarningTimer = 0.0f;
+                stage_->bossDelay = 3.0f;
+
+                if (audio_) audio_->playBGM(stageBgmKey(stageNum_));
+                state_ = GameState::PLAYING;
+            } else if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                onGameOver();
+            }
         } else if (state_ == GameState::GAMEOVER || state_ == GameState::VICTORY) {
             if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_RETURN) {
                 state_ = GameState::TITLE;
@@ -272,6 +301,14 @@ void Game::update(float dt) {
     }
     if (state_ == GameState::SHIP_SELECT) {
         updateShipSelect(*shipSelect_, dt);
+        return;
+    }
+    if (state_ == GameState::CONTINUE) {
+        continueTimer_ -= dt;
+        continueCountdown_ = static_cast<int>(continueTimer_) + 1;
+        if (continueTimer_ <= 0.0f) {
+            onGameOver();
+        }
         return;
     }
     // Update particles during STAGE_CLEAR so explosion effects keep animating
@@ -299,7 +336,8 @@ void Game::update(float dt) {
     updateBoss(*boss_, dt, *bullets_, player_->center());
     updateBullets(*bullets_, dt);
     updateParticles(*particles_, dt);
-    updatePowerUps(*powerUps_, dt);
+    const Vec2* magnetPos = (player_->magnetTimer > 0.0f) ? &(player_->pos) : nullptr;
+    updatePowerUps(*powerUps_, dt, magnetPos);
 
     checkBulletEnemyCollision(*bullets_, *enemies_, *player_, *powerUps_, audio_, particles_);
     checkBulletPlayerCollision(*bullets_, *player_, audio_);
@@ -382,8 +420,16 @@ void Game::render() {
         if (boss_->active) {
             renderBossHP(renderer_, font_, boss_->hp, boss_->maxHp, boss_->phase);
         }
+        if (stage_->bossWarningActive) {
+            renderWarning(renderer_, font_, stage_->bossWarningTimer);
+        }
+        if (player_->comboCount >= 2) {
+            renderCombo(renderer_, font_, player_->comboCount, player_->comboTimer);
+        }
     } else if (state_ == GameState::STAGE_CLEAR) {
         renderStageClear(renderer_, font_, stageNum_ - 1, player_->score);
+    } else if (state_ == GameState::CONTINUE) {
+        renderContinue(renderer_, font_, continueCountdown_);
     } else if (state_ == GameState::GAMEOVER) {
         renderGameOver(renderer_, font_, player_->score);
     } else if (state_ == GameState::VICTORY) {
@@ -418,6 +464,13 @@ void Game::onStageClear() {
 }
 
 void Game::onGameOver() {
+    if (stage_ && stage_->checkpointReached && state_ != GameState::CONTINUE) {
+        state_ = GameState::CONTINUE;
+        continueTimer_ = 9.0f;
+        continueCountdown_ = 9;
+        if (audio_) audio_->stopBGM();
+        return;
+    }
     state_ = GameState::GAMEOVER;
     saveHiScore();
     if (audio_) audio_->playBGM(BGM_GAMEOVER);

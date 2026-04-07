@@ -34,11 +34,23 @@ void renderStageClear(SDL_Renderer* renderer, TTF_Font* font,
 // Full-screen "GAME OVER" overlay.
 void renderGameOver(SDL_Renderer* renderer, TTF_Font* font, int score);
 
+// Full-screen "CONTINUE?" countdown overlay (shown when checkpoint was reached).
+// countdown is 0–9; when it reaches 0, game over.
+void renderContinue(SDL_Renderer* renderer, TTF_Font* font, int countdown);
+
 // Full-screen "VICTORY!" overlay shown after clearing all 3 stages.
 void renderVictory(SDL_Renderer* renderer, TTF_Font* font, int score);
 
 // Small text rendering utility (delegates to SDL2_ttf or pixel font fallback).
 void renderText(SDL_Renderer* renderer, TTF_Font* font,
                 const char* text, int x, int y, SDL_Color color);
+
+// Flashing "WARNING!!" overlay displayed before boss appearance.
+// alpha cycles based on timer for a blinking effect.
+void renderWarning(SDL_Renderer* renderer, TTF_Font* font, float timer);
+
+// Combo counter display shown near the top-right during active combos.
+void renderCombo(SDL_Renderer* renderer, TTF_Font* font,
+                 int comboCount, float comboTimer);
 
 } // namespace galaxy

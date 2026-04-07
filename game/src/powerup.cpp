@@ -17,12 +17,20 @@ void spawnPowerUp(PowerUpPool& pp, Vec2 pos, PowerUpType type) {
     }
 }
 
-void updatePowerUps(PowerUpPool& pp, float dt) {
+void updatePowerUps(PowerUpPool& pp, float dt, const Vec2* magnetPos) {
     for (PowerUp& p : pp.pool) {
         if (!p.active) continue;
         p.bobTimer += dt * 3.0f;
-        p.pos.x += static_cast<float>(p.bobDir) * 20.0f * dt;
-        if (p.pos.x < 4.0f || p.pos.x > SCREEN_W - 24.0f) p.bobDir *= -1;
+
+        if (magnetPos) {
+            const Vec2 dir = (*magnetPos - p.pos).normalized();
+            p.vel = dir * 400.0f;
+        } else {
+            p.pos.x += static_cast<float>(p.bobDir) * 20.0f * dt;
+            if (p.pos.x < 4.0f || p.pos.x > SCREEN_W - 24.0f) p.bobDir *= -1;
+            p.vel = {0.0f, 120.0f};
+        }
+
         p.pos += p.vel * dt;
         if (p.pos.y > static_cast<float>(SCREEN_H) + 24.0f) {
             p.active = false;

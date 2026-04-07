@@ -68,6 +68,12 @@ private:
     float         screenShakeTimer_     = 0.0f;  // > 0 while bomb screen shake is active
     bool          prevBombActive_       = false;  // previous frame bomb state (for edge detection)
 
+    // Checkpoint / continue system
+    int           checkpointStageNum_   = 1;      // stage num at checkpoint
+    int           checkpointWaveIdx_    = 0;      // wave index at checkpoint
+    float         continueTimer_        = 9.0f;   // countdown seconds for CONTINUE? screen
+    int           continueCountdown_    = 9;      // integer version for display
+
     // ── Persistence helpers ───────────────────────────────────────────────────
 
     // Load hi score from hi_score.dat; sets hiScore_ = 0 if file missing.

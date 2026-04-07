@@ -81,8 +81,34 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
 
             if (e.hp <= 0) {
                 e.active = false;
-                player.score += scoreForEnemy(e.type);
-                if (audio) audio->playSFX(SFX_EXPLODE_SMALL);
+                player.comboCount++;
+                player.comboTimer = 2.0f;
+                player.scoreMultiplier = 1.0f + static_cast<float>(player.comboCount / 5) * 0.5f;
+                player.scoreMultiplier = std::min(player.scoreMultiplier, 4.0f);
+                player.score += static_cast<int>(scoreForEnemy(e.type) * player.scoreMultiplier);
+                if (audio) {
+                    switch (e.type) {
+                        case EnemyType::SMALL:
+                        case EnemyType::FAST:
+                            audio->playSFX(SFX_EXPLODE_SMALL);
+                            break;
+                        case EnemyType::MEDIUM: {
+                            switch (std::rand() % 3) {
+                                case 0: audio->playSFX(SFX_EXPLODE_MED1); break;
+                                case 1: audio->playSFX(SFX_EXPLODE_MED2); break;
+                                default: audio->playSFX(SFX_EXPLODE_MED3); break;
+                            }
+                            break;
+                        }
+                        case EnemyType::LARGE:
+                        case EnemyType::ARMORED:
+                            audio->playSFX(SFX_EXPLODE_BIG);
+                            break;
+                    }
+                    if (player.comboCount > 0 && (player.comboCount % 5) == 0) {
+                        audio->playSFX(SFX_COMBO);
+                    }
+                }
                 if (ps) {
                     spawnExplosion(*ps, e.center(),
                                    e.type == EnemyType::LARGE || e.type == EnemyType::ARMORED);
@@ -168,7 +194,22 @@ void checkPowerUpPickup(Player& player, PowerUpPool& powerUps, AudioManager* aud
         if (!rectsOverlap(pb, p.worldBounds())) continue;
 
         p.active = false;
-        if (audio) audio->playSFX(SFX_POWERUP);
+        if (audio) {
+            switch (p.type) {
+                case PowerUpType::SHIELD:
+                    audio->playSFX(SFX_POWERUP_SHIELD);
+                    break;
+                case PowerUpType::BOMB:
+                    audio->playSFX(SFX_POWERUP_BOMB);
+                    break;
+                case PowerUpType::MAGNET:
+                    audio->playSFX(SFX_POWERUP_MAGNET);
+                    break;
+                default:
+                    audio->playSFX(SFX_POWERUP);
+                    break;
+            }
+        }
         switch (p.type) {
             case PowerUpType::SPREAD:
             case PowerUpType::LASER:
@@ -184,6 +225,9 @@ void checkPowerUpPickup(Player& player, PowerUpPool& powerUps, AudioManager* aud
                 break;
             case PowerUpType::BOMB:
                 player.bombStock = std::min(9, player.bombStock + 1);
+                break;
+            case PowerUpType::MAGNET:
+                player.magnetTimer = 8.0f;
                 break;
             case PowerUpType::POWER:
                 player.powerLevel = std::min(4, player.powerLevel + 1);

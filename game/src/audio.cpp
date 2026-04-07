@@ -37,6 +37,17 @@ bool AudioManager::init() {
     loadSound(SFX_SHIELD_DOWN, "assets/sfx/sfx_shield_down.ogg");
     loadSound(SFX_LASER_ALT,   "assets/sfx/sfx_laser_alt.ogg");
     loadSound(SFX_ZAP,         "assets/sfx/sfx_zap.ogg");
+    // Varied explosion sounds for enemy type variety
+    loadSound(SFX_EXPLODE_MED1, "assets/sfx/sfx_exp_medium1.wav");
+    loadSound(SFX_EXPLODE_MED2, "assets/sfx/sfx_exp_medium3.wav");
+    loadSound(SFX_EXPLODE_MED3, "assets/sfx/sfx_exp_medium5.wav");
+    // Power-up type-specific sounds
+    loadSound(SFX_POWERUP_SHIELD, "assets/sfx/sfx_shield_up.ogg");
+    loadSound(SFX_POWERUP_BOMB,   "assets/sfx/sfx_sounds_powerup1.wav");
+    loadSound(SFX_POWERUP_MAGNET, "assets/sfx/sfx_sounds_powerup3.wav");
+    // Combo and warning sounds
+    loadSound(SFX_COMBO,   "assets/sfx/sfx_sounds_fanfare1.wav");
+    loadSound(SFX_WARNING, "assets/sfx/sfx_alarm_loop1.wav");
 
     setBGMVolume(bgmVolume);
     setSFXVolume(sfxVolume);

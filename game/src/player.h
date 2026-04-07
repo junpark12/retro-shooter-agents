@@ -48,6 +48,14 @@ struct Player : Entity {
     float      sidecarTimer    = 0.0f;  // countdown from 30s
     float      sidecarFireTimer= 0.0f;  // fire cooldown for sidecar auto-shot
 
+    // Magnet system (MAGNET power-up)
+    float      magnetTimer     = 0.0f;  // > 0 → attract nearby power-ups
+
+    // Combo system
+    int        comboCount      = 0;     // current consecutive kill streak
+    float      comboTimer      = 0.0f;  // time remaining before combo resets
+    float      scoreMultiplier = 1.0f;  // score multiplier derived from combo
+
     // Sprite animation
     int        animFrame       = 0;
     float      animTimer       = 0.0f;

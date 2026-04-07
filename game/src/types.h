@@ -40,6 +40,7 @@ enum class GameState {
     SHIP_SELECT,  // ship selection screen
     PLAYING,
     STAGE_CLEAR,
+    CONTINUE,     // "CONTINUE?" countdown after game over (checkpoint)
     GAMEOVER,
     VICTORY,
     QUIT          // signals the main loop to exit cleanly via running_ = false
@@ -68,7 +69,8 @@ enum class PowerUpType {
     SHIELD,    // temporary invincibility bubble
     BOMB,      // extra bomb stock
     POWER,     // increase power level
-    SIDECAR    // side companion ship (auto-fires for 30 seconds, rare drop)
+    SIDECAR,   // side companion ship (auto-fires for 30 seconds, rare drop)
+    MAGNET     // attract nearby power-ups toward player
 };
 
 enum class BulletOwner {

@@ -171,6 +171,60 @@ void renderGameOver(SDL_Renderer* renderer, TTF_Font* font, int score) {
     renderText(renderer, font, "PRESS ENTER", 154, 346, {255, 255, 255, 255});
 }
 
+void renderWarning(SDL_Renderer* renderer, TTF_Font* font, float timer) {
+    const int tick = static_cast<int>(timer * 8.0f);
+    if (tick % 2 == 0) return;
+
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 200, 0, 0, 60);
+    SDL_Rect overlay{0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &overlay);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
+    renderText(renderer, font, "!! WARNING !!", SCREEN_W / 2 - 78, SCREEN_H / 2 - 20, {255, 50, 50, 255});
+    renderText(renderer, font, "BOSS INCOMING", SCREEN_W / 2 - 78, SCREEN_H / 2 + 10, {255, 200, 0, 255});
+
+    SDL_SetRenderDrawColor(renderer, 255, 50, 50, 255);
+    SDL_RenderDrawLine(renderer, 10, SCREEN_H / 2, 30, SCREEN_H / 2 - 15);
+    SDL_RenderDrawLine(renderer, 10, SCREEN_H / 2, 30, SCREEN_H / 2 + 15);
+    SDL_RenderDrawLine(renderer, 10, SCREEN_H / 2, 40, SCREEN_H / 2);
+    SDL_RenderDrawLine(renderer, SCREEN_W - 10, SCREEN_H / 2, SCREEN_W - 30, SCREEN_H / 2 - 15);
+    SDL_RenderDrawLine(renderer, SCREEN_W - 10, SCREEN_H / 2, SCREEN_W - 30, SCREEN_H / 2 + 15);
+    SDL_RenderDrawLine(renderer, SCREEN_W - 10, SCREEN_H / 2, SCREEN_W - 40, SCREEN_H / 2);
+}
+
+void renderCombo(SDL_Renderer* renderer, TTF_Font* font, int comboCount, float comboTimer) {
+    if (comboCount < 2) return;
+    char buf[32];
+    std::snprintf(buf, sizeof(buf), "COMBO x%d", comboCount);
+    const Uint8 alpha = static_cast<Uint8>(std::min(255.0f, comboTimer * 255.0f));
+    SDL_Color color{255, 232, 0, alpha};
+    renderText(renderer, font, buf, SCREEN_W - 140, 50, color);
+
+    if (comboCount >= 5) {
+        char mulBuf[16];
+        const float mul = 1.0f + static_cast<float>(comboCount / 5) * 0.5f;
+        std::snprintf(mulBuf, sizeof(mulBuf), "%.1fx SCORE", std::min(mul, 4.0f));
+        SDL_Color mulColor{255, 100, 255, alpha};
+        renderText(renderer, font, mulBuf, SCREEN_W - 140, 66, mulColor);
+    }
+}
+
+void renderContinue(SDL_Renderer* renderer, TTF_Font* font, int countdown) {
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 190);
+    SDL_Rect r{0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &r);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
+    renderText(renderer, font, "CONTINUE?", SCREEN_W / 2 - 55, 240, {255, 232, 0, 255});
+    char numBuf[4];
+    std::snprintf(numBuf, sizeof(numBuf), "%d", countdown);
+    renderText(renderer, font, numBuf, SCREEN_W / 2 - 6, 290, {255, 100, 100, 255});
+    renderText(renderer, font, "PRESS ENTER TO CONTINUE", SCREEN_W / 2 - 135, 340, {200, 200, 200, 255});
+    renderText(renderer, font, "ESC: GIVE UP", SCREEN_W / 2 - 70, 365, {150, 150, 150, 255});
+}
+
 void renderVictory(SDL_Renderer* renderer, TTF_Font* font, int score) {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);

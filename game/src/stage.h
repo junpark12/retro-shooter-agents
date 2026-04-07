@@ -26,6 +26,14 @@ struct Stage {
     bool  bossSpawned   = false;
     bool  stageCleared  = false;
     float bossDelay     = 0.0f;    // countdown before boss appears after all waves
+
+    // Checkpoint: saved at the midpoint of each stage.
+    int   checkpointWave    = 0;   // wave index of last saved checkpoint
+    bool  checkpointReached = false;
+
+    // Boss warning: shown when bossDelay countdown begins.
+    bool  bossWarningActive = false;
+    float bossWarningTimer  = 0.0f; // duration remaining for warning display
 };
 
 // Initialise the stage: reset counters, set wave table for stageNum.
