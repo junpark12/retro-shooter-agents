@@ -90,7 +90,11 @@ enum class BulletPattern {
     AIMED_SPREAD,  // aimed spread (3 aimed shots)
     CURTAIN,       // dense horizontal curtain
     RANDOM_SPREAD, // random spread burst
-    HOMING         // homing shots
+    HOMING,        // homing shots
+    HOMING_LASER,  // fast narrow homing laser burst
+    MISSILE,       // heavy slow homing missiles
+    AIMED_BURST,   // 5-shot aimed burst
+    SPREAD_LASER   // fast wide laser spread
 };
 
 // ─── Math primitives ──────────────────────────────────────────────────────────

@@ -66,6 +66,22 @@ void patternRandomSpread(BulletPool& bp, Vec2 origin, Vec2 toward,
 void patternHoming(BulletPool& bp, Vec2 origin, Vec2 toward,
                    float baseAngle, float speed, int damage, BulletOwner owner);
 
+// Fast homing laser burst.
+void patternHomingLaser(BulletPool& bp, Vec2 origin, Vec2 toward,
+                        float baseAngle, float speed, int damage, BulletOwner owner);
+
+// Heavy slow homing missiles.
+void patternMissile(BulletPool& bp, Vec2 origin, Vec2 toward,
+                    float baseAngle, float speed, int damage, BulletOwner owner);
+
+// Tight 5-shot aimed burst.
+void patternAimedBurst(BulletPool& bp, Vec2 origin, Vec2 toward,
+                       float baseAngle, float speed, int damage, BulletOwner owner);
+
+// Fast 5-way wide laser spread.
+void patternSpreadLaser(BulletPool& bp, Vec2 origin, Vec2 toward,
+                        float baseAngle, float speed, int damage, BulletOwner owner);
+
 // Dispatch function — fires a pattern by enum value.
 void firePattern(BulletPool& bp, BulletPattern pattern,
                  Vec2 origin, Vec2 toward,
