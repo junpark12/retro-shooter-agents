@@ -13,6 +13,7 @@ struct Wave {
     float         spawnInterval; // seconds between individual spawns within the wave
     BulletPattern pattern;       // attack pattern used by enemies in this wave
     float         entryDelay;    // seconds before this wave begins
+    FormationType formation = FormationType::LANE; // spawn formation pattern
 };
 
 // ─── Stage ────────────────────────────────────────────────────────────────────

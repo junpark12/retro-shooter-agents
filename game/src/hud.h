@@ -23,9 +23,23 @@ struct Player; // defined in player.h
 void renderHUD(SDL_Renderer* renderer, const AssetManager& assets,
                TTF_Font* font, const Player& player, int stageNum, int hiScore = 0);
 
+// Charge bar drawn near the player when charging (shows charge progress 0–1).
+// chargeRatio = player.chargeTimer / CHARGE_TIME, clamped to [0,1].
+void renderChargeBar(SDL_Renderer* renderer, int playerX, int playerY, float chargeRatio);
+
+// Power-up timer countdown bar drawn in the HUD.
+// powerUpCount = remaining shots; shieldTimer = remaining seconds (>0 for shield).
+void renderPowerUpTimer(SDL_Renderer* renderer, TTF_Font* font,
+                        int powerUpCount, float shieldTimer, bool hasPowerUp);
+
 // Boss HP bar drawn at the top of the screen during boss fight.
+// displayHp is the lerped visual HP value (smooth animation); pass boss.displayHp.
 void renderBossHP(SDL_Renderer* renderer, TTF_Font* font,
-                  int currentHp, int maxHp, int phase);
+                  int currentHp, int maxHp, int phase, float displayHp = -1.0f);
+
+// Renders the boss attack warning flash (red tint on boss body area) when attackWarning is true.
+void renderBossAttackWarning(SDL_Renderer* renderer, int bossX, int bossY, int bossW, int bossH,
+                             float warningRatio);
 
 // Full-screen "STAGE CLEAR!" overlay displayed between stages.
 void renderStageClear(SDL_Renderer* renderer, TTF_Font* font,
@@ -50,7 +64,11 @@ void renderText(SDL_Renderer* renderer, TTF_Font* font,
 void renderWarning(SDL_Renderer* renderer, TTF_Font* font, float timer);
 
 // Combo counter display shown near the top-right during active combos.
+// Tier visual: 2–4 (white), 5–9 (yellow), 10–19 (orange), 20+ (red pulse).
 void renderCombo(SDL_Renderer* renderer, TTF_Font* font,
                  int comboCount, float comboTimer);
+
+// "PAUSED" overlay displayed when the game is paused.
+void renderPaused(SDL_Renderer* renderer, TTF_Font* font);
 
 } // namespace galaxy

@@ -68,6 +68,11 @@ void renderEngineExhaust(SDL_Renderer* renderer, const AssetManager& assets,
 void renderSidecars(SDL_Renderer* renderer, const AssetManager& assets,
                     int playerX, int playerY, int animFrame);
 
+// Enemy HP bar drawn just above the enemy sprite; only for ARMORED enemies (HP > 1).
+// currentHp / maxHp determines fill ratio. x, y is the enemy top-left position.
+void renderEnemyHPBar(SDL_Renderer* renderer, int x, int y, int spriteW,
+                      int currentHp, int maxHp);
+
 // ─── Fallback primitive renderers (used when no texture is available) ─────────
 void renderPlayerPrimitive(SDL_Renderer* renderer, int x, int y, ShipType ship);
 void renderEnemyPrimitive(SDL_Renderer* renderer, int x, int y, EnemyType type);

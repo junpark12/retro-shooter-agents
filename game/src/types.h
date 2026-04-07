@@ -39,6 +39,7 @@ enum class GameState {
     HIGH_SCORE,   // high score display screen
     SHIP_SELECT,  // ship selection screen
     PLAYING,
+    PAUSED,       // game paused (P key toggles)
     STAGE_CLEAR,
     CONTINUE,     // "CONTINUE?" countdown after game over (checkpoint)
     GAMEOVER,
@@ -122,6 +123,15 @@ struct Rect {
     float y = 0.0f;
     float w = 0.0f;
     float h = 0.0f;
+};
+
+// ─── Enemy formation types ────────────────────────────────────────────────────
+enum class FormationType {
+    LANE,        // original: evenly-spaced vertical lanes
+    V_SHAPE,     // V-formation pointing up
+    DIAGONAL,    // diagonal line (left-to-right stagger)
+    CIRCLE,      // arc/semicircle spread across top
+    PINCER       // two groups from opposite sides converging
 };
 
 // ─── AABB overlap test ────────────────────────────────────────────────────────
