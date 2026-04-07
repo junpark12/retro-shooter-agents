@@ -105,6 +105,37 @@ void patternHoming(BulletPool& bp, Vec2 origin, Vec2 toward, float baseAngle, fl
     }
 }
 
+void patternHomingLaser(BulletPool& bp, Vec2 origin, Vec2 toward, float, float speed, int, BulletOwner owner) {
+    const float base = angleTo(origin, toward);
+    for (float deg : {-5.0f, -1.6667f, 1.6667f, 5.0f}) {
+        const Vec2 d = dirFromAngle(base + deg * PI / 180.0f);
+        fireHomingBullet(bp, origin, d * (speed * 1.5f), owner, toward, 2);
+    }
+}
+
+void patternMissile(BulletPool& bp, Vec2 origin, Vec2 toward, float, float speed, int, BulletOwner owner) {
+    const float base = angleTo(origin, toward);
+    for (float deg : {-20.0f, 20.0f}) {
+        const Vec2 d = dirFromAngle(base + deg * PI / 180.0f);
+        fireHomingBullet(bp, origin, d * (speed * 0.6f), owner, toward, 3);
+    }
+}
+
+void patternAimedBurst(BulletPool& bp, Vec2 origin, Vec2 toward, float, float speed, int damage, BulletOwner owner) {
+    const float base = angleTo(origin, toward);
+    for (float deg : {-10.0f, -5.0f, 0.0f, 5.0f, 10.0f}) {
+        const Vec2 d = dirFromAngle(base + deg * PI / 180.0f);
+        fireBullet(bp, origin, d * speed, owner, damage);
+    }
+}
+
+void patternSpreadLaser(BulletPool& bp, Vec2 origin, Vec2, float baseAngle, float speed, int damage, BulletOwner owner) {
+    for (float deg : {-45.0f, -22.5f, 0.0f, 22.5f, 45.0f}) {
+        const Vec2 d = dirFromAngle(baseAngle + deg * PI / 180.0f);
+        fireBullet(bp, origin, d * (speed * 1.3f), owner, damage);
+    }
+}
+
 void firePattern(BulletPool& bp, BulletPattern pattern,
                  Vec2 origin, Vec2 toward,
                  float baseAngle, float speed, int damage, BulletOwner owner) {
@@ -121,6 +152,10 @@ void firePattern(BulletPool& bp, BulletPattern pattern,
         case BulletPattern::CURTAIN:       patternCurtain(bp, origin, toward, baseAngle, speed, damage, owner); break;
         case BulletPattern::RANDOM_SPREAD: patternRandomSpread(bp, origin, toward, baseAngle, speed, damage, owner); break;
         case BulletPattern::HOMING:        patternHoming(bp, origin, toward, baseAngle, speed, damage, owner); break;
+        case BulletPattern::HOMING_LASER:  patternHomingLaser(bp, origin, toward, baseAngle, speed, damage, owner); break;
+        case BulletPattern::MISSILE:       patternMissile(bp, origin, toward, baseAngle, speed, damage, owner); break;
+        case BulletPattern::AIMED_BURST:   patternAimedBurst(bp, origin, toward, baseAngle, speed, damage, owner); break;
+        case BulletPattern::SPREAD_LASER:  patternSpreadLaser(bp, origin, toward, baseAngle, speed, damage, owner); break;
     }
 }
 
