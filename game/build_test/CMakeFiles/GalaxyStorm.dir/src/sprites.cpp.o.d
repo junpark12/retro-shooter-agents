@@ -282,4 +282,4 @@ CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o: \
  /usr/include/c++/13/bits/stl_tempbuf.h \
  /usr/include/c++/13/pstl/glue_algorithm_defs.h \
  /usr/include/c++/13/pstl/execution_defs.h /usr/include/c++/13/array \
- /usr/include/c++/13/compare
+ /usr/include/c++/13/compare /usr/include/c++/13/cstdint

@@ -24,6 +24,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/GalaxyStorm.dir/src/main.cpp.o.d"
   "CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o"
   "CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o.d"
+  "CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o"
+  "CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o.d"
   "CMakeFiles/GalaxyStorm.dir/src/player.cpp.o"
   "CMakeFiles/GalaxyStorm.dir/src/player.cpp.o.d"
   "CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o"

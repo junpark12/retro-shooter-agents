@@ -417,6 +417,30 @@ src/menu.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/menu.cpp.s
 .PHONY : src/menu.cpp.s
 
+src/particles.o: src/particles.cpp.o
+.PHONY : src/particles.o
+
+# target to build an object file
+src/particles.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o
+.PHONY : src/particles.cpp.o
+
+src/particles.i: src/particles.cpp.i
+.PHONY : src/particles.i
+
+# target to preprocess a source file
+src/particles.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/particles.cpp.i
+.PHONY : src/particles.cpp.i
+
+src/particles.s: src/particles.cpp.s
+.PHONY : src/particles.s
+
+# target to generate assembly for a file
+src/particles.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/GalaxyStorm.dir/build.make CMakeFiles/GalaxyStorm.dir/src/particles.cpp.s
+.PHONY : src/particles.cpp.s
+
 src/player.o: src/player.cpp.o
 .PHONY : src/player.o
 
@@ -558,6 +582,9 @@ help:
 	@echo "... src/menu.o"
 	@echo "... src/menu.i"
 	@echo "... src/menu.s"
+	@echo "... src/particles.o"
+	@echo "... src/particles.i"
+	@echo "... src/particles.s"
 	@echo "... src/player.o"
 	@echo "... src/player.i"
 	@echo "... src/player.s"

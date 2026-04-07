@@ -18,6 +18,7 @@ GalaxyStorm: \
   CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o \
   CMakeFiles/GalaxyStorm.dir/src/background.cpp.o \
+  CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o \
   /usr/lib/x86_64-linux-gnu/libSDL2.so \
   /usr/lib/x86_64-linux-gnu/libSDL2main.a \
   /usr/lib/x86_64-linux-gnu/libSDL2_image.so \
@@ -166,6 +167,8 @@ CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o:
 CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o:
 
 CMakeFiles/GalaxyStorm.dir/src/background.cpp.o:
+
+CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o:
 
 /usr/lib/x86_64-linux-gnu/libSDL2.so:
 

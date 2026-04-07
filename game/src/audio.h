@@ -91,9 +91,17 @@ constexpr const char* SFX_EXPLODE_MED3  = "sfx_explode_med3";
 constexpr const char* SFX_POWERUP_SHIELD = "sfx_powerup_shield";
 constexpr const char* SFX_POWERUP_BOMB   = "sfx_powerup_bomb";
 constexpr const char* SFX_POWERUP_MAGNET = "sfx_powerup_magnet";
+constexpr const char* SFX_POWERUP_SPREAD = "sfx_powerup_spread";
+constexpr const char* SFX_POWERUP_LASER  = "sfx_powerup_laser";
+constexpr const char* SFX_POWERUP_MISSILE = "sfx_powerup_missile";
 // Combo milestone sound
 constexpr const char* SFX_COMBO         = "sfx_combo";
 // Boss warning sound
 constexpr const char* SFX_WARNING       = "sfx_warning";
+// Graze (near-miss) sound
+constexpr const char* SFX_GRAZE         = "sfx_graze";
+// Pause in/out sounds
+constexpr const char* SFX_PAUSE_IN      = "sfx_pause_in";
+constexpr const char* SFX_PAUSE_OUT     = "sfx_pause_out";
 
 } // namespace galaxy

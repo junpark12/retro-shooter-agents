@@ -19,6 +19,8 @@
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
 
+#include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <ctime>
 #include <fstream>
@@ -250,6 +252,20 @@ void Game::handleEvents() {
             } else if (next == GameState::TITLE) {
                 state_ = GameState::TITLE;
             }
+        } else if (state_ == GameState::PLAYING) {
+            if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_P) {
+                stateBeforePause_ = state_;
+                state_ = GameState::PAUSED;
+                if (audio_) audio_->playSFX(SFX_PAUSE_IN);
+                return;
+            }
+        } else if (state_ == GameState::PAUSED) {
+            if (e.type == SDL_KEYDOWN && (e.key.keysym.scancode == SDL_SCANCODE_P ||
+                                          e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)) {
+                state_ = stateBeforePause_;
+                if (audio_) audio_->playSFX(SFX_PAUSE_OUT);
+                return;
+            }
         } else if (state_ == GameState::CONTINUE) {
             if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_RETURN) {
                 player_->lives = 1;
@@ -272,6 +288,7 @@ void Game::handleEvents() {
                 stage_->stageCleared = false;
                 stage_->bossWarningActive = false;
                 stage_->bossWarningTimer = 0.0f;
+                stage_->bossWarningJustStarted = false;
                 stage_->bossDelay = 3.0f;
 
                 if (audio_) audio_->playBGM(stageBgmKey(stageNum_));
@@ -317,30 +334,41 @@ void Game::update(float dt) {
         updateParticles(*particles_, dt);
         return;
     }
+    if (state_ == GameState::PAUSED) {
+        return;
+    }
     if (state_ != GameState::PLAYING) {
         return;
     }
 
-    updatePlayer(*player_, dt, *bullets_, *enemies_);
+    updatePlayer(*player_, dt, *bullets_, *enemies_, particles_);
     // Detect bomb activation edge: start screen shake
     if (player_->bombActive && !prevBombActive_) {
-        screenShakeTimer_ = 0.35f;
+        screenShakeMagnitude_ = 12.0f;
     }
     prevBombActive_ = player_->bombActive;
-    if (screenShakeTimer_ > 0.0f) {
-        screenShakeTimer_ -= dt;
-        if (screenShakeTimer_ < 0.0f) screenShakeTimer_ = 0.0f;
-    }
+    screenShakeMagnitude_ = screenShakeMagnitude_ * std::exp(-15.0f * dt);
     updateStage(*stage_, dt, *enemies_, *boss_);
+    if (stage_->bossWarningJustStarted) {
+        stage_->bossWarningJustStarted = false;
+        if (audio_) audio_->playSFX(SFX_WARNING);
+    }
     updateEnemies(*enemies_, dt, *bullets_, player_->center());
     updateBoss(*boss_, dt, *bullets_, player_->center());
+    if (boss_->active && prevBossPhase_ == 0) {
+        prevBossPhase_ = boss_->phase;
+    }
+    if (boss_->active && boss_->phase > prevBossPhase_) {
+        screenShakeMagnitude_ = std::max(screenShakeMagnitude_, 8.0f);
+        prevBossPhase_ = boss_->phase;
+    }
     updateBullets(*bullets_, dt);
     updateParticles(*particles_, dt);
     const Vec2* magnetPos = (player_->magnetTimer > 0.0f) ? &(player_->pos) : nullptr;
     updatePowerUps(*powerUps_, dt, magnetPos);
 
     checkBulletEnemyCollision(*bullets_, *enemies_, *player_, *powerUps_, audio_, particles_);
-    checkBulletPlayerCollision(*bullets_, *player_, audio_);
+    checkBulletPlayerCollision(*bullets_, *player_, audio_, particles_);
     checkPlayerEnemyCollision(*player_, *enemies_, audio_, particles_);
     checkBulletBossCollision(*bullets_, *boss_, *player_, audio_);
     checkPowerUpPickup(*player_, *powerUps_, audio_);
@@ -389,24 +417,28 @@ void Game::render() {
         return;
     }
 
-    // Apply screen shake offset when bomb is active
-    if (screenShakeTimer_ > 0.0f) {
-        const float intensity = 10.0f * (screenShakeTimer_ / 0.35f);
-        const int ox = static_cast<int>((std::rand() % static_cast<int>(intensity * 2 + 1)) - intensity);
-        const int oy = static_cast<int>((std::rand() % static_cast<int>(intensity * 2 + 1)) - intensity);
+    if (screenShakeMagnitude_ > 0.5f) {
+        const float mag = screenShakeMagnitude_;
+        const int ox = static_cast<int>((std::rand() % static_cast<int>(mag * 2 + 1)) - mag);
+        const int oy = static_cast<int>((std::rand() % static_cast<int>(mag * 2 + 1)) - mag);
         SDL_Rect viewport{ox, oy, SCREEN_W, SCREEN_H};
         SDL_RenderSetViewport(renderer_, &viewport);
     }
 
     renderEnemies(renderer_, *assets_, *enemies_);
     renderBoss(renderer_, *assets_, *boss_);
+    if (boss_->active && boss_->attackWarning) {
+        const float ratio = 1.0f - (boss_->attackWarningTimer / 0.4f);
+        renderBossAttackWarning(renderer_, static_cast<int>(boss_->pos.x), static_cast<int>(boss_->pos.y),
+                                static_cast<int>(boss_->bounds.w), static_cast<int>(boss_->bounds.h), ratio);
+    }
     renderPowerUps(renderer_, *assets_, *powerUps_);
     renderPlayer(renderer_, *assets_, *player_);
     renderParticles(renderer_, *particles_);
     renderBullets(renderer_, *assets_, *bullets_);
 
     // Reset viewport after shake
-    if (screenShakeTimer_ > 0.0f) {
+    if (screenShakeMagnitude_ > 0.5f) {
         SDL_RenderSetViewport(renderer_, nullptr);
     }
 
@@ -417,8 +449,14 @@ void Game::render() {
 
     if (state_ == GameState::PLAYING) {
         renderHUD(renderer_, *assets_, font_, *player_, stageNum_, hiScore_);
+        // Charge bar (shown when charging)
+        const float CHARGE_TIME = 1.0f;
+        renderChargeBar(renderer_, static_cast<int>(player_->pos.x), static_cast<int>(player_->pos.y),
+                        std::clamp(player_->chargeTimer / CHARGE_TIME, 0.0f, 1.0f));
+        // Power-up timer
+        renderPowerUpTimer(renderer_, font_, player_->powerUpCount, player_->shieldTimer, player_->hasPowerUp);
         if (boss_->active) {
-            renderBossHP(renderer_, font_, boss_->hp, boss_->maxHp, boss_->phase);
+            renderBossHP(renderer_, font_, boss_->hp, boss_->maxHp, boss_->phase, boss_->displayHp);
         }
         if (stage_->bossWarningActive) {
             renderWarning(renderer_, font_, stage_->bossWarningTimer);
@@ -426,6 +464,16 @@ void Game::render() {
         if (player_->comboCount >= 2) {
             renderCombo(renderer_, font_, player_->comboCount, player_->comboTimer);
         }
+    } else if (state_ == GameState::PAUSED) {
+        renderHUD(renderer_, *assets_, font_, *player_, stageNum_, hiScore_);
+        const float CHARGE_TIME = 1.0f;
+        renderChargeBar(renderer_, static_cast<int>(player_->pos.x), static_cast<int>(player_->pos.y),
+                        std::clamp(player_->chargeTimer / CHARGE_TIME, 0.0f, 1.0f));
+        renderPowerUpTimer(renderer_, font_, player_->powerUpCount, player_->shieldTimer, player_->hasPowerUp);
+        if (boss_->active) {
+            renderBossHP(renderer_, font_, boss_->hp, boss_->maxHp, boss_->phase, boss_->displayHp);
+        }
+        renderPaused(renderer_, font_);
     } else if (state_ == GameState::STAGE_CLEAR) {
         renderStageClear(renderer_, font_, stageNum_ - 1, player_->score);
     } else if (state_ == GameState::CONTINUE) {
@@ -449,6 +497,8 @@ void Game::startStage(int num) {
     bossMusicPlaying_ = false;
 
     initStage(*stage_, num);
+    prevBossPhase_ = 0;
+    screenShakeMagnitude_ = 0.0f;
     if (audio_) audio_->playBGM(stageBgmKey(num));
 }
 

@@ -693,4 +693,30 @@ void renderSidecars(SDL_Renderer* renderer, const AssetManager& assets,
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 }
 
+void renderEnemyHPBar(SDL_Renderer* renderer, int x, int y, int spriteW, int currentHp, int maxHp) {
+    if (maxHp <= 0 || currentHp <= 0) return;
+    const float ratio = std::clamp(static_cast<float>(currentHp) / static_cast<float>(maxHp), 0.0f, 1.0f);
+    if (ratio >= 1.0f) return;
+
+    SDL_BlendMode prevBlend = SDL_BLENDMODE_NONE;
+    SDL_GetRenderDrawBlendMode(renderer, &prevBlend);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    SDL_Rect back{x, y - 8, spriteW, 4};
+    SDL_SetRenderDrawColor(renderer, 80, 80, 80, 200);
+    SDL_RenderFillRect(renderer, &back);
+
+    SDL_Color hpColor{80, 255, 80, 220};
+    if (ratio <= 0.25f) hpColor = {255, 60, 60, 220};
+    else if (ratio <= 0.5f) hpColor = {255, 220, 70, 220};
+
+    SDL_Rect fill{back.x, back.y, static_cast<int>(back.w * ratio), back.h};
+    SDL_SetRenderDrawColor(renderer, hpColor.r, hpColor.g, hpColor.b, hpColor.a);
+    SDL_RenderFillRect(renderer, &fill);
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 220);
+    SDL_RenderDrawRect(renderer, &back);
+    SDL_SetRenderDrawBlendMode(renderer, prevBlend);
+}
+
 } // namespace galaxy

@@ -13,6 +13,7 @@ struct Wave {
     float         spawnInterval; // seconds between individual spawns within the wave
     BulletPattern pattern;       // attack pattern used by enemies in this wave
     float         entryDelay;    // seconds before this wave begins
+    FormationType formation = FormationType::LANE; // spawn formation pattern
 };
 
 // ─── Stage ────────────────────────────────────────────────────────────────────
@@ -34,6 +35,7 @@ struct Stage {
     // Boss warning: shown when bossDelay countdown begins.
     bool  bossWarningActive = false;
     float bossWarningTimer  = 0.0f; // duration remaining for warning display
+    bool  bossWarningJustStarted = false; // set true for one frame when warning begins
 };
 
 // Initialise the stage: reset counters, set wave table for stageNum.

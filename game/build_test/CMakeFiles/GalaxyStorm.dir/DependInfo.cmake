@@ -20,6 +20,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/hud.cpp" "CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/hud.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/main.cpp" "CMakeFiles/GalaxyStorm.dir/src/main.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/main.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/menu.cpp" "CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/menu.cpp.o.d"
+  "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/particles.cpp" "CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/particles.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/player.cpp" "CMakeFiles/GalaxyStorm.dir/src/player.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/player.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/powerup.cpp" "CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/powerup.cpp.o.d"
   "/home/runner/work/retro-shooter-agents/retro-shooter-agents/game/src/sprites.cpp" "CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o" "gcc" "CMakeFiles/GalaxyStorm.dir/src/sprites.cpp.o.d"

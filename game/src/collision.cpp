@@ -9,6 +9,7 @@
 #include "particles.h"
 
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 
 namespace galaxy {
@@ -75,16 +76,24 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
             if (!rectsOverlap(bb, e.worldBounds())) continue;
 
             e.hp -= b.damage;
+            // Slight knockback on hit (push enemy away from bullet direction)
+            const Vec2 pushDir = (e.center() - b.center()).normalized();
+            e.pos += pushDir * 3.0f;  // 3px knockback
             if (!isLaser) {
                 b.active = false;
+            }
+
+            // Spawn hit spark on damage (not only on kill).
+            if (ps && e.hp > 0) {
+                spawnHitSpark(*ps, b.center(), 255, 200, 50);
             }
 
             if (e.hp <= 0) {
                 e.active = false;
                 player.comboCount++;
-                player.comboTimer = 2.0f;
-                player.scoreMultiplier = 1.0f + static_cast<float>(player.comboCount / 5) * 0.5f;
-                player.scoreMultiplier = std::min(player.scoreMultiplier, 4.0f);
+                player.comboTimer = 3.5f;
+                player.scoreMultiplier = 1.0f + static_cast<float>(player.comboCount / 4) * 0.5f;
+                player.scoreMultiplier = std::min(player.scoreMultiplier, 8.0f);
                 player.score += static_cast<int>(scoreForEnemy(e.type) * player.scoreMultiplier);
                 if (audio) {
                     switch (e.type) {
@@ -127,7 +136,7 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
     }
 }
 
-void checkBulletPlayerCollision(BulletPool& bullets, Player& player, AudioManager* audio) {
+void checkBulletPlayerCollision(BulletPool& bullets, Player& player, AudioManager* audio, ParticleSystem* ps) {
     if (!player.active) return;
     if (player.invincibleTimer > 0.0f || player.shieldTimer > 0.0f) return;
 
@@ -135,10 +144,31 @@ void checkBulletPlayerCollision(BulletPool& bullets, Player& player, AudioManage
     for (Bullet& b : bullets.pool) {
         if (!b.active || (b.owner != BulletOwner::ENEMY && b.owner != BulletOwner::BOSS)) continue;
         const Vec2 bc = b.center();
+        const float dx = pc.x - bc.x;
+        const float dy = pc.y - bc.y;
+        const float dist = std::sqrt(dx * dx + dy * dy);
+        const float hitDist = player.hitRadius + b.hitRadius;
+        const float grazeDist = hitDist + 8.0f;
+        if (dist <= grazeDist && dist > hitDist) {
+            const bool canPlayGrazeSfx = (player.grazeFlashTimer <= 0.0f);
+            player.grazeCount++;
+            player.grazeScore += 50;
+            player.score += 50;
+            player.grazeFlashTimer = 0.15f;
+            if (ps) spawnGrazeSpark(*ps, player.center());
+            if (canPlayGrazeSfx && audio) {
+                audio->playSFX(SFX_GRAZE);
+            }
+        }
         if (!circlesOverlap(pc.x, pc.y, player.hitRadius, bc.x, bc.y, b.hitRadius)) continue;
 
         b.active = false;
         if (audio) audio->playSFX(SFX_PLAYER_HIT);
+        // Player knockback: push away from bullet direction
+        const Vec2 pushDir = (player.center() - bc).normalized();
+        player.pos += pushDir * 8.0f;
+        player.pos.x = std::clamp(player.pos.x, 0.0f, static_cast<float>(SCREEN_W) - 28.0f);
+        player.pos.y = std::clamp(player.pos.y, 0.0f, static_cast<float>(SCREEN_H) - 36.0f);
         damagePlayer(player, b.damage);
         break;
     }
@@ -196,6 +226,15 @@ void checkPowerUpPickup(Player& player, PowerUpPool& powerUps, AudioManager* aud
         p.active = false;
         if (audio) {
             switch (p.type) {
+                case PowerUpType::SPREAD:
+                    audio->playSFX(SFX_POWERUP_SPREAD);
+                    break;
+                case PowerUpType::LASER:
+                    audio->playSFX(SFX_POWERUP_LASER);
+                    break;
+                case PowerUpType::MISSILE:
+                    audio->playSFX(SFX_POWERUP_MISSILE);
+                    break;
                 case PowerUpType::SHIELD:
                     audio->playSFX(SFX_POWERUP_SHIELD);
                     break;

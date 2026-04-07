@@ -6,6 +6,7 @@ namespace galaxy {
 
 struct BulletPool;  // defined in bullet.h
 struct EnemyPool;   // defined in enemy.h
+struct ParticleSystem; // defined in particles.h
 
 // ─── Lock-on target ───────────────────────────────────────────────────────────
 struct LockTarget {
@@ -65,6 +66,11 @@ struct Player : Entity {
     bool       prevLockHeld    = false;
     bool       prevFireHeld    = false;
     bool       prevBombHeld    = false;
+
+    // Graze system: near-miss with enemy bullets awards bonus score
+    int        grazeCount      = 0;     // total graze events this stage
+    float      grazeFlashTimer = 0.0f;  // brief visual flash timer when graze occurs
+    int        grazeScore      = 0;     // score accumulated from grazes
 };
 
 // Initialise the player at the default starting position with the given ship type.
@@ -72,7 +78,8 @@ void initPlayer(Player& p, ShipType ship = ShipType::BAGON);
 
 // Update player state: movement, fire cooldown, lock-on, charge, bomb.
 // Fires bullets into pool when the spacebar is held.
-void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies);
+void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies,
+                  ParticleSystem* ps = nullptr);
 
 // Release lock-on: fire homing shots at all locked targets.
 void releaseLockOn(Player& p, BulletPool& bullets);

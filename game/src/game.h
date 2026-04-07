@@ -65,8 +65,11 @@ private:
     ParticleSystem* particles_  = nullptr;
     bool          bossMusicPlaying_ = false;
     int           hiScore_          = 0;   // all-time high score (persisted)
-    float         screenShakeTimer_     = 0.0f;  // > 0 while bomb screen shake is active
+    float         screenShakeTimer_     = 0.0f;  // > 0 while screen shake is active
+    float         screenShakeMagnitude_ = 0.0f;  // current shake magnitude (exponential decay)
     bool          prevBombActive_       = false;  // previous frame bomb state (for edge detection)
+    int           prevBossPhase_        = 0;      // previous boss phase for phase-transition shake
+    GameState     stateBeforePause_     = GameState::PLAYING; // state to restore on unpause
 
     // Checkpoint / continue system
     int           checkpointStageNum_   = 1;      // stage num at checkpoint

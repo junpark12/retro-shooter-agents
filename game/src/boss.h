@@ -28,6 +28,17 @@ struct Boss : Entity {
     Vec2  targetPos      = {};     // movement target
     float moveCooldown   = 0.0f;   // time until next repositioning
     bool  lockedOn       = false;  // player has locked onto this boss
+
+    // Attack pre-warning flash (0.5s before firing)
+    float attackWarningTimer = 0.0f; // counts down from ATTACK_WARNING_DURATION to 0
+    bool  attackWarning      = false; // true while warning is active
+
+    // Smooth HP bar display (lerped toward actual hp)
+    float displayHp = 0.0f;        // lerped HP value for smooth bar animation
+
+    // Boss entrance animation
+    float entranceTimer = 0.0f;    // > 0 while boss is sliding in from top
+    bool  entranceDone  = false;   // true once entrance animation complete
 };
 
 // Initialise the boss for the given stage (sets HP, speed, size, bounds).

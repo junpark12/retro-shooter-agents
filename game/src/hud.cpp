@@ -133,9 +133,58 @@ void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* fon
     }
 }
 
-void renderBossHP(SDL_Renderer* renderer, TTF_Font* font, int currentHp, int maxHp, int phase) {
+void renderChargeBar(SDL_Renderer* renderer, int playerX, int playerY, float chargeRatio) {
+    if (chargeRatio <= 0.0f) return;
+    chargeRatio = std::clamp(chargeRatio, 0.0f, 1.0f);
+
+    SDL_Rect frame{playerX, playerY + 52, 28, 4};
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(renderer, &frame);
+
+    const int fillW = static_cast<int>((frame.w - 2) * chargeRatio);
+    SDL_Rect fill{frame.x + 1, frame.y + 1, fillW, frame.h - 2};
+
+    if (chargeRatio >= 1.0f) {
+        const bool blink = ((SDL_GetTicks() / 80) % 2) == 0;
+        if (blink) SDL_SetRenderDrawColor(renderer, 255, 245, 80, 255);
+        else SDL_SetRenderDrawColor(renderer, 255, 180, 30, 255);
+    } else {
+        const Uint8 g = static_cast<Uint8>(140 + 100 * chargeRatio);
+        const Uint8 b = static_cast<Uint8>(255 - 110 * chargeRatio);
+        SDL_SetRenderDrawColor(renderer, 0, g, b, 255);
+    }
+    SDL_RenderFillRect(renderer, &fill);
+}
+
+void renderPowerUpTimer(SDL_Renderer* renderer, TTF_Font* font,
+                        int powerUpCount, float shieldTimer, bool hasPowerUp) {
+    if (hasPowerUp && powerUpCount > 0) {
+        SDL_Color pwrColor{80, 255, 120, 255};
+        if (powerUpCount <= 30) {
+            const bool blink = ((SDL_GetTicks() / 200) % 2) == 0;
+            pwrColor = blink ? SDL_Color{255, 80, 80, 255} : SDL_Color{160, 40, 40, 255};
+        } else if (powerUpCount <= 60) {
+            pwrColor = {255, 170, 40, 255};
+        }
+
+        char buf[32];
+        std::snprintf(buf, sizeof(buf), "PWR: %d", powerUpCount);
+        renderText(renderer, font, buf, SCREEN_W - 120, SCREEN_H - 44, pwrColor);
+    }
+
+    if (shieldTimer > 0.0f) {
+        const int sec = std::max(1, static_cast<int>(shieldTimer + 0.99f));
+        char shlBuf[16];
+        std::snprintf(shlBuf, sizeof(shlBuf), "SHL: %ds", sec);
+        renderText(renderer, font, shlBuf, 10, 40, {120, 200, 255, 255});
+    }
+}
+
+void renderBossHP(SDL_Renderer* renderer, TTF_Font* font, int currentHp, int maxHp, int phase, float displayHp) {
     if (maxHp <= 0) return;
-    const float ratio = std::clamp(static_cast<float>(currentHp) / static_cast<float>(maxHp), 0.0f, 1.0f);
+    const float ratio = (displayHp >= 0.0f)
+                            ? std::clamp(displayHp / static_cast<float>(maxHp), 0.0f, 1.0f)
+                            : std::clamp(static_cast<float>(currentHp) / static_cast<float>(maxHp), 0.0f, 1.0f);
     SDL_Rect border{8, 6, SCREEN_W - 16, 14};
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderDrawRect(renderer, &border);
@@ -146,6 +195,21 @@ void renderBossHP(SDL_Renderer* renderer, TTF_Font* font, int currentHp, int max
     renderText(renderer, font, "BOSS", 10, 22, {255, 255, 255, 255});
     std::string stars(phase, '*');
     renderText(renderer, font, stars.c_str(), SCREEN_W - 50, 22, {255, 232, 0, 255});
+}
+
+void renderBossAttackWarning(SDL_Renderer* renderer, int bossX, int bossY, int bossW, int bossH,
+                             float warningRatio) {
+    warningRatio = std::clamp(warningRatio, 0.0f, 1.0f);
+    const Uint8 alpha = static_cast<Uint8>(120.0f * warningRatio);
+    if (alpha == 0) return;
+
+    SDL_BlendMode prevBlend = SDL_BLENDMODE_NONE;
+    SDL_GetRenderDrawBlendMode(renderer, &prevBlend);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, alpha);
+    SDL_Rect area{bossX, bossY, bossW, bossH};
+    SDL_RenderFillRect(renderer, &area);
+    SDL_SetRenderDrawBlendMode(renderer, prevBlend);
 }
 
 void renderStageClear(SDL_Renderer* renderer, TTF_Font* font, int stageNum, int score) {
@@ -198,16 +262,37 @@ void renderCombo(SDL_Renderer* renderer, TTF_Font* font, int comboCount, float c
     char buf[32];
     std::snprintf(buf, sizeof(buf), "COMBO x%d", comboCount);
     const Uint8 alpha = static_cast<Uint8>(std::min(255.0f, comboTimer * 255.0f));
-    SDL_Color color{255, 232, 0, alpha};
+    SDL_Color color{255, 255, 255, alpha};
+    if (comboCount >= 5 && comboCount <= 9) {
+        color = {255, 232, 0, alpha};
+    } else if (comboCount >= 10 && comboCount <= 19) {
+        color = {255, 140, 0, alpha};
+    } else if (comboCount >= 20) {
+        const bool blink = ((SDL_GetTicks() / 100) % 2) == 0;
+        color = blink ? SDL_Color{255, 40, 40, alpha} : SDL_Color{140, 20, 20, alpha};
+    }
     renderText(renderer, font, buf, SCREEN_W - 140, 50, color);
 
     if (comboCount >= 5) {
         char mulBuf[16];
-        const float mul = 1.0f + static_cast<float>(comboCount / 5) * 0.5f;
-        std::snprintf(mulBuf, sizeof(mulBuf), "%.1fx SCORE", std::min(mul, 4.0f));
+        const float mul = 1.0f + static_cast<float>(comboCount / 4) * 0.5f;
+        std::snprintf(mulBuf, sizeof(mulBuf), "%.1fx SCORE", std::min(mul, 8.0f));
         SDL_Color mulColor{255, 100, 255, alpha};
         renderText(renderer, font, mulBuf, SCREEN_W - 140, 66, mulColor);
     }
+}
+
+void renderPaused(SDL_Renderer* renderer, TTF_Font* font) {
+    SDL_BlendMode prevBlend = SDL_BLENDMODE_NONE;
+    SDL_GetRenderDrawBlendMode(renderer, &prevBlend);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 160);
+    SDL_Rect overlay{0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &overlay);
+    SDL_SetRenderDrawBlendMode(renderer, prevBlend);
+
+    renderText(renderer, font, "PAUSED", SCREEN_W / 2 - 48, SCREEN_H / 2 - 24, {255, 232, 0, 255});
+    renderText(renderer, font, "PRESS P TO RESUME", SCREEN_W / 2 - 96, SCREEN_H / 2 + 8, {255, 255, 255, 255});
 }
 
 void renderContinue(SDL_Renderer* renderer, TTF_Font* font, int countdown) {
