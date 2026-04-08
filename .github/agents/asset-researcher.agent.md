@@ -4,7 +4,6 @@ description: >-
   게임에 사용할 무료 에셋(스프라이트, BGM, 효과음, 폰트)을 인터넷에서
   검색하고, asset-request.json을 생성하여 GitHub Actions workflow로
   다운로드를 트리거하는 에이전트. VS Code에서 실행합니다.
-target: vscode
 user-invocable: true
 tools:
   - read
