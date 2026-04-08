@@ -113,6 +113,8 @@ const char* powerUpLabel(PowerUpType type) {
         case PowerUpType::BOMB: return "BOM";
         case PowerUpType::POWER: return "UP";
         case PowerUpType::SIDECAR: return "SC";
+        case PowerUpType::MAGNET: return "MAG";
+        case PowerUpType::SPEEDUP: return "SPD";
     }
     return nullptr;
 }
@@ -126,6 +128,8 @@ void setPowerUpLabelColor(SDL_Renderer* renderer, PowerUpType type) {
         case PowerUpType::BOMB: SDL_SetRenderDrawColor(renderer, 255, 165, 0, 255); break;
         case PowerUpType::POWER: SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255); break;
         case PowerUpType::SIDECAR: SDL_SetRenderDrawColor(renderer, 120, 200, 255, 255); break;
+        case PowerUpType::MAGNET: SDL_SetRenderDrawColor(renderer, 160, 120, 255, 255); break;
+        case PowerUpType::SPEEDUP: SDL_SetRenderDrawColor(renderer, 255, 232, 0, 255); break;
     }
 }
 
@@ -204,6 +208,8 @@ const char* powerUpKey(PowerUpType type) {
         case PowerUpType::BOMB: return SPR_POWERUP_BOMB;
         case PowerUpType::POWER: return SPR_POWERUP_POWER;
         case PowerUpType::SIDECAR: return SPR_POWERUP_POWER;
+        case PowerUpType::MAGNET: return SPR_POWERUP_POWER;
+        case PowerUpType::SPEEDUP: return "powerups/speed";
     }
     return SPR_POWERUP_POWER;
 }
@@ -319,6 +325,22 @@ void renderBulletPrimitive(SDL_Renderer* renderer, int x, int y, BulletOwner own
 }
 
 void renderPowerUpPrimitive(SDL_Renderer* renderer, int x, int y, PowerUpType type) {
+    if (type == PowerUpType::SPEEDUP) {
+        const int cx = x + 12;
+        const int cy = y + 12;
+        SDL_SetRenderDrawColor(renderer, 255, 232, 0, 255);
+        for (int dy = -10; dy <= 10; ++dy) {
+            const int span = 10 - std::abs(dy);
+            SDL_RenderDrawLine(renderer, cx - span, cy + dy, cx + span, cy + dy);
+        }
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 240);
+        SDL_RenderDrawLine(renderer, cx, cy - 6, cx - 4, cy + 2);
+        SDL_RenderDrawLine(renderer, cx, cy - 6, cx + 4, cy + 2);
+        SDL_RenderDrawLine(renderer, cx - 4, cy + 2, cx + 4, cy + 2);
+        renderPowerUpLabel(renderer, x, y, type);
+        return;
+    }
+
     switch (type) {
         case PowerUpType::SPREAD: setColor(renderer, COLOR_YELLOW); break;
         case PowerUpType::LASER: setColor(renderer, COLOR_CYAN); break;
@@ -327,6 +349,8 @@ void renderPowerUpPrimitive(SDL_Renderer* renderer, int x, int y, PowerUpType ty
         case PowerUpType::BOMB: setColor(renderer, COLOR_ORANGE); break;
         case PowerUpType::POWER: setColor(renderer, COLOR_MAGENTA); break;
         case PowerUpType::SIDECAR: SDL_SetRenderDrawColor(renderer, 120, 200, 255, 255); break;
+        case PowerUpType::MAGNET: SDL_SetRenderDrawColor(renderer, 160, 120, 255, 255); break;
+        case PowerUpType::SPEEDUP: break;
     }
     drawFilledCircle(renderer, x + 12, y + 12, 10);
     renderPowerUpLabel(renderer, x, y, type);
@@ -504,7 +528,11 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
 
 void renderPowerUpSprite(SDL_Renderer* renderer, const AssetManager& assets, int x, int y, PowerUpType type) {
     SDL_Texture* tex = assets.get(powerUpKey(type));
-    SDL_Rect dst{x, y, 24, 24};
+    if (!tex && type == PowerUpType::SPEEDUP) {
+        auto& mutableAssets = const_cast<AssetManager&>(assets);
+        tex = mutableAssets.load("powerups/speed", "assets/sprites/powerups/speed.png");
+    }
+    SDL_Rect dst = (type == PowerUpType::SPEEDUP) ? SDL_Rect{x + 2, y + 2, 20, 20} : SDL_Rect{x, y, 24, 24};
     if (tex) {
         SDL_RenderCopy(renderer, tex, nullptr, &dst);
         renderPowerUpLabel(renderer, x, y, type);

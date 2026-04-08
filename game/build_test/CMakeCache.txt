@@ -214,7 +214,7 @@ GalaxyStorm_IS_TOP_LEVEL:STATIC=ON
 GalaxyStorm_SOURCE_DIR:STATIC=/home/runner/work/retro-shooter-agents/retro-shooter-agents/game
 
 //The directory containing a CMake configuration file for SDL2.
-SDL2_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/SDL2
+SDL2_DIR:PATH=SDL2_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for SDL2_image.
 SDL2_image_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/SDL2_image

@@ -14,10 +14,17 @@ namespace galaxy {
 
 namespace {
 constexpr float PI = 3.14159265f;
-constexpr float MOVE_SPEED = 280.0f;
-constexpr float CHARGE_TIME = 1.0f;
 constexpr float LOCK_ACQUIRE_INTERVAL = 0.08f;
 constexpr float BOMB_DURATION = 2.0f;
+
+float moveSpeedForLevel(int lvl) {
+    switch (lvl) {
+        case 1:  return PLAYER_SPEED_LVL1;
+        case 2:  return PLAYER_SPEED_LVL2;
+        case 3:  return PLAYER_SPEED_LVL3;
+        default: return PLAYER_SPEED_BASE;
+    }
+}
 
 void resetLockTargets(Player& p) {
     p.lockTargetCount = 0;
@@ -211,6 +218,7 @@ void initPlayer(Player& p, ShipType ship) {
     p.grazeFlashTimer = 0.0f;
     p.grazeScore = 0;
     p.scoreMultiplier = 1.0f;
+    p.speedLevel = 0;
     p.lockOnActive = false;
     p.lockOnTimer = 0.0f;
     p.animFrame = 0;
@@ -253,7 +261,8 @@ void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies, 
         mx *= 0.7071067f;
         my *= 0.7071067f;
     }
-    p.vel = {mx * MOVE_SPEED, my * MOVE_SPEED};
+    const float spd = moveSpeedForLevel(p.speedLevel);
+    p.vel = {mx * spd, my * spd};
     p.pos += p.vel * dt;
     p.pos.x = std::clamp(p.pos.x, 0.0f, static_cast<float>(SCREEN_W) - 28.0f);
     p.pos.y = std::clamp(p.pos.y, 0.0f, static_cast<float>(SCREEN_H) - 36.0f);
@@ -315,7 +324,7 @@ void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies, 
 
     if (fireHeld) {
         p.chargeTimer += dt;
-        if (p.chargeTimer >= CHARGE_TIME) {
+        if (p.chargeTimer >= PLAYER_CHARGE_TIME) {
             p.chargeReady = true;
         }
 
