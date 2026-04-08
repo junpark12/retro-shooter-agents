@@ -450,9 +450,8 @@ void Game::render() {
     if (state_ == GameState::PLAYING) {
         renderHUD(renderer_, *assets_, font_, *player_, stageNum_, hiScore_);
         // Charge bar (shown when charging)
-        const float CHARGE_TIME = 1.0f;
         renderChargeBar(renderer_, static_cast<int>(player_->pos.x), static_cast<int>(player_->pos.y),
-                        std::clamp(player_->chargeTimer / CHARGE_TIME, 0.0f, 1.0f));
+                        std::clamp(player_->chargeTimer / PLAYER_CHARGE_TIME, 0.0f, 1.0f));
         // Power-up timer
         renderPowerUpTimer(renderer_, font_, player_->powerUpCount, player_->shieldTimer, player_->hasPowerUp);
         if (boss_->active) {
@@ -466,9 +465,8 @@ void Game::render() {
         }
     } else if (state_ == GameState::PAUSED) {
         renderHUD(renderer_, *assets_, font_, *player_, stageNum_, hiScore_);
-        const float CHARGE_TIME = 1.0f;
         renderChargeBar(renderer_, static_cast<int>(player_->pos.x), static_cast<int>(player_->pos.y),
-                        std::clamp(player_->chargeTimer / CHARGE_TIME, 0.0f, 1.0f));
+                        std::clamp(player_->chargeTimer / PLAYER_CHARGE_TIME, 0.0f, 1.0f));
         renderPowerUpTimer(renderer_, font_, player_->powerUpCount, player_->shieldTimer, player_->hasPowerUp);
         if (boss_->active) {
             renderBossHP(renderer_, font_, boss_->hp, boss_->maxHp, boss_->phase, boss_->displayHp);

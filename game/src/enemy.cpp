@@ -139,7 +139,7 @@ void renderEnemies(SDL_Renderer* renderer, const AssetManager& assets, const Ene
         renderEnemySprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type, e.lockedOn);
         if (e.type == EnemyType::ARMORED && e.hp < e.maxHp) {
             renderEnemyHPBar(renderer, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y),
-                             40, e.hp, e.maxHp);
+                             static_cast<int>(e.bounds.w), e.hp, e.maxHp);
         }
     }
 }

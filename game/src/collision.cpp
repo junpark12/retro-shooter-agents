@@ -17,13 +17,14 @@ namespace galaxy {
 namespace {
 PowerUpType randomDrop() {
     int r = std::rand() % 100;
-    if (r < 5)  return PowerUpType::SIDECAR;  // 5% rare
-    if (r < 20) return PowerUpType::POWER;
-    if (r < 35) return PowerUpType::BOMB;
-    if (r < 50) return PowerUpType::SHIELD;
-    if (r < 68) return PowerUpType::MISSILE;
-    if (r < 84) return PowerUpType::LASER;
-    return PowerUpType::SPREAD;
+    if (r < 5)  return PowerUpType::SIDECAR;  // 5%
+    if (r < 17) return PowerUpType::SPEEDUP;  // 12%
+    if (r < 30) return PowerUpType::POWER;    // 13%
+    if (r < 43) return PowerUpType::BOMB;     // 13%
+    if (r < 57) return PowerUpType::SHIELD;   // 14%
+    if (r < 72) return PowerUpType::MISSILE;  // 15%
+    if (r < 86) return PowerUpType::LASER;    // 14%
+    return PowerUpType::SPREAD;               // 14%
 }
 
 int scoreForEnemy(EnemyType t) {
@@ -244,6 +245,13 @@ void checkPowerUpPickup(Player& player, PowerUpPool& powerUps, AudioManager* aud
                 case PowerUpType::MAGNET:
                     audio->playSFX(SFX_POWERUP_MAGNET);
                     break;
+                case PowerUpType::SPEEDUP:
+                    audio->playSFX(SFX_POWERUP);
+                    break;
+                case PowerUpType::POWER:
+                case PowerUpType::SIDECAR:
+                    audio->playSFX(SFX_POWERUP);
+                    break;
                 default:
                     audio->playSFX(SFX_POWERUP);
                     break;
@@ -270,6 +278,9 @@ void checkPowerUpPickup(Player& player, PowerUpPool& powerUps, AudioManager* aud
                 break;
             case PowerUpType::POWER:
                 player.powerLevel = std::min(4, player.powerLevel + 1);
+                break;
+            case PowerUpType::SPEEDUP:
+                player.speedLevel = std::min(PLAYER_SPEED_MAX_LVL, player.speedLevel + 1);
                 break;
             case PowerUpType::SIDECAR:
                 player.sidecarActive = true;
