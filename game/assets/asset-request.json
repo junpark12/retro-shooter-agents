@@ -1,0 +1,20 @@
+{
+  "assets": [
+    {
+      "category": "bgm/boss",
+      "urls": [
+        "https://opengameart.org/sites/default/files/SpaceBattle_0.ogg"
+      ],
+      "source": "OpenGameArt - Space Music (yd)",
+      "license": "CC0"
+    },
+    {
+      "category": "bgm/action",
+      "urls": [
+        "https://opengameart.org/sites/default/files/5_chiptunes_action.zip"
+      ],
+      "source": "OpenGameArt - 5 Chiptunes Action (Juhani Junkala)",
+      "license": "CC0"
+    }
+  ]
+}

@@ -238,6 +238,15 @@ OFL 글꼴을 포함한 소프트웨어를 판매 가능.
 
 ---
 
+## 🎵 Pending BGM Requests (2026-04-08)
+
+| 파일(예정) | 출처 | 작성자 | 라이선스 | 비고 |
+|------|------|--------|----------|------|
+| `bgm/boss/SpaceBattle_0.ogg` | [OpenGameArt - Space Music](https://opengameart.org/content/space-music) | yd | CC0 | 보스전용 긴장감 있는 스페이스 배틀 음악 |
+| `bgm/action/` (zip 내 ogg 파일들) | [OpenGameArt - 5 Chiptunes Action](https://opengameart.org/content/5-chiptunes-action) | Juhani Junkala | CC0 | 스테이지 액션용 칩튠 5트랙 (루프) |
+
+---
+
 ## 👹 Pending Boss Asset Requests (2026-04-08)
 
 | 파일(예정) | 출처 | 작성자 | 라이선스 | 비고 |
