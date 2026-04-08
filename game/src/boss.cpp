@@ -42,6 +42,10 @@ void initBoss(Boss& b, int stageNum) {
             b.maxHp = 1200;
             b.bounds = {0.0f, 0.0f, 210.0f, 170.0f};
             break;
+        case 6:
+            b.maxHp = 2500;
+            b.bounds = {0.0f, 0.0f, 230.0f, 190.0f};
+            break;
         default:
             b.maxHp = 1800;
             b.bounds = {0.0f, 0.0f, 220.0f, 180.0f};
@@ -189,6 +193,25 @@ void updateBoss(Boss& b, float dt, BulletPool& bullets, Vec2 playerPos) {
             firePattern(bullets, BulletPattern::AIMED_BURST, origin, playerPos, 0.0f, 300.0f, 1, BulletOwner::BOSS);
         }
         b.attackTimer = (b.phase == 1 ? 0.75f : b.phase == 2 ? 0.55f : 0.38f);
+    } else if (b.stageNum == 6) {
+        if (b.phase == 1) {
+            firePattern(bullets, BulletPattern::HOMING_LASER, origin, playerPos, 0.0f, 330.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 300.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::AIMED_BURST, origin, playerPos, 0.0f, 330.0f, 1, BulletOwner::BOSS);
+        } else if (b.phase == 2) {
+            firePattern(bullets, BulletPattern::HOMING_LASER, origin, playerPos, 0.0f, 340.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 300.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 290.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::SPIRAL_CCW, origin, playerPos, b.patternAngle, 320.0f, 1, BulletOwner::BOSS);
+        } else {
+            firePattern(bullets, BulletPattern::HOMING_LASER, origin, playerPos, 0.0f, 350.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::CIRCLE_16, origin, playerPos, b.patternAngle, 310.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::SPIRAL_CW, origin, playerPos, b.patternAngle, 330.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::SPIRAL_CCW, origin, playerPos, b.patternAngle, 330.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::AIMED_BURST, origin, playerPos, 0.0f, 340.0f, 1, BulletOwner::BOSS);
+            firePattern(bullets, BulletPattern::CURTAIN, origin, playerPos, 0.0f, 300.0f, 1, BulletOwner::BOSS);
+        }
+        b.attackTimer = (b.phase == 1 ? 0.65f : b.phase == 2 ? 0.45f : 0.30f);
     } else {
         if (b.phase == 1) {
             firePattern(bullets, BulletPattern::HOMING_LASER, origin, playerPos, 0.0f, 300.0f, 1, BulletOwner::BOSS);

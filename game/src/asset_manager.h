@@ -66,6 +66,8 @@ constexpr const char* SPR_ENEMY_SHIP_5  = "enemies/spaceShips_005";
 constexpr const char* SPR_BOSS_1        = "bosses/ship_20";
 constexpr const char* SPR_BOSS_2        = "bosses/ship_80";
 constexpr const char* SPR_BOSS_3        = "bosses/ship_180";
+// Stage 6 boss — from bosses_stage7 (newly added assets)
+constexpr const char* SPR_BOSS_6        = "bosses_stage7/boss_ship";
 // Fallback boss sprites (procedural, Python/Pillow)
 constexpr const char* SPR_BOSS_1_FB     = "bosses/boss_1";
 constexpr const char* SPR_BOSS_2_FB     = "bosses/boss_2";

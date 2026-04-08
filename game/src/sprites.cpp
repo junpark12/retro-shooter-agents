@@ -170,6 +170,7 @@ const char* enemyKey(EnemyType type) {
 const char* bossKey(int stageNum) {
     if (stageNum == 1) return SPR_BOSS_1;
     if (stageNum == 2) return SPR_BOSS_2;
+    if (stageNum == 6) return SPR_BOSS_6;
     return SPR_BOSS_3;
 }
 
@@ -285,6 +286,14 @@ void renderBossPrimitive(SDL_Renderer* renderer, int x, int y, int stageNum) {
         fill(renderer, x + 6, y + 8, 60, 40);
         setColor(renderer, COLOR_ORANGE);
         fill(renderer, x + 20, y, 32, 12);
+    } else if (stageNum == 6) {
+        // 딥 퍼플 최종 보스 92x76
+        setColor(renderer, {128, 0, 255});
+        fill(renderer, x + 4, y + 4, 84, 68);
+        setColor(renderer, COLOR_CYAN);
+        fill(renderer, x + 22, y + 14, 48, 36);
+        setColor(renderer, COLOR_MAGENTA);
+        fill(renderer, x + 34, y + 22, 24, 16);
     } else {
         // 마젠타 요새 80x64
         setColor(renderer, COLOR_MAGENTA);
@@ -416,7 +425,8 @@ void renderBossSprite(SDL_Renderer* renderer, const AssetManager& assets,
     }
     SDL_Rect dst = (stageNum == 1) ? SDL_Rect{x, y, 160, 120}
                    : (stageNum == 2) ? SDL_Rect{x, y, 180, 140}
-                                       : SDL_Rect{x, y, 200, 160};
+                   : (stageNum == 6) ? SDL_Rect{x, y, 230, 190}
+                                     : SDL_Rect{x, y, 200, 160};
 
     if (tex) {
         if (phase >= 3) SDL_SetTextureColorMod(tex, 255, 120, 120);

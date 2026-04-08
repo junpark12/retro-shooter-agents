@@ -36,7 +36,9 @@ const char* stageBgmKey(int stageNum) {
         case 1: return BGM_STAGE_1;
         case 2: return BGM_STAGE_2;
         case 3: return BGM_STAGE_3;
-        case 4: return BGM_STAGE_2;
+        case 4: return BGM_STAGE_4;
+        case 5: return BGM_STAGE_5;
+        case 6: return BGM_STAGE_6;
         default: return BGM_STAGE_3;
     }
 }
@@ -298,9 +300,15 @@ void Game::handleEvents() {
             }
         } else if (state_ == GameState::GAMEOVER || state_ == GameState::VICTORY) {
             if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_RETURN) {
-                state_ = GameState::TITLE;
+                state_ = GameState::CREDITS;
+                creditsScrollY_ = 0.0f;
             } else if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                 running_ = false;
+            }
+        } else if (state_ == GameState::CREDITS) {
+            if (e.type == SDL_KEYDOWN && (e.key.keysym.scancode == SDL_SCANCODE_RETURN ||
+                                          e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)) {
+                state_ = GameState::TITLE;
             }
         }
     }
@@ -335,6 +343,10 @@ void Game::update(float dt) {
         return;
     }
     if (state_ == GameState::PAUSED) {
+        return;
+    }
+    if (state_ == GameState::CREDITS) {
+        creditsScrollY_ += 40.0f * dt;
         return;
     }
     if (state_ != GameState::PLAYING) {
@@ -482,6 +494,8 @@ void Game::render() {
         renderGameOver(renderer_, font_, player_->score);
     } else if (state_ == GameState::VICTORY) {
         renderVictory(renderer_, font_, player_->score);
+    } else if (state_ == GameState::CREDITS) {
+        renderCredits(renderer_, font_, creditsScrollY_);
     }
 
     SDL_RenderPresent(renderer_);
@@ -504,8 +518,9 @@ void Game::startStage(int num) {
 
 void Game::onStageClear() {
     stageNum_++;
-    if (stageNum_ > 5) {
-        state_ = GameState::VICTORY;
+    if (stageNum_ > 6) {
+        state_ = GameState::CREDITS;
+        creditsScrollY_ = 0.0f;
         saveHiScore();
         if (audio_) audio_->playBGM(BGM_VICTORY);
     } else {

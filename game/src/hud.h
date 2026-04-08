@@ -55,6 +55,11 @@ void renderContinue(SDL_Renderer* renderer, TTF_Font* font, int countdown);
 // Full-screen "VICTORY!" overlay shown after clearing all 3 stages.
 void renderVictory(SDL_Renderer* renderer, TTF_Font* font, int score);
 
+// Scrolling credits screen shown after VICTORY or GAMEOVER.
+// scrollY is the current vertical scroll offset (increases each frame to scroll down).
+// Returns true when the credits have scrolled completely off screen.
+bool renderCredits(SDL_Renderer* renderer, TTF_Font* font, float scrollY);
+
 // Small text rendering utility (delegates to SDL2_ttf or pixel font fallback).
 void renderText(SDL_Renderer* renderer, TTF_Font* font,
                 const char* text, int x, int y, SDL_Color color);

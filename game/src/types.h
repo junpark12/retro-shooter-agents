@@ -44,6 +44,7 @@ enum class GameState {
     CONTINUE,     // "CONTINUE?" countdown after game over (checkpoint)
     GAMEOVER,
     VICTORY,
+    CREDITS,      // scrolling credits screen (shown after VICTORY or GAMEOVER)
     QUIT          // signals the main loop to exit cleanly via running_ = false
 };
 

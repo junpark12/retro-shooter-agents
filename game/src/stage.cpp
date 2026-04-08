@@ -58,6 +58,19 @@ constexpr Wave STAGE5_WAVES[] = {
     {EnemyType::ARMORED, 5,  0.70f, BulletPattern::CURTAIN,      0.3f, FormationType::PINCER},
 };
 
+constexpr Wave STAGE6_WAVES[] = {
+    {EnemyType::FAST,    12, 0.14f, BulletPattern::AIMED_BURST,  0.0f, FormationType::CIRCLE},
+    {EnemyType::MEDIUM,  10, 0.26f, BulletPattern::CIRCLE_16,    0.6f, FormationType::V_SHAPE},
+    {EnemyType::FAST,    14, 0.12f, BulletPattern::AIMED_SPREAD, 0.6f, FormationType::PINCER},
+    {EnemyType::LARGE,    6, 0.48f, BulletPattern::CURTAIN,      0.6f, FormationType::DIAGONAL},
+    {EnemyType::ARMORED,  5, 0.68f, BulletPattern::CIRCLE_16,    0.6f, FormationType::LANE},
+    {EnemyType::FAST,    14, 0.12f, BulletPattern::HOMING_LASER, 0.5f, FormationType::CIRCLE},
+    {EnemyType::MEDIUM,  12, 0.22f, BulletPattern::SPIRAL_CW,    0.4f, FormationType::DIAGONAL},
+    {EnemyType::LARGE,    7, 0.42f, BulletPattern::SPIRAL_CCW,   0.3f, FormationType::V_SHAPE},
+    {EnemyType::ARMORED,  6, 0.62f, BulletPattern::CURTAIN,      0.3f, FormationType::PINCER},
+    {EnemyType::FAST,    16, 0.10f, BulletPattern::AIMED_BURST,  0.2f, FormationType::CIRCLE},
+};
+
 const Wave* getWavesForStage(int stageNum, int& outCount) {
     switch (stageNum) {
         case 1:
@@ -72,6 +85,9 @@ const Wave* getWavesForStage(int stageNum, int& outCount) {
         case 4:
             outCount = static_cast<int>(sizeof(STAGE4_WAVES) / sizeof(STAGE4_WAVES[0]));
             return STAGE4_WAVES;
+        case 6:
+            outCount = static_cast<int>(sizeof(STAGE6_WAVES) / sizeof(STAGE6_WAVES[0]));
+            return STAGE6_WAVES;
         default:
             outCount = static_cast<int>(sizeof(STAGE5_WAVES) / sizeof(STAGE5_WAVES[0]));
             return STAGE5_WAVES;

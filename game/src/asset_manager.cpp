@@ -30,6 +30,7 @@ bool AssetManager::init(SDL_Renderer* r) {
     load(SPR_BOSS_1,        "assets/sprites/bosses_extra/og_001_0.png");
     load(SPR_BOSS_2,        "assets/sprites/bosses_extra/og_002_1.png");
     load(SPR_BOSS_3,        "assets/sprites/bosses_extra/Titan_0.png");
+    load(SPR_BOSS_6,        "assets/sprites/bosses_stage7/Ship.png");
     load(SPR_BOSS_1_FB,     "assets/sprites/bosses/boss_1.png");
     load(SPR_BOSS_2_FB,     "assets/sprites/bosses/boss_2.png");
     load(SPR_BOSS_3_FB,     "assets/sprites/bosses/boss_3.png");

@@ -321,4 +321,64 @@ void renderVictory(SDL_Renderer* renderer, TTF_Font* font, int score) {
     renderText(renderer, font, "PRESS ENTER", 154, 346, {255, 255, 255, 255});
 }
 
+bool renderCredits(SDL_Renderer* renderer, TTF_Font* font, float scrollY) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 20, 255);
+    SDL_Rect bg{0, 0, SCREEN_W, SCREEN_H};
+    SDL_RenderFillRect(renderer, &bg);
+
+    struct CreditLine {
+        const char* text;
+        bool header;
+    };
+
+    static constexpr CreditLine lines[] = {
+        {"GALAXY STORM", true},
+        {"", false},
+        {"Created by", true},
+        {"Contoso Games", false},
+        {"", false},
+        {"Project Leadership", true},
+        {"Project Leader Agent", false},
+        {"", false},
+        {"Development", true},
+        {"Developer Agent", false},
+        {"", false},
+        {"Visual Design", true},
+        {"UI Designer Agent", false},
+        {"", false},
+        {"Quality Assurance", true},
+        {"Tester Agent", false},
+        {"", false},
+        {"", false},
+        {"Thank you for playing!", true},
+    };
+
+    constexpr int lineSpacing = 28;
+    constexpr int lineCount = static_cast<int>(sizeof(lines) / sizeof(lines[0]));
+    const int baseY = static_cast<int>(scrollY);
+
+    for (int i = 0; i < lineCount; ++i) {
+        if (!lines[i].text[0]) continue;
+        const int y = baseY + i * lineSpacing;
+        if (y < -lineSpacing || y > SCREEN_H) continue;
+
+        int textW = 0;
+        int textH = 0;
+        if (font && TTF_SizeUTF8(font, lines[i].text, &textW, &textH) == 0) {
+            // sized by font metrics
+        } else {
+            textW = static_cast<int>(std::string(lines[i].text).size()) * 6;
+            textH = 8;
+        }
+        const int x = (SCREEN_W - textW) / 2;
+        const SDL_Color color = lines[i].header ? SDL_Color{255, 232, 0, 255}
+                                                : SDL_Color{200, 200, 255, 255};
+        renderText(renderer, font, lines[i].text, x, y, color);
+    }
+
+    renderText(renderer, font, "PRESS ENTER TO RETURN", 122, SCREEN_H - 24, {150, 150, 150, 255});
+
+    return (baseY + lineCount * lineSpacing) > SCREEN_H;
+}
+
 } // namespace galaxy

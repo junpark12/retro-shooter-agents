@@ -46,7 +46,7 @@ private:
     // ── Game state ────────────────────────────────────────────────────────────
     GameState state_          = GameState::TITLE;
     bool      running_        = false;
-    int       stageNum_       = 1;   // 1-based current stage (1–3)
+    int       stageNum_       = 1;   // 1-based current stage (1–6)
     ShipType  selectedShip_   = ShipType::BAGON;
 
     // ── Subsystems ────────────────────────────────────────────────────────────
@@ -76,6 +76,9 @@ private:
     int           checkpointWaveIdx_    = 0;      // wave index at checkpoint
     float         continueTimer_        = 9.0f;   // countdown seconds for CONTINUE? screen
     int           continueCountdown_    = 9;      // integer version for display
+
+    // Credits scroll
+    float         creditsScrollY_       = 0.0f;   // current Y offset for scrolling credits
 
     // ── Persistence helpers ───────────────────────────────────────────────────
 
