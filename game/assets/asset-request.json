@@ -1,0 +1,12 @@
+{
+  "assets": [
+    {
+      "category": "sprites/bosses_stage7",
+      "urls": [
+        "https://opengameart.org/sites/default/files/Ship.zip"
+      ],
+      "source": "OpenGameArt (Alien Spaceship Sprite Pack)",
+      "license": "CC0"
+    }
+  ]
+}

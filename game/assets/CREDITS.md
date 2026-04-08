@@ -235,3 +235,11 @@ OFL 글꼴을 포함한 소프트웨어를 판매 가능.
 |------|------|--------|----------|------|
 | `bgm/OutThere_0.ogg` | [OpenGameArt - Space Music: Out There](https://opengameart.org/content/space-music-out-there) | yd | CC0 | 배경/타이틀용 앰비언트 |
 | `bgm/through_space.ogg` | [OpenGameArt - Through Space](https://opengameart.org/content/through-space) | maxstack | CC-BY-SA 3.0 | 스테이지 진행용 신스 트랙 |
+
+---
+
+## 👹 Pending Boss Asset Requests (2026-04-08)
+
+| 파일(예정) | 출처 | 작성자 | 라이선스 | 비고 |
+|------|------|--------|----------|------|
+| `sprites/bosses_stage7/*` | [OpenGameArt - Alien Spaceship Sprite Pack](https://opengameart.org/content/alien-spaceship-sprite-pack) | pzUH | CC0 | Stage 7 포함 확장 스테이지용 보스 후보 스프라이트 팩 (zip: Ship.zip) |
