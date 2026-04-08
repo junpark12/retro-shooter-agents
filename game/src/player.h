@@ -8,6 +8,9 @@ struct BulletPool;  // defined in bullet.h
 struct EnemyPool;   // defined in enemy.h
 struct ParticleSystem; // defined in particles.h
 
+// Shared charge-shot time constant (used by player.cpp and game.cpp HUD).
+constexpr float PLAYER_CHARGE_TIME = 1.0f;
+
 // ─── Lock-on target ───────────────────────────────────────────────────────────
 struct LockTarget {
     bool  active   = false;
@@ -56,6 +59,9 @@ struct Player : Entity {
     int        comboCount      = 0;     // current consecutive kill streak
     float      comboTimer      = 0.0f;  // time remaining before combo resets
     float      scoreMultiplier = 1.0f;  // score multiplier derived from combo
+
+    // Speed system: 0 = base (slowest), 1–3 = SPEEDUP stages
+    int        speedLevel      = 0;     // 0=base, 1=0.7x, 2=1.0x, 3=1.3x of original speed
 
     // Sprite animation
     int        animFrame       = 0;

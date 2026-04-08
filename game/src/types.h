@@ -71,8 +71,17 @@ enum class PowerUpType {
     BOMB,      // extra bomb stock
     POWER,     // increase power level
     SIDECAR,   // side companion ship (auto-fires for 30 seconds, rare drop)
-    MAGNET     // attract nearby power-ups toward player
+    MAGNET,    // attract nearby power-ups toward player
+    SPEEDUP    // increase movement speed (3 stages: 0.7x → 1.0x → 1.3x of base current)
 };
+
+// ─── Player movement speed constants ─────────────────────────────────────────
+// Base speed is slower than the original 280; collecting SPEEDUP items raises it.
+constexpr float PLAYER_SPEED_BASE   = 168.0f;  // no speedup (≈ 0.6 × 280)
+constexpr float PLAYER_SPEED_LVL1   = 196.0f;  // stage 1  (0.7 × 280)
+constexpr float PLAYER_SPEED_LVL2   = 280.0f;  // stage 2  (1.0 × 280, original speed)
+constexpr float PLAYER_SPEED_LVL3   = 364.0f;  // stage 3  (1.3 × 280)
+constexpr int   PLAYER_SPEED_MAX_LVL = 3;
 
 enum class BulletOwner {
     PLAYER,
