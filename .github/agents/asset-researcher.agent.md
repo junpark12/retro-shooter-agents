@@ -5,6 +5,7 @@ description: >-
   검색하고, asset-request.json을 생성하여 GitHub Actions workflow로
   다운로드를 트리거하는 에이전트. VS Code에서 실행합니다.
 user-invocable: true
+target: vscode
 tools:
   - read
   - edit
