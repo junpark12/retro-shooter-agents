@@ -121,6 +121,7 @@ constexpr const char* SPR_POWERUP_MISSILE = "powerups/powerup_missile_k";
 constexpr const char* SPR_POWERUP_SHIELD  = "powerups/powerup_shield_k";
 constexpr const char* SPR_POWERUP_BOMB    = "powerups/powerup_bomb_k";
 constexpr const char* SPR_POWERUP_POWER   = "powerups/powerup_power_k";
+constexpr const char* SPR_POWERUP_SPEEDUP = "powerups/speed";
 
 // Backgrounds
 constexpr const char* SPR_BG_SPACE        = "backgrounds/space_bg";

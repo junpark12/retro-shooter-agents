@@ -209,7 +209,7 @@ const char* powerUpKey(PowerUpType type) {
         case PowerUpType::POWER: return SPR_POWERUP_POWER;
         case PowerUpType::SIDECAR: return SPR_POWERUP_POWER;
         case PowerUpType::MAGNET: return SPR_POWERUP_POWER;
-        case PowerUpType::SPEEDUP: return "powerups/speed";
+        case PowerUpType::SPEEDUP: return SPR_POWERUP_SPEEDUP;
     }
     return SPR_POWERUP_POWER;
 }
@@ -350,7 +350,6 @@ void renderPowerUpPrimitive(SDL_Renderer* renderer, int x, int y, PowerUpType ty
         case PowerUpType::POWER: setColor(renderer, COLOR_MAGENTA); break;
         case PowerUpType::SIDECAR: SDL_SetRenderDrawColor(renderer, 120, 200, 255, 255); break;
         case PowerUpType::MAGNET: SDL_SetRenderDrawColor(renderer, 160, 120, 255, 255); break;
-        case PowerUpType::SPEEDUP: break;
     }
     drawFilledCircle(renderer, x + 12, y + 12, 10);
     renderPowerUpLabel(renderer, x, y, type);
@@ -528,10 +527,6 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
 
 void renderPowerUpSprite(SDL_Renderer* renderer, const AssetManager& assets, int x, int y, PowerUpType type) {
     SDL_Texture* tex = assets.get(powerUpKey(type));
-    if (!tex && type == PowerUpType::SPEEDUP) {
-        auto& mutableAssets = const_cast<AssetManager&>(assets);
-        tex = mutableAssets.load("powerups/speed", "assets/sprites/powerups/speed.png");
-    }
     SDL_Rect dst = (type == PowerUpType::SPEEDUP) ? SDL_Rect{x + 2, y + 2, 20, 20} : SDL_Rect{x, y, 24, 24};
     if (tex) {
         SDL_RenderCopy(renderer, tex, nullptr, &dst);

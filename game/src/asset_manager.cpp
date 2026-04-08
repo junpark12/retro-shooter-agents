@@ -82,6 +82,7 @@ bool AssetManager::init(SDL_Renderer* r) {
     load(SPR_POWERUP_SHIELD,  "assets/sprites/powerups/powerup_shield_k.png");
     load(SPR_POWERUP_BOMB,    "assets/sprites/powerups/powerup_bomb_k.png");
     load(SPR_POWERUP_POWER,   "assets/sprites/powerups/powerup_power_k.png");
+    load(SPR_POWERUP_SPEEDUP, "assets/sprites/powerups/speed.png");
 
     // Background + UI
     load(SPR_BG_SPACE,     "assets/sprites/backgrounds/space_bg.png");

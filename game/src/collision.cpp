@@ -248,6 +248,10 @@ void checkPowerUpPickup(Player& player, PowerUpPool& powerUps, AudioManager* aud
                 case PowerUpType::SPEEDUP:
                     audio->playSFX(SFX_POWERUP);
                     break;
+                case PowerUpType::POWER:
+                case PowerUpType::SIDECAR:
+                    audio->playSFX(SFX_POWERUP);
+                    break;
                 default:
                     audio->playSFX(SFX_POWERUP);
                     break;
