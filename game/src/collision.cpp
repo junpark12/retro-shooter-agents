@@ -49,15 +49,21 @@ bool shouldDrop(EnemyType t) {
     return false;
 }
 
-void damagePlayer(Player& player, int dmg) {
+void damagePlayer(Player& player, int dmg, Vec2 deathPos,
+                  AudioManager* audio = nullptr, ParticleSystem* ps = nullptr) {
     player.hp -= dmg;
     player.invincibleTimer = 1.0f;
     if (player.hp > 0) return;
+
+    // Ship destroyed — spawn explosion effect at death position
+    if (ps)    spawnExplosion(*ps, deathPos, true);
+    if (audio) audio->playSFX(SFX_EXPLODE_BIG);
+
     player.lives--;
     if (player.lives > 0) {
         player.hp = 3;
-        player.pos = {SCREEN_W * 0.5f - 14.0f, SCREEN_H - 90.0f};
-        player.invincibleTimer = 2.0f;
+        player.pos = deathPos;
+        player.invincibleTimer = 3.0f;
     } else {
         player.active = false;
     }
@@ -170,7 +176,8 @@ void checkBulletPlayerCollision(BulletPool& bullets, Player& player, AudioManage
         player.pos += pushDir * 8.0f;
         player.pos.x = std::clamp(player.pos.x, 0.0f, static_cast<float>(SCREEN_W) - 28.0f);
         player.pos.y = std::clamp(player.pos.y, 0.0f, static_cast<float>(SCREEN_H) - 36.0f);
-        damagePlayer(player, b.damage);
+        const Vec2 deathPos = player.center();
+        damagePlayer(player, b.damage, deathPos, audio, ps);
         break;
     }
 }
@@ -188,7 +195,8 @@ void checkPlayerEnemyCollision(Player& player, EnemyPool& enemies,
         e.active = false;
         if (ps) spawnExplosion(*ps, e.center(), false);
         if (audio) audio->playSFX(SFX_PLAYER_HIT);
-        damagePlayer(player, 1);
+        const Vec2 deathPos = player.center();
+        damagePlayer(player, 1, deathPos, audio, ps);
         break;
     }
 }
@@ -214,6 +222,19 @@ void checkBulletBossCollision(BulletPool& bullets, Boss& boss, Player& player,
             if (audio) audio->playSFX(SFX_EXPLODE_BIG);
         }
     }
+}
+
+void checkPlayerBossCollision(Player& player, Boss& boss,
+                              AudioManager* audio, ParticleSystem* ps) {
+    if (!player.active) return;
+    if (player.invincibleTimer > 0.0f || player.shieldTimer > 0.0f) return;
+    if (!boss.active || !boss.entranceDone) return;
+
+    if (!rectsOverlap(player.worldBounds(), boss.worldBounds())) return;
+
+    if (audio) audio->playSFX(SFX_PLAYER_HIT);
+    const Vec2 deathPos = player.center();
+    damagePlayer(player, 1, deathPos, audio, ps);
 }
 
 void checkPowerUpPickup(Player& player, PowerUpPool& powerUps, AudioManager* audio) {
