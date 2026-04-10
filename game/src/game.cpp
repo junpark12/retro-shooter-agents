@@ -371,6 +371,7 @@ void Game::update(float dt) {
     checkBulletPlayerCollision(*bullets_, *player_, audio_, particles_);
     checkPlayerEnemyCollision(*player_, *enemies_, audio_, particles_);
     checkBulletBossCollision(*bullets_, *boss_, *player_, audio_);
+    checkPlayerBossCollision(*player_, *boss_, audio_, particles_);
     checkPowerUpPickup(*player_, *powerUps_, audio_);
 
     if (player_->score > hiScore_) hiScore_ = player_->score;

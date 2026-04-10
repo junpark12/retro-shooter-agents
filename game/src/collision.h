@@ -43,6 +43,12 @@ void checkPlayerEnemyCollision(Player& player, EnemyPool& enemies,
 void checkBulletBossCollision(BulletPool& bullets, Boss& boss, Player& player,
                                AudioManager* audio = nullptr);
 
+// Player body vs boss body: AABB collision, damages player on contact.
+// Spawns particle explosion and plays SFX if provided.
+void checkPlayerBossCollision(Player& player, Boss& boss,
+                               AudioManager* audio = nullptr,
+                               ParticleSystem* ps = nullptr);
+
 // Player vs power-ups: applies the power-up effect to the player.
 void checkPowerUpPickup(Player& player, PowerUpPool& powerUps,
                         AudioManager* audio = nullptr);
