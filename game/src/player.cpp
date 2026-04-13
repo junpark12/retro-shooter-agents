@@ -81,19 +81,19 @@ void firePrimary(Player& p, BulletPool& bullets, ParticleSystem* ps) {
     switch (p.shipType) {
         case ShipType::BAGON: {
             if (level == 1) {
-                fireBullet(bullets, muzzle, {0.0f, -760.0f}, BulletOwner::PLAYER, 2);
+                fireBullet(bullets, muzzle, {0.0f, -836.0f}, BulletOwner::PLAYER, 2);
                 p.fireTimer = 0.08f;
             } else if (level == 2) {
-                fireBullet(bullets, muzzle, {0.0f, -860.0f}, BulletOwner::PLAYER, 2);
+                fireBullet(bullets, muzzle, {0.0f, -946.0f}, BulletOwner::PLAYER, 2);
                 p.fireTimer = 0.08f;
             } else if (level == 3) {
-                fireBullet(bullets, muzzle, {-30.0f, -760.0f}, BulletOwner::PLAYER, 2);
-                fireBullet(bullets, muzzle, {30.0f, -760.0f}, BulletOwner::PLAYER, 2);
+                fireBullet(bullets, muzzle, {-33.0f, -836.0f}, BulletOwner::PLAYER, 2);
+                fireBullet(bullets, muzzle, {33.0f, -836.0f}, BulletOwner::PLAYER, 2);
                 p.fireTimer = 0.07f;
             } else {
                 for (int i = -1; i <= 1; ++i) {
                     const float rad = (i * 15.0f) * PI / 180.0f;
-                    fireBullet(bullets, muzzle, {std::sin(rad) * 760.0f, -std::cos(rad) * 760.0f},
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 836.0f, -std::cos(rad) * 836.0f},
                                BulletOwner::PLAYER, 2);
                 }
                 p.fireTimer = 0.07f;
@@ -102,26 +102,26 @@ void firePrimary(Player& p, BulletPool& bullets, ParticleSystem* ps) {
         }
         case ShipType::DAMUL: {
             if (level == 1) {
-                fireBullet(bullets, muzzle, {0.0f, -580.0f}, BulletOwner::PLAYER, 1);
+                fireBullet(bullets, muzzle, {0.0f, -638.0f}, BulletOwner::PLAYER, 1);
                 p.fireTimer = 0.10f;
             } else if (level == 2) {
                 for (int i = -1; i <= 1; ++i) {
                     const float rad = (i * 20.0f) * PI / 180.0f;
-                    fireBullet(bullets, muzzle, {std::sin(rad) * 580.0f, -std::cos(rad) * 580.0f},
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 638.0f, -std::cos(rad) * 638.0f},
                                BulletOwner::PLAYER, 1);
                 }
                 p.fireTimer = 0.14f;
             } else if (level == 3) {
                 for (int i = -2; i <= 2; ++i) {
                     const float rad = (i * 20.0f) * PI / 180.0f;
-                    fireBullet(bullets, muzzle, {std::sin(rad) * 580.0f, -std::cos(rad) * 580.0f},
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 638.0f, -std::cos(rad) * 638.0f},
                                BulletOwner::PLAYER, 1);
                 }
                 p.fireTimer = 0.14f;
             } else {
                 for (int i = -3; i <= 3; ++i) {
                     const float rad = (i * 16.0f) * PI / 180.0f;
-                    fireBullet(bullets, muzzle, {std::sin(rad) * 580.0f, -std::cos(rad) * 580.0f},
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 638.0f, -std::cos(rad) * 638.0f},
                                BulletOwner::PLAYER, 1);
                 }
                 p.fireTimer = 0.14f;
@@ -130,12 +130,12 @@ void firePrimary(Player& p, BulletPool& bullets, ParticleSystem* ps) {
         }
         case ShipType::GUNEX: {
             if (level == 1) {
-                fireBullet(bullets, muzzle, {0.0f, -500.0f}, BulletOwner::PLAYER, 2);
+                fireBullet(bullets, muzzle, {0.0f, -550.0f}, BulletOwner::PLAYER, 2);
                 p.fireTimer = 0.15f;
             } else {
                 for (int i = -1; i <= 1; ++i) {
                     const float rad = (i * 18.0f) * PI / 180.0f;
-                    fireBullet(bullets, muzzle, {std::sin(rad) * 500.0f, -std::cos(rad) * 500.0f},
+                    fireBullet(bullets, muzzle, {std::sin(rad) * 550.0f, -std::cos(rad) * 550.0f},
                                BulletOwner::PLAYER, 2);
                 }
 
@@ -166,19 +166,19 @@ void fireCharge(Player& p, BulletPool& bullets, ParticleSystem* ps) {
     }
     switch (p.shipType) {
         case ShipType::BAGON:
-            fireBullet(bullets, {c.x - 2.0f, c.y - 14.0f}, {0.0f, -1000.0f}, BulletOwner::PLAYER, 8);
+            fireBullet(bullets, {c.x - 2.0f, c.y - 14.0f}, {0.0f, -1100.0f}, BulletOwner::PLAYER, 8);
             break;
         case ShipType::DAMUL:
             for (int i = -3; i <= 3; ++i) {
                 const float rad = (i * 12.0f) * PI / 180.0f;
-                fireBullet(bullets, c, {std::sin(rad) * 720.0f, -std::cos(rad) * 720.0f},
+                fireBullet(bullets, c, {std::sin(rad) * 792.0f, -std::cos(rad) * 792.0f},
                            BulletOwner::PLAYER, 4);
             }
             break;
         case ShipType::GUNEX:
             for (int i = 0; i < 16; ++i) {
                 const float rad = (i * 22.5f) * PI / 180.0f;
-                fireBullet(bullets, c, {std::cos(rad) * 500.0f, std::sin(rad) * 500.0f},
+                fireBullet(bullets, c, {std::cos(rad) * 550.0f, std::sin(rad) * 550.0f},
                            BulletOwner::PLAYER, 5);
             }
             break;
@@ -289,9 +289,9 @@ void updatePlayer(Player& p, float dt, BulletPool& bullets, EnemyPool& enemies, 
     }
     p.sidecarFireTimer = std::max(0.0f, p.sidecarFireTimer - dt);
     if (p.sidecarActive && p.sidecarFireTimer <= 0.0f) {
-        fireBullet(bullets, {p.pos.x - 10.0f, p.pos.y + 8.0f}, {0.0f, -600.0f},
+        fireBullet(bullets, {p.pos.x - 10.0f, p.pos.y + 8.0f}, {0.0f, -660.0f},
                    BulletOwner::PLAYER, 3);
-        fireBullet(bullets, {p.pos.x + 38.0f, p.pos.y + 8.0f}, {0.0f, -600.0f},
+        fireBullet(bullets, {p.pos.x + 38.0f, p.pos.y + 8.0f}, {0.0f, -660.0f},
                    BulletOwner::PLAYER, 3);
         p.sidecarFireTimer = 0.15f;
     }
@@ -356,7 +356,7 @@ void releaseLockOn(Player& p, BulletPool& bullets) {
         if (!p.lockTargets[i].active) continue;
         const Vec2 tgt = p.lockTargets[i].pos;
         const Vec2 dir = (tgt - c).normalized();
-        fireHomingBullet(bullets, c, dir * 420.0f, BulletOwner::PLAYER, tgt, 2);
+        fireHomingBullet(bullets, c, dir * 462.0f, BulletOwner::PLAYER, tgt, 2);
     }
     p.lockOnActive = false;
     p.lockOnTimer = 0.0f;

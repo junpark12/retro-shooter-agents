@@ -117,11 +117,11 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
             int dmg = 1;
 
             switch (e.type) {
-                case EnemyType::SMALL:   speed = 190.0f; e.fireTimer = 1.5f; break;
-                case EnemyType::MEDIUM:  speed = 220.0f; e.fireTimer = 1.2f; break;
-                case EnemyType::LARGE:   speed = 230.0f; e.fireTimer = 0.95f; break;
-                case EnemyType::FAST:    speed = 280.0f; e.fireTimer = 0.75f; break;
-                case EnemyType::ARMORED: speed = 210.0f; e.fireTimer = 1.35f; dmg = 2; break;
+                case EnemyType::SMALL:   speed = 209.0f; e.fireTimer = 1.5f; break;
+                case EnemyType::MEDIUM:  speed = 242.0f; e.fireTimer = 1.2f; break;
+                case EnemyType::LARGE:   speed = 253.0f; e.fireTimer = 0.95f; break;
+                case EnemyType::FAST:    speed = 308.0f; e.fireTimer = 0.75f; break;
+                case EnemyType::ARMORED: speed = 231.0f; e.fireTimer = 1.35f; dmg = 2; break;
             }
 
             firePattern(bullets, e.firePattern, origin, playerPos, angle, speed, dmg, BulletOwner::ENEMY);
