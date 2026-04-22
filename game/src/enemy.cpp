@@ -15,6 +15,7 @@ void setupEnemyStats(Enemy& e, EnemyType type) {
     e.moveTimer = 0.0f;
     e.fireTimer = 0.7f;
     e.active = true;
+    e.colorVariant = std::rand() % 5;
     e.vel = {0.0f, 0.0f};
 
     switch (type) {
@@ -136,7 +137,7 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
 void renderEnemies(SDL_Renderer* renderer, const AssetManager& assets, const EnemyPool& ep) {
     for (const Enemy& e : ep.pool) {
         if (!e.active) continue;
-        renderEnemySprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type, e.lockedOn);
+        renderEnemySprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type, e.lockedOn, e.colorVariant);
         if (e.type == EnemyType::ARMORED && e.hp < e.maxHp) {
             renderEnemyHPBar(renderer, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y),
                              static_cast<int>(e.bounds.w), e.hp, e.maxHp);

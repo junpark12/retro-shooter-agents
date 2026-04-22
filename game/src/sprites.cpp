@@ -160,13 +160,29 @@ const char* playerKey(ShipType ship) {
     return SPR_PLAYER_BAGON;
 }
 
-const char* enemyKey(EnemyType type) {
+const char* enemyKey(EnemyType type, int colorVariant) {
+    static constexpr const char* greenVariants[5] = {
+        SPR_ENEMY_GREEN_1, SPR_ENEMY_GREEN_2, SPR_ENEMY_GREEN_3, SPR_ENEMY_GREEN_4, SPR_ENEMY_GREEN_5
+    };
+    static constexpr const char* blueVariants[5] = {
+        SPR_ENEMY_BLUE_1, SPR_ENEMY_BLUE_2, SPR_ENEMY_BLUE_3, SPR_ENEMY_BLUE_4, SPR_ENEMY_BLUE_5
+    };
+    static constexpr const char* redVariants[5] = {
+        SPR_ENEMY_RED_1, SPR_ENEMY_RED_2, SPR_ENEMY_RED_3, SPR_ENEMY_RED_4, SPR_ENEMY_RED_5
+    };
+    static constexpr const char* blackVariants[5] = {
+        SPR_ENEMY_BLACK_1, SPR_ENEMY_BLACK_2, SPR_ENEMY_BLACK_3, SPR_ENEMY_BLACK_4, SPR_ENEMY_BLACK_5
+    };
+    static constexpr const char* largeVariants[5] = {
+        SPR_ENEMY_LARGE, SPR_ENEMY_SHIP_6, SPR_ENEMY_SHIP_7, SPR_ENEMY_SHIP_8, SPR_ENEMY_SHIP_9
+    };
+    const int idx = ((colorVariant % 5) + 5) % 5;
     switch (type) {
-        case EnemyType::SMALL: return SPR_ENEMY_SMALL;
-        case EnemyType::MEDIUM: return SPR_ENEMY_MEDIUM;
-        case EnemyType::LARGE: return SPR_ENEMY_LARGE;
-        case EnemyType::FAST: return SPR_ENEMY_FAST;
-        case EnemyType::ARMORED: return SPR_ENEMY_ARMORED;
+        case EnemyType::SMALL:   return greenVariants[idx];
+        case EnemyType::MEDIUM:  return blueVariants[idx];
+        case EnemyType::LARGE:   return largeVariants[idx];
+        case EnemyType::FAST:    return redVariants[idx];
+        case EnemyType::ARMORED: return blackVariants[idx];
     }
     return SPR_ENEMY_SMALL;
 }
@@ -409,8 +425,8 @@ void renderHitboxIndicator(SDL_Renderer* renderer, int cx, int cy, float radius)
 }
 
 void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
-                       int x, int y, EnemyType type, bool lockedOn) {
-    SDL_Texture* tex = assets.get(enemyKey(type));
+                       int x, int y, EnemyType type, bool lockedOn, int colorVariant) {
+    SDL_Texture* tex = assets.get(enemyKey(type, colorVariant));
     SDL_Rect dst{};
     if (type == EnemyType::SMALL) dst = {x, y, 24, 24};
     else if (type == EnemyType::MEDIUM) dst = {x, y, 32, 32};
@@ -468,7 +484,12 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
         tex = assets.get(SPR_BULLET_PLAYER);
         dst = SDL_Rect{x, y, 9, 36};
     } else if (owner == BulletOwner::BOSS) {
-        tex = assets.get(SPR_BOSS_MISSILE);
+        static constexpr const char* missileKeys[5] = {
+            SPR_MISSILE_1, SPR_MISSILE_2, SPR_MISSILE_3, SPR_MISSILE_4, SPR_MISSILE_5
+        };
+        const int idx = ((colorIdx % 5) + 5) % 5;
+        tex = assets.get(missileKeys[idx]);
+        if (!tex) tex = assets.get(SPR_BOSS_MISSILE);
         dst = SDL_Rect{x - 8, y - 16, 24, 48};
     } else {
         tex = assets.get(enemyBulletStripKey(colorIdx));
@@ -486,8 +507,13 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
         }
 
         if (!usingStrip) {
-            tex = assets.get(SPR_BULLET_ENEMY);
-            dst = SDL_Rect{x - 10, y - 20, 20, 40};
+            static constexpr const char* laserKeys[4] = {
+                SPR_LASER_BLUE_9, SPR_LASER_RED_9, SPR_LASER_GREEN_1, SPR_LASER_RED_1
+            };
+            const int idx = ((colorIdx % 4) + 4) % 4;
+            tex = assets.get(laserKeys[idx]);
+            if (!tex) tex = assets.get(SPR_BULLET_ENEMY);
+            dst = SDL_Rect{x - 4, y - 12, 9, 36};
             srcPtr = nullptr;
         }
     }

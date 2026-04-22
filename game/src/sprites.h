@@ -27,7 +27,7 @@ void renderHitboxIndicator(SDL_Renderer* renderer, int cx, int cy, float radius)
 
 // Enemy sprite; shape and colour vary by type.
 void renderEnemySprite(SDL_Renderer* renderer, const AssetManager& assets,
-                       int x, int y, EnemyType type, bool lockedOn = false);
+                       int x, int y, EnemyType type, bool lockedOn = false, int colorVariant = 0);
 
 // Boss sprite differs by stage number (1–3).
 // Optionally draws a lock-on ring overlay.
