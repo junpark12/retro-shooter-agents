@@ -15,6 +15,8 @@ bool AudioManager::init() {
     loadMusic(BGM_STAGE_1,  "assets/bgm/bgm_stage1.ogg");
     loadMusic(BGM_STAGE_2,  "assets/bgm/bgm_stage2.ogg");
     loadMusic(BGM_STAGE_3,  "assets/bgm/bgm_stage3.ogg");
+    loadMusic(BGM_STAGE_4,  "assets/bgm/ObservingTheStar.ogg");
+    loadMusic(BGM_STAGE_5,  "assets/bgm/Space%20Bass_0.ogg");
     loadMusic(BGM_BOSS,     "assets/bgm/bgm_boss.ogg");
     loadMusic(BGM_GAMEOVER, "assets/bgm/bgm_gameover.ogg");
     loadMusic(BGM_VICTORY,  "assets/bgm/bgm_victory.ogg");

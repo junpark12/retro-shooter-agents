@@ -41,6 +41,40 @@ bool AssetManager::init(SDL_Renderer* r) {
     load(SPR_ENEMY_SHIP_3,  "assets/sprites/enemies/spaceShips_003.png");
     load(SPR_ENEMY_SHIP_4,  "assets/sprites/enemies/spaceShips_004.png");
     load(SPR_ENEMY_SHIP_5,  "assets/sprites/enemies/spaceShips_005.png");
+    load(SPR_ENEMY_SHIP_6,  "assets/sprites/enemies/spaceShips_006.png");
+    load(SPR_ENEMY_SHIP_7,  "assets/sprites/enemies/spaceShips_007.png");
+    load(SPR_ENEMY_SHIP_8,  "assets/sprites/enemies/spaceShips_008.png");
+    load(SPR_ENEMY_SHIP_9,  "assets/sprites/enemies/spaceShips_009.png");
+    // Enemy Green variants (SMALL enemies)
+    load(SPR_ENEMY_GREEN_1, "assets/sprites/enemies/enemyGreen1.png");
+    load(SPR_ENEMY_GREEN_2, "assets/sprites/enemies/enemyGreen2.png");
+    load(SPR_ENEMY_GREEN_3, "assets/sprites/enemies/enemyGreen3.png");
+    load(SPR_ENEMY_GREEN_4, "assets/sprites/enemies/enemyGreen4.png");
+    load(SPR_ENEMY_GREEN_5, "assets/sprites/enemies/enemyGreen5.png");
+    // Enemy Blue variants (MEDIUM enemies)
+    load(SPR_ENEMY_BLUE_1,  "assets/sprites/enemies/enemyBlue1.png");
+    load(SPR_ENEMY_BLUE_2,  "assets/sprites/enemies/enemyBlue2.png");
+    load(SPR_ENEMY_BLUE_3,  "assets/sprites/enemies/enemyBlue3.png");
+    load(SPR_ENEMY_BLUE_4,  "assets/sprites/enemies/enemyBlue4.png");
+    load(SPR_ENEMY_BLUE_5,  "assets/sprites/enemies/enemyBlue5.png");
+    // Enemy Red variants (FAST enemies)
+    load(SPR_ENEMY_RED_1,   "assets/sprites/enemies/enemyRed1.png");
+    load(SPR_ENEMY_RED_2,   "assets/sprites/enemies/enemyRed2.png");
+    load(SPR_ENEMY_RED_3,   "assets/sprites/enemies/enemyRed3.png");
+    load(SPR_ENEMY_RED_4,   "assets/sprites/enemies/enemyRed4.png");
+    load(SPR_ENEMY_RED_5,   "assets/sprites/enemies/enemyRed5.png");
+    // Enemy Black variants (ARMORED enemies)
+    load(SPR_ENEMY_BLACK_1, "assets/sprites/enemies/enemyBlack1.png");
+    load(SPR_ENEMY_BLACK_2, "assets/sprites/enemies/enemyBlack2.png");
+    load(SPR_ENEMY_BLACK_3, "assets/sprites/enemies/enemyBlack3.png");
+    load(SPR_ENEMY_BLACK_4, "assets/sprites/enemies/enemyBlack4.png");
+    load(SPR_ENEMY_BLACK_5, "assets/sprites/enemies/enemyBlack5.png");
+    // Missile projectile sprites
+    load(SPR_MISSILE_1, "assets/sprites/enemies/spaceMissiles_001.png");
+    load(SPR_MISSILE_2, "assets/sprites/enemies/spaceMissiles_010.png");
+    load(SPR_MISSILE_3, "assets/sprites/enemies/spaceMissiles_020.png");
+    load(SPR_MISSILE_4, "assets/sprites/enemies/spaceMissiles_030.png");
+    load(SPR_MISSILE_5, "assets/sprites/enemies/spaceMissiles_040.png");
 
     // Bullets / Lasers (Kenney)
     load(SPR_BULLET_PLAYER,      "assets/sprites/bullets/laser_player.png");
@@ -51,6 +85,12 @@ bool AssetManager::init(SDL_Renderer* r) {
     load(SPR_BULLET_STRIP_GREEN,  "assets/sprites/bullets/spr_bullet_strip02.png");
     load(SPR_BULLET_STRIP_YELLOW, "assets/sprites/bullets/spr_bullet_strip03.png");
     load(SPR_BULLET_STRIP_RED,    "assets/sprites/bullets/spr_bullet_strip04.png");
+    load(SPR_LASER_BLUE_1,  "assets/sprites/bullets/laserBlue01.png");
+    load(SPR_LASER_BLUE_9,  "assets/sprites/bullets/laserBlue09.png");
+    load(SPR_LASER_GREEN_1, "assets/sprites/bullets/laserGreen01.png");
+    load(SPR_LASER_GREEN_9, "assets/sprites/bullets/laserGreen09.png");
+    load(SPR_LASER_RED_1,   "assets/sprites/bullets/laserRed01.png");
+    load(SPR_LASER_RED_9,   "assets/sprites/bullets/laserRed09.png");
 
     // Explosions
     load(SPR_EXPLOSION_0, "assets/sprites/effects/explosion_0.png");

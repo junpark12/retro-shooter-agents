@@ -36,8 +36,8 @@ const char* stageBgmKey(int stageNum) {
         case 1: return BGM_STAGE_1;
         case 2: return BGM_STAGE_2;
         case 3: return BGM_STAGE_3;
-        case 4: return BGM_STAGE_2;
-        default: return BGM_STAGE_3;
+        case 4: return BGM_STAGE_4;
+        default: return BGM_STAGE_5;
     }
 }
 } // namespace

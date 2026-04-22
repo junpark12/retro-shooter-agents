@@ -61,6 +61,41 @@ constexpr const char* SPR_ENEMY_SHIP_2  = "enemies/spaceShips_002";
 constexpr const char* SPR_ENEMY_SHIP_3  = "enemies/spaceShips_003";
 constexpr const char* SPR_ENEMY_SHIP_4  = "enemies/spaceShips_004";
 constexpr const char* SPR_ENEMY_SHIP_5  = "enemies/spaceShips_005";
+constexpr const char* SPR_ENEMY_SHIP_6  = "enemies/spaceShips_006";
+constexpr const char* SPR_ENEMY_SHIP_7  = "enemies/spaceShips_007";
+constexpr const char* SPR_ENEMY_SHIP_8  = "enemies/spaceShips_008";
+constexpr const char* SPR_ENEMY_SHIP_9  = "enemies/spaceShips_009";
+// Enemy color variants (Kenney Space Shooter Redux — 5 per color)
+// Green variants → SMALL enemy
+constexpr const char* SPR_ENEMY_GREEN_1 = "enemies/enemyGreen1";
+constexpr const char* SPR_ENEMY_GREEN_2 = "enemies/enemyGreen2";
+constexpr const char* SPR_ENEMY_GREEN_3 = "enemies/enemyGreen3";
+constexpr const char* SPR_ENEMY_GREEN_4 = "enemies/enemyGreen4";
+constexpr const char* SPR_ENEMY_GREEN_5 = "enemies/enemyGreen5";
+// Blue variants → MEDIUM enemy
+constexpr const char* SPR_ENEMY_BLUE_1  = "enemies/enemyBlue1";
+constexpr const char* SPR_ENEMY_BLUE_2  = "enemies/enemyBlue2";
+constexpr const char* SPR_ENEMY_BLUE_3  = "enemies/enemyBlue3";
+constexpr const char* SPR_ENEMY_BLUE_4  = "enemies/enemyBlue4";
+constexpr const char* SPR_ENEMY_BLUE_5  = "enemies/enemyBlue5";
+// Red variants → FAST enemy
+constexpr const char* SPR_ENEMY_RED_1   = "enemies/enemyRed1";
+constexpr const char* SPR_ENEMY_RED_2   = "enemies/enemyRed2";
+constexpr const char* SPR_ENEMY_RED_3   = "enemies/enemyRed3";
+constexpr const char* SPR_ENEMY_RED_4   = "enemies/enemyRed4";
+constexpr const char* SPR_ENEMY_RED_5   = "enemies/enemyRed5";
+// Black variants → ARMORED enemy
+constexpr const char* SPR_ENEMY_BLACK_1 = "enemies/enemyBlack1";
+constexpr const char* SPR_ENEMY_BLACK_2 = "enemies/enemyBlack2";
+constexpr const char* SPR_ENEMY_BLACK_3 = "enemies/enemyBlack3";
+constexpr const char* SPR_ENEMY_BLACK_4 = "enemies/enemyBlack4";
+constexpr const char* SPR_ENEMY_BLACK_5 = "enemies/enemyBlack5";
+// Missile projectile sprites (spaceMissiles — used for MISSILE bullet type)
+constexpr const char* SPR_MISSILE_1     = "enemies/spaceMissiles_001";
+constexpr const char* SPR_MISSILE_2     = "enemies/spaceMissiles_010";
+constexpr const char* SPR_MISSILE_3     = "enemies/spaceMissiles_020";
+constexpr const char* SPR_MISSILE_4     = "enemies/spaceMissiles_030";
+constexpr const char* SPR_MISSILE_5     = "enemies/spaceMissiles_040";
 
 // Bosses (200 Starships / Wisedawn CC0 — large-scale boss candidates)
 constexpr const char* SPR_BOSS_1        = "bosses/ship_20";
@@ -87,6 +122,13 @@ constexpr const char* SPR_BULLET_STRIP_BLUE   = "bullets/spr_bullet_strip";
 constexpr const char* SPR_BULLET_STRIP_GREEN  = "bullets/spr_bullet_strip02";
 constexpr const char* SPR_BULLET_STRIP_YELLOW = "bullets/spr_bullet_strip03";
 constexpr const char* SPR_BULLET_STRIP_RED    = "bullets/spr_bullet_strip04";
+// Kenney Space Shooter Redux laser sprites (varied color lasers for enemy/player bullets)
+constexpr const char* SPR_LASER_BLUE_1   = "bullets/laserBlue01";
+constexpr const char* SPR_LASER_BLUE_9   = "bullets/laserBlue09";
+constexpr const char* SPR_LASER_GREEN_1  = "bullets/laserGreen01";
+constexpr const char* SPR_LASER_GREEN_9  = "bullets/laserGreen09";
+constexpr const char* SPR_LASER_RED_1    = "bullets/laserRed01";
+constexpr const char* SPR_LASER_RED_9    = "bullets/laserRed09";
 
 // Effects
 constexpr const char* SPR_EXPLOSION_0   = "effects/explosion_0";
