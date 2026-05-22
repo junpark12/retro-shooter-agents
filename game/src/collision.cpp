@@ -212,9 +212,9 @@ void checkBulletBossCollision(BulletPool& bullets, Boss& boss, Player& player,
         if (!rectsOverlap(bb, b.worldBounds())) continue;
 
         int appliedDamage = b.damage;
-        // Missile power-up can stack up boss damage too quickly in edge cases.
-        // Reduce per-hit boss damage while missile mode is active.
-        if (player.powerType == PowerUpType::MISSILE) {
+        // Reduce per-hit boss damage only for missile-like projectiles.
+        // Use bullet-level homing flag as a minimal discriminator.
+        if (player.powerType == PowerUpType::MISSILE && b.homing) {
             appliedDamage = std::max(1, appliedDamage / 2);
         }
         boss.hp -= appliedDamage;
