@@ -27,7 +27,9 @@ void initBoss(Boss& b, int stageNum) {
 
     switch (stageNum) {
         case 1:
-            b.maxHp = 300;
+            // Stage 1 was being melted too quickly with certain player power-up
+            // interactions; raise baseline HP for safer pacing.
+            b.maxHp = 450;
             b.bounds = {0.0f, 0.0f, 160.0f, 120.0f};
             break;
         case 2:

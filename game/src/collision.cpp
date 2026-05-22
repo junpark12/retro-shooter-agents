@@ -207,19 +207,28 @@ void checkBulletBossCollision(BulletPool& bullets, Boss& boss, Player& player,
     Rect bb = boss.worldBounds();
 
     for (Bullet& b : bullets.pool) {
+        if (!boss.active) break;
         if (!b.active || b.owner != BulletOwner::PLAYER) continue;
         if (!rectsOverlap(bb, b.worldBounds())) continue;
 
-        boss.hp -= b.damage;
-        if (player.powerType != PowerUpType::LASER) {
-            b.active = false;
+        int appliedDamage = b.damage;
+        // Missile power-up can stack up boss damage too quickly in edge cases.
+        // Reduce per-hit boss damage while missile mode is active.
+        if (player.powerType == PowerUpType::MISSILE) {
+            appliedDamage = std::max(1, appliedDamage / 2);
         }
+        boss.hp -= appliedDamage;
+
+        // Always consume projectile on boss hit to prevent lingering multi-tick
+        // damage from a single overlapping shot/power-up edge case.
+        b.active = false;
 
         if (boss.hp <= 0) {
             boss.hp = 0;
             boss.active = false;
             player.score += 10000 * boss.stageNum;
             if (audio) audio->playSFX(SFX_EXPLODE_BIG);
+            break;
         }
     }
 }
