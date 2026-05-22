@@ -25,6 +25,7 @@ Thumbs.db
 # Build artifacts
 game/build/
 game/build_test/
+game/build_clean/
 game/*.exe
 game/*.o
 game/*.obj
