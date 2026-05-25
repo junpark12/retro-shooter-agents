@@ -60,7 +60,8 @@ enum class EnemyType {
     MEDIUM,     // sine-wave path, medium HP
     LARGE,      // tracks player, high HP, drops power-up on death
     FAST,       // diagonal movement, rapid fire
-    ARMORED     // high HP, slow movement, spread pattern
+    ARMORED,    // high HP, slow movement, spread pattern
+    TURRET      // stationary ground turret: rotates to track player, fires from muzzle
 };
 
 enum class PowerUpType {

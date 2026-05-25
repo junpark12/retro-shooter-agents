@@ -18,6 +18,7 @@ constexpr Wave STAGE1_WAVES[] = {
 
 constexpr Wave STAGE2_WAVES[] = {
     {EnemyType::FAST,    6, 0.30f, BulletPattern::AIMED,        0.0f, FormationType::PINCER},
+    {EnemyType::TURRET,  2, 1.50f, BulletPattern::AIMED,        1.5f, FormationType::LANE},
     {EnemyType::MEDIUM,  4, 0.50f, BulletPattern::SPREAD_3,     1.0f, FormationType::V_SHAPE},
     {EnemyType::FAST,    4, 0.28f, BulletPattern::AIMED,        0.7f, FormationType::DIAGONAL},
     {EnemyType::LARGE,   3, 0.70f, BulletPattern::CIRCLE_8,     0.8f, FormationType::LANE},
@@ -28,6 +29,7 @@ constexpr Wave STAGE2_WAVES[] = {
 constexpr Wave STAGE3_WAVES[] = {
     {EnemyType::SMALL,   8,  0.22f, BulletPattern::SPREAD_3,     0.0f, FormationType::V_SHAPE},
     {EnemyType::FAST,    6,  0.24f, BulletPattern::AIMED,        0.8f, FormationType::DIAGONAL},
+    {EnemyType::TURRET,  3, 1.20f, BulletPattern::AIMED,        1.0f, FormationType::LANE},
     {EnemyType::MEDIUM,  6,  0.42f, BulletPattern::AIMED_SPREAD, 0.8f, FormationType::CIRCLE},
     {EnemyType::FAST,    8,  0.22f, BulletPattern::AIMED,        0.7f, FormationType::PINCER},
     {EnemyType::LARGE,   4,  0.65f, BulletPattern::CIRCLE_8,     0.8f, FormationType::LANE},
@@ -39,6 +41,7 @@ constexpr Wave STAGE4_WAVES[] = {
     {EnemyType::FAST,    8,  0.20f, BulletPattern::SPIRAL_CCW,   0.0f, FormationType::CIRCLE},
     {EnemyType::MEDIUM,  6,  0.36f, BulletPattern::CIRCLE_16,    0.8f, FormationType::V_SHAPE},
     {EnemyType::FAST,    8,  0.18f, BulletPattern::AIMED_SPREAD, 0.7f, FormationType::PINCER},
+    {EnemyType::TURRET,  3,  1.00f, BulletPattern::AIMED_SPREAD, 0.8f, FormationType::LANE},
     {EnemyType::LARGE,   4,  0.58f, BulletPattern::CURTAIN,      0.7f, FormationType::DIAGONAL},
     {EnemyType::ARMORED, 3,  0.88f, BulletPattern::CIRCLE_16,    0.7f, FormationType::LANE},
     {EnemyType::FAST,    9,  0.16f, BulletPattern::AIMED,        0.5f, FormationType::CIRCLE},
@@ -52,6 +55,7 @@ constexpr Wave STAGE5_WAVES[] = {
     {EnemyType::FAST,    10, 0.14f, BulletPattern::AIMED_SPREAD, 0.7f, FormationType::PINCER},
     {EnemyType::LARGE,   5,  0.52f, BulletPattern::CIRCLE_16,    0.7f, FormationType::DIAGONAL},
     {EnemyType::ARMORED, 4,  0.76f, BulletPattern::CURTAIN,      0.7f, FormationType::LANE},
+    {EnemyType::TURRET,  4,  0.80f, BulletPattern::AIMED_SPREAD, 0.6f, FormationType::LANE},
     {EnemyType::MEDIUM,  10, 0.26f, BulletPattern::SPIRAL_CCW,   0.5f, FormationType::CIRCLE},
     {EnemyType::FAST,    12, 0.14f, BulletPattern::AIMED_SPREAD, 0.4f, FormationType::DIAGONAL},
     {EnemyType::LARGE,   6,  0.46f, BulletPattern::CIRCLE_16,    0.3f, FormationType::V_SHAPE},
@@ -164,7 +168,11 @@ void updateStage(Stage& s, float dt, EnemyPool& enemies, Boss& boss) {
                     x = laneGap * (idx + 1) - 16.0f;
                     if (wave.type == EnemyType::LARGE) x += (idx % 2 == 0) ? -40.0f : 40.0f;
                     if (wave.type == EnemyType::FAST) x = (idx % 2 == 0) ? 12.0f : SCREEN_W - 30.0f;
-                    Enemy* spawned = spawnEnemy(enemies, wave.type, {x, -36.0f - (idx % 3) * 24.0f});
+                    // Turrets spawn at fixed visible Y positions (they don't move)
+                    float spawnY = (wave.type == EnemyType::TURRET)
+                                       ? (60.0f + static_cast<float>(idx % 3) * 80.0f)
+                                       : (-36.0f - (idx % 3) * 24.0f);
+                    Enemy* spawned = spawnEnemy(enemies, wave.type, {x, spawnY});
                     if (spawned) spawned->firePattern = wave.pattern;
                     break;
                 }

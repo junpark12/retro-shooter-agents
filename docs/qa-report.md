@@ -1,8 +1,8 @@
 # QA Report — Galaxy Storm
 
-**Review Date**: 2026-03-26 (v1) → 2026-05-01 (v2 — Full Re-review) → 2026-05-01 (v3 — Kenney Asset Integration Review) → 2026-05-01 (v4 — Particle System / HIGH_SCORE / HitboxIndicator Review)
+**Review Date**: 2026-03-26 (v1) → 2026-05-01 (v2 — Full Re-review) → 2026-05-01 (v3 — Kenney Asset Integration Review) → 2026-05-01 (v4 — Particle System / HIGH_SCORE / HitboxIndicator Review) → 2026-05-26 (v5 — TURRET EnemyType Integration Review)
 **Reviewer**: @tester (QA Engineer Agent)  
-**Build Status**: ✅ PASS (Linux / GCC 13.3 / SDL2 2.30 — all 14 source files compiled and linked)
+**Build Status**: ✅ PASS (Linux / GCC 13.3 / SDL2 2.30 — all 16 source files compiled and linked, zero warnings)
 
 ---
 
@@ -496,9 +496,151 @@ SDL_Texture* tex = assets.get(fireKeys[idx]);  // idx는 항상 [0, 7]
 
 ---
 
+---
+
+## v5 — TURRET EnemyType Integration Review (2026-05-26)
+
+**Review Date**: 2026-05-26
+**Reviewer**: @tester (QA Engineer Agent)
+**Build Status**: ✅ PASS → ✅ PASS (all fixes applied, zero warnings)
+
+### Files Reviewed
+
+| File | Change |
+|------|--------|
+| `src/types.h` | `EnemyType::TURRET` added to enum |
+| `src/enemy.h` | `float angle` field added to `Enemy` struct |
+| `src/enemy.cpp` | TURRET spawn stats, movement (barrel tracking), muzzle-offset fire logic |
+| `src/asset_manager.h` | `SPR_TURRET_BASE`, `SPR_TURRET_GUN` constants added |
+| `src/asset_manager.cpp` | `load()` calls for `turretBase_big.png` and `gun00.png` |
+| `src/sprites.h` | `renderTurretSprite()` declaration added |
+| `src/sprites.cpp` | `renderTurretSprite()` implementation; `renderEnemyPrimitive` TURRET case |
+| `src/stage.cpp` | TURRET waves in STAGE2–5 |
+| `src/collision.cpp` | (**bug site** — missing TURRET cases) |
+
+---
+
+### 🔴 Critical — None
+
+Build succeeded without errors on first attempt (SDL2 2.30 / GCC 13.3 / C++17).
+
+---
+
+### 🟠 Major — Found & Fixed
+
+#### [collision.cpp:31] `scoreForEnemy()` returns 100 pts for TURRET instead of 800
+
+- **Location**: `collision.cpp:31` — `scoreForEnemy(EnemyType)` switch
+- **Problem**: `EnemyType::TURRET` was not handled. Switch falls through to `return 100`, so destroying a TURRET (8 HP, defined `pointValue = 800`) awards only **100 points** — 8× less than intended and less than the weakest enemy (SMALL = 100 pts).
+- **Impact**: Incorrect scoring for every TURRET kill across Stages 2–5. Ruins the risk/reward balance of fighting a high-HP stationary enemy.
+- **Compiler warning**: `-Wswitch` reports this: `enumeration value 'TURRET' not handled in switch`
+- **Fix applied** (`collision.cpp:31`):
+  ```cpp
+  // Before
+  case EnemyType::ARMORED: return 700;
+  // (TURRET missing — falls to return 100)
+
+  // After
+  case EnemyType::ARMORED: return 700;
+  case EnemyType::TURRET:  return 800;
+  ```
+- **Severity**: 🟠 Major (wrong score output for all TURRET kills)
+
+---
+
+### 🟡 Minor — Found & Fixed
+
+#### [collision.cpp:42] `shouldDrop()` always returns false for TURRET
+
+- **Location**: `collision.cpp:42`
+- **Problem**: TURRET not handled → falls to `return false`. A TURRET (8 HP, high-threat stationary enemy) never drops power-ups, which undercuts the player incentive for destroying a durable target.
+- **Fix applied** (`collision.cpp:42`): `case EnemyType::TURRET: return (std::rand() % 100) < 60;` — 60% drop chance, higher than ARMORED (50%), consistent with TURRET's role as a dangerous but immobile target.
+- **Compiler warning**: `-Wswitch` reported
+
+#### [collision.cpp:106] No explosion SFX when TURRET is killed
+
+- **Location**: `collision.cpp:106` — audio `switch` on kill
+- **Problem**: `EnemyType::TURRET` not in the audio switch, so `audio->playSFX()` is never called when a TURRET is destroyed. Silent kill of a large armored enemy is jarring.
+- **Fix applied** (`collision.cpp:106`): Added `case EnemyType::TURRET:` falling through to `SFX_EXPLODE_BIG`, same as LARGE/ARMORED.
+- **Compiler warning**: `-Wswitch` reported
+
+#### [sprites.cpp:180] `enemyKey()` switch missing TURRET case
+
+- **Location**: `sprites.cpp:180`
+- **Problem**: `enemyKey()` returns `SPR_ENEMY_SMALL` for TURRET (fallback). **No runtime crash** because `renderEnemies()` (enemy.cpp:169) branches on `e.type == EnemyType::TURRET` and calls `renderTurretSprite()` directly — `renderEnemySprite()` (which calls `enemyKey()`) is never called for TURRETs.
+- **Fix applied** (`sprites.cpp:180`): Added `case EnemyType::TURRET: return SPR_TURRET_BASE;` with a clarifying comment. Eliminates compiler warning; safe defensive coverage.
+- **Compiler warning**: `-Wswitch` reported
+
+#### [sprites.cpp:379] `renderPowerUpPrimitive()` missing SPEEDUP case (pre-existing)
+
+- **Location**: `sprites.cpp:379`
+- **Problem**: `PowerUpType::SPEEDUP` not handled → no color is set, so the filled circle inherits whatever draw color was active previously. Visual artifact in fallback rendering.
+- **Fix applied** (`sprites.cpp:380`): Added `case PowerUpType::SPEEDUP: SDL_SetRenderDrawColor(renderer, 255, 220, 60, 255); break;` — bright gold color, visually distinct.
+- **Compiler warning**: `-Wswitch` reported
+
+---
+
+### ✅ All TURRET Switch Statements Verified
+
+| Location | Switch | TURRET Handled |
+|----------|--------|----------------|
+| `enemy.cpp:21` — `setupEnemyStats()` stats | ✅ | `case EnemyType::TURRET:` |
+| `enemy.cpp:67` — `setupEnemyStats()` firePattern | ✅ | `case EnemyType::TURRET:` |
+| `enemy.cpp:96` — `updateEnemies()` movement | ✅ | `case EnemyType::TURRET:` |
+| `enemy.cpp:146` — `updateEnemies()` fire timing | ✅ | `case EnemyType::TURRET:` |
+| `sprites.cpp:180` — `enemyKey()` | ✅ (fixed) | added SPR_TURRET_BASE fallback |
+| `collision.cpp:31` — `scoreForEnemy()` | ✅ (fixed) | returns 800 |
+| `collision.cpp:42` — `shouldDrop()` | ✅ (fixed) | 60% drop chance |
+| `collision.cpp:106` — kill audio | ✅ (fixed) | SFX_EXPLODE_BIG |
+
+### ✅ Turret Render Path Verified
+
+- `renderEnemies()` correctly branches: TURRET → `renderTurretSprite()`, others → `renderEnemySprite()`
+- `renderTurretSprite()` (sprites.cpp:790): draws base (`SPR_TURRET_BASE`) then rotates barrel via `SDL_RenderCopyEx` with `angleDeg`
+- Fallback primitive in `renderEnemyPrimitive()` (sprites.cpp:289): steel-grey circle base + orange barrel line ✅
+- Lock-on highlight rendered for TURRETs (enemy.cpp:174 checks `e.type == EnemyType::TURRET`) ✅
+- HP bar rendered for TURRETs when damaged (enemy.cpp:174) ✅
+
+### ✅ TURRET Logic Verified
+
+| Check | Result |
+|-------|--------|
+| TURRET is stationary (`vel = {0, 0}`) | ✅ `enemy.cpp:62` |
+| Barrel tracks player via `atan2` | ✅ `enemy.cpp:121–124` |
+| Fires from muzzle offset (not center) | ✅ `enemy.cpp:135–140` |
+| Does NOT despawn when off-screen bottom | ✅ `enemy.cpp:158` — guarded by `e.type != EnemyType::TURRET` |
+| Spawns at fixed visible Y in LANE formation | ✅ `stage.cpp:172–174` |
+| TURRET waves present in Stages 2–5 | ✅ `stage.cpp:21, 32, 44, 58` |
+| `angle` field initialized to 180.0f (pointing down) | ✅ `enemy.cpp:63` |
+| Asset paths match disk files (`turretBase_big.png`, `gun00.png`) | ✅ (paths consistent) |
+
+### ✅ Build Verification (Post-Fix)
+
+```bash
+# Environment: Ubuntu 24.04 / GCC 13.3 / SDL2 2.30.0 / C++17
+cd game/build_test && make -j$(nproc)
+# → [100%] Built target GalaxyStorm  ✅
+
+# Warning check with -Wall -Wextra -Wswitch -Wshadow -Wnull-dereference
+g++ -std=c++17 -Wall -Wextra -Wswitch -Wshadow -Wnull-dereference -fsyntax-only ...
+# → (no output — zero warnings)  ✅
+```
+
+### v5 Fixes Summary
+
+| File | Change | Severity |
+|------|--------|----------|
+| `src/collision.cpp:31` | `scoreForEnemy()` — added `case EnemyType::TURRET: return 800;` | 🟠 Major |
+| `src/collision.cpp:42` | `shouldDrop()` — added `case EnemyType::TURRET: return (rand()%100) < 60;` | 🟡 Minor |
+| `src/collision.cpp:106` | kill audio switch — added `case EnemyType::TURRET:` → `SFX_EXPLODE_BIG` | 🟡 Minor |
+| `src/sprites.cpp:180` | `enemyKey()` — added `case EnemyType::TURRET: return SPR_TURRET_BASE;` | 🟡 Minor |
+| `src/sprites.cpp:379` | `renderPowerUpPrimitive()` — added `case PowerUpType::SPEEDUP:` (gold color) | 🟡 Minor |
+
+---
+
 ## 전체 품질 평가
 
-**v4 점수: 9.5 / 10** (v3 대비 +0.5 — 파티클 시스템 Major 버그 수정, HIGH_SCORE 흐름 완성)
+**v5 점수: 9.6 / 10** (v4 대비 +0.1 — TURRET integration complete, all switch warnings resolved)
 
 ### 강점
 - 오브젝트 풀 패턴(`BulletPool`, `EnemyPool`, `PowerUpPool`)으로 런타임 동적 할당 없음

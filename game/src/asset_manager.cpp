@@ -76,6 +76,10 @@ bool AssetManager::init(SDL_Renderer* r) {
     load(SPR_MISSILE_4, "assets/sprites/enemies/spaceMissiles_030.png");
     load(SPR_MISSILE_5, "assets/sprites/enemies/spaceMissiles_040.png");
 
+    // Turret sprites (Kenney Space Shooter Redux)
+    load(SPR_TURRET_BASE, "assets/sprites/player/turretBase_big.png");
+    load(SPR_TURRET_GUN,  "assets/sprites/player/gun00.png");
+
     // Bullets / Lasers (Kenney)
     load(SPR_BULLET_PLAYER,      "assets/sprites/bullets/laser_player.png");
     load(SPR_BULLET_PLAYER_WIDE, "assets/sprites/bullets/laser_player_wide.png");

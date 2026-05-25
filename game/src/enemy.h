@@ -18,6 +18,7 @@ struct Enemy : Entity {
     bool      lockedOn    = false;  // true when player has locked onto this enemy
     int       colorVariant = 0;     // sprite color variant
     int       maxHp       = 1;      // maximum HP at spawn; used for HP bar ratio
+    float     angle       = 0.0f;   // facing angle in degrees (used by TURRET for barrel rotation)
 };
 
 // Fixed-size pool.

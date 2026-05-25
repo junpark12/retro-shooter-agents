@@ -73,6 +73,12 @@ void renderSidecars(SDL_Renderer* renderer, const AssetManager& assets,
 void renderEnemyHPBar(SDL_Renderer* renderer, int x, int y, int spriteW,
                       int currentHp, int maxHp);
 
+// Turret sprite: draws a stationary base with a rotating barrel overlay.
+// angleDeg is the barrel's clockwise rotation in degrees (0 = pointing up).
+// Rendered at (x, y) top-left with a 32×32 footprint.
+void renderTurretSprite(SDL_Renderer* renderer, const AssetManager& assets,
+                        int x, int y, float angleDeg, bool lockedOn);
+
 // ─── Fallback primitive renderers (used when no texture is available) ─────────
 void renderPlayerPrimitive(SDL_Renderer* renderer, int x, int y, ShipType ship);
 void renderEnemyPrimitive(SDL_Renderer* renderer, int x, int y, EnemyType type);

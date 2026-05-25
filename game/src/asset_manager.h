@@ -97,6 +97,10 @@ constexpr const char* SPR_MISSILE_3     = "enemies/spaceMissiles_020";
 constexpr const char* SPR_MISSILE_4     = "enemies/spaceMissiles_030";
 constexpr const char* SPR_MISSILE_5     = "enemies/spaceMissiles_040";
 
+// Turret (Kenney Space Shooter Redux — turretBase + gun barrel)
+constexpr const char* SPR_TURRET_BASE   = "player/turretBase_big";   // stationary base sprite
+constexpr const char* SPR_TURRET_GUN    = "player/gun00";            // rotating barrel sprite
+
 // Bosses (200 Starships / Wisedawn CC0 — large-scale boss candidates)
 constexpr const char* SPR_BOSS_1        = "bosses/ship_20";
 constexpr const char* SPR_BOSS_2        = "bosses/ship_80";

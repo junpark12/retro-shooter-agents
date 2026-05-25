@@ -34,6 +34,7 @@ int scoreForEnemy(EnemyType t) {
         case EnemyType::LARGE:   return 500;
         case EnemyType::FAST:    return 200;
         case EnemyType::ARMORED: return 700;
+        case EnemyType::TURRET:  return 800;
     }
     return 100;
 }
@@ -45,6 +46,7 @@ bool shouldDrop(EnemyType t) {
         case EnemyType::SMALL:   return (std::rand() % 100) < 10;
         case EnemyType::FAST:    return (std::rand() % 100) < 20;
         case EnemyType::ARMORED: return (std::rand() % 100) < 50;
+        case EnemyType::TURRET:  return (std::rand() % 100) < 60;
     }
     return false;
 }
@@ -84,8 +86,11 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
 
             e.hp -= b.damage;
             // Slight knockback on hit (push enemy away from bullet direction)
-            const Vec2 pushDir = (e.center() - b.center()).normalized();
-            e.pos += pushDir * 3.0f;  // 3px knockback
+            // Turrets are stationary — skip knockback to keep them fixed
+            if (e.type != EnemyType::TURRET) {
+                const Vec2 pushDir = (e.center() - b.center()).normalized();
+                e.pos += pushDir * 3.0f;  // 3px knockback
+            }
             if (!isLaser) {
                 b.active = false;
             }
@@ -118,6 +123,7 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
                         }
                         case EnemyType::LARGE:
                         case EnemyType::ARMORED:
+                        case EnemyType::TURRET:
                             audio->playSFX(SFX_EXPLODE_BIG);
                             break;
                     }
@@ -127,7 +133,8 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
                 }
                 if (ps) {
                     spawnExplosion(*ps, e.center(),
-                                   e.type == EnemyType::LARGE || e.type == EnemyType::ARMORED);
+                                   e.type == EnemyType::LARGE || e.type == EnemyType::ARMORED
+                                   || e.type == EnemyType::TURRET);
                 }
 
                 if (shouldDrop(e.type)) {
