@@ -19,6 +19,8 @@ on:
 jobs:
   build-windows:
     runs-on: windows-latest
+    permissions:
+      contents: write
     if: >-
       github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' ||
@@ -90,6 +92,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Auto-tag and Release (PR merge or push to main)
+        id: auto_tag
         if: >-
           (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
           (github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/'))
@@ -101,7 +104,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "$TAG"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
           git push origin "$TAG"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -111,7 +116,7 @@ jobs:
           (github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/'))
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.${{ github.run_number }}
+          tag_name: ${{ steps.auto_tag.outputs.tag }}
           files: GalaxyStorm-windows-x64.zip
           generate_release_notes: true
           name: "Galaxy Storm Build #${{ github.run_number }}"
