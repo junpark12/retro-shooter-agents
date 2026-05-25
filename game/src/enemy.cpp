@@ -54,6 +54,14 @@ void setupEnemyStats(Enemy& e, EnemyType type) {
             e.pointValue = 700;
             e.vel = {0.0f, 75.0f};
             break;
+        case EnemyType::TURRET:
+            e.bounds = {0.0f, 0.0f, 32.0f, 32.0f};
+            e.hp = 8;
+            e.maxHp = 8;
+            e.pointValue = 800;
+            e.vel = {0.0f, 0.0f};   // stationary — no movement
+            e.angle = 180.0f;        // initially pointing down
+            break;
     }
 
     switch (type) {
@@ -62,6 +70,7 @@ void setupEnemyStats(Enemy& e, EnemyType type) {
         case EnemyType::LARGE:   e.firePattern = BulletPattern::AIMED_SPREAD; break;
         case EnemyType::FAST:    e.firePattern = BulletPattern::AIMED; break;
         case EnemyType::ARMORED: e.firePattern = BulletPattern::CURTAIN; break;
+        case EnemyType::TURRET: e.firePattern = BulletPattern::AIMED; break;
     }
 }
 }
@@ -107,12 +116,29 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
             case EnemyType::ARMORED:
                 e.vel.x = std::sin(e.moveTimer * 1.2f) * 45.0f;
                 break;
+            case EnemyType::TURRET: {
+                // Rotate barrel to track player
+                float dx = playerPos.x - (e.pos.x + e.bounds.w * 0.5f);
+                float dy = playerPos.y - (e.pos.y + e.bounds.h * 0.5f);
+                // Convert atan2 angle (radians, CCW from +X) to SDL degrees (CW from up = -Y axis)
+                e.angle = std::atan2(dy, dx) * 180.0f / 3.14159265f + 90.0f;
+                // vel stays zero — turret does not move
+                break;
+            }
         }
 
         e.pos += e.vel * dt;
 
         if (e.fireTimer <= 0.0f) {
             Vec2 origin = {e.pos.x + e.bounds.w * 0.5f, e.pos.y + e.bounds.h};
+            // For turrets, fire from muzzle point (end of rotating barrel)
+            if (e.type == EnemyType::TURRET) {
+                const float barrelLen = 18.0f;
+                // Convert angle back to radians for muzzle offset
+                float rad = (e.angle - 90.0f) * 3.14159265f / 180.0f;
+                origin.x = e.pos.x + e.bounds.w * 0.5f + std::cos(rad) * barrelLen;
+                origin.y = e.pos.y + e.bounds.h * 0.5f + std::sin(rad) * barrelLen;
+            }
             float speed = 200.0f;
             float angle = e.patternTimer;
             int dmg = 1;
@@ -123,13 +149,16 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
                 case EnemyType::LARGE:   speed = 230.0f; e.fireTimer = 0.95f; break;
                 case EnemyType::FAST:    speed = 280.0f; e.fireTimer = 0.75f; break;
                 case EnemyType::ARMORED: speed = 210.0f; e.fireTimer = 1.35f; dmg = 2; break;
+                case EnemyType::TURRET:  speed = 240.0f; e.fireTimer = 1.0f; break;
             }
 
             firePattern(bullets, e.firePattern, origin, playerPos, angle, speed, dmg, BulletOwner::ENEMY);
         }
 
-        if (e.pos.y > SCREEN_H + 40.0f || e.pos.x < -80.0f || e.pos.x > SCREEN_W + 80.0f) {
-            e.active = false;
+        if (e.type != EnemyType::TURRET) {
+            if (e.pos.y > SCREEN_H + 40.0f || e.pos.x < -80.0f || e.pos.x > SCREEN_W + 80.0f) {
+                e.active = false;
+            }
         }
     }
 }
@@ -137,8 +166,12 @@ void updateEnemies(EnemyPool& ep, float dt, BulletPool& bullets, Vec2 playerPos)
 void renderEnemies(SDL_Renderer* renderer, const AssetManager& assets, const EnemyPool& ep) {
     for (const Enemy& e : ep.pool) {
         if (!e.active) continue;
-        renderEnemySprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type, e.lockedOn, e.colorVariant);
-        if (e.type == EnemyType::ARMORED && e.hp < e.maxHp) {
+        if (e.type == EnemyType::TURRET) {
+            renderTurretSprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.angle, e.lockedOn);
+        } else {
+            renderEnemySprite(renderer, assets, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y), e.type, e.lockedOn, e.colorVariant);
+        }
+        if ((e.type == EnemyType::ARMORED || e.type == EnemyType::TURRET) && e.hp < e.maxHp) {
             renderEnemyHPBar(renderer, static_cast<int>(e.pos.x), static_cast<int>(e.pos.y),
                              static_cast<int>(e.bounds.w), e.hp, e.maxHp);
         }

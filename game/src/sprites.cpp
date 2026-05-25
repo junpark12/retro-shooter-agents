@@ -183,6 +183,7 @@ const char* enemyKey(EnemyType type, int colorVariant) {
         case EnemyType::LARGE:   return largeVariants[idx];
         case EnemyType::FAST:    return redVariants[idx];
         case EnemyType::ARMORED: return blackVariants[idx];
+        case EnemyType::TURRET:  return SPR_TURRET_BASE;  // fallback; renderTurretSprite() is used instead
     }
     return SPR_ENEMY_SMALL;
 }
@@ -286,6 +287,25 @@ void renderEnemyPrimitive(SDL_Renderer* renderer, int x, int y, EnemyType type) 
         for (int i = 0; i < 14; ++i) {
             SDL_RenderDrawLine(renderer, x + 10 - i / 2, y + i, x + 10 + i / 2, y + i);
         }
+    } else if (type == EnemyType::TURRET) {
+        // Steel-grey circular base
+        SDL_SetRenderDrawColor(renderer, 140, 140, 160, 255);
+        for (int dy = -14; dy <= 14; ++dy) {
+            const int span = static_cast<int>(std::sqrt(static_cast<float>(14 * 14 - dy * dy)));
+            SDL_RenderDrawLine(renderer, x + 16 - span, y + 16 + dy, x + 16 + span, y + 16 + dy);
+        }
+        // Dark outline ring
+        SDL_SetRenderDrawColor(renderer, 80, 80, 100, 255);
+        for (int angle = 0; angle < 360; angle += 10) {
+            const float rad = static_cast<float>(angle) * 3.14159265f / 180.0f;
+            SDL_RenderDrawPoint(renderer,
+                x + 16 + static_cast<int>(14.0f * std::cos(rad)),
+                y + 16 + static_cast<int>(14.0f * std::sin(rad)));
+        }
+        // Orange barrel (pointing down by default = angle 180)
+        SDL_SetRenderDrawColor(renderer, 255, 140, 0, 255);
+        SDL_RenderDrawLine(renderer, x + 16, y + 16, x + 16, y + 30);
+        SDL_RenderDrawLine(renderer, x + 15, y + 16, x + 15, y + 30);
     } else {
         // 오렌지 사각형 36x30
         setColor(renderer, COLOR_ORANGE);
@@ -366,6 +386,7 @@ void renderPowerUpPrimitive(SDL_Renderer* renderer, int x, int y, PowerUpType ty
         case PowerUpType::POWER: setColor(renderer, COLOR_MAGENTA); break;
         case PowerUpType::SIDECAR: SDL_SetRenderDrawColor(renderer, 120, 200, 255, 255); break;
         case PowerUpType::MAGNET: SDL_SetRenderDrawColor(renderer, 160, 120, 255, 255); break;
+        case PowerUpType::SPEEDUP: SDL_SetRenderDrawColor(renderer, 255, 220, 60, 255); break;
     }
     drawFilledCircle(renderer, x + 12, y + 12, 10);
     renderPowerUpLabel(renderer, x, y, type);
@@ -766,6 +787,52 @@ void renderEnemyHPBar(SDL_Renderer* renderer, int x, int y, int spriteW, int cur
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 220);
     SDL_RenderDrawRect(renderer, &back);
     SDL_SetRenderDrawBlendMode(renderer, prevBlend);
+}
+
+void renderTurretSprite(SDL_Renderer* renderer, const AssetManager& assets,
+                        int x, int y, float angleDeg, bool lockedOn) {
+    constexpr int SIZE = 32;
+    SDL_Rect dst{x, y, SIZE, SIZE};
+
+    // Draw stationary base
+    SDL_Texture* baseTex = assets.get(SPR_TURRET_BASE);
+    if (baseTex) {
+        SDL_RenderCopy(renderer, baseTex, nullptr, &dst);
+    } else {
+        // Fallback primitive base (steel-grey circle)
+        SDL_SetRenderDrawColor(renderer, 140, 140, 160, 255);
+        const int cx = x + SIZE / 2;
+        const int cy = y + SIZE / 2;
+        for (int dy = -14; dy <= 14; ++dy) {
+            const int span = static_cast<int>(std::sqrt(static_cast<float>(14 * 14 - dy * dy)));
+            SDL_RenderDrawLine(renderer, cx - span, cy + dy, cx + span, cy + dy);
+        }
+    }
+
+    // Draw rotating barrel using SDL_RenderCopyEx
+    SDL_Texture* gunTex = assets.get(SPR_TURRET_GUN);
+    const SDL_Point pivot{SIZE / 2, SIZE / 2};  // rotate around center
+    if (gunTex) {
+        SDL_RenderCopyEx(renderer, gunTex, nullptr, &dst,
+                         static_cast<double>(angleDeg), &pivot, SDL_FLIP_NONE);
+    } else {
+        // Fallback primitive barrel: draw a line from center in direction angleDeg
+        const float rad = (angleDeg - 90.0f) * 3.14159265f / 180.0f;
+        const int cx = x + SIZE / 2;
+        const int cy = y + SIZE / 2;
+        const int mx = cx + static_cast<int>(std::cos(rad) * 14.0f);
+        const int my = cy + static_cast<int>(std::sin(rad) * 14.0f);
+        SDL_SetRenderDrawColor(renderer, 255, 140, 0, 255);
+        SDL_RenderDrawLine(renderer, cx, cy, mx, my);
+        SDL_RenderDrawLine(renderer, cx + 1, cy, mx + 1, my);
+    }
+
+    // Lock-on highlight
+    if (lockedOn) {
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_Rect lock{x - 2, y - 2, SIZE + 4, SIZE + 4};
+        SDL_RenderDrawRect(renderer, &lock);
+    }
 }
 
 } // namespace galaxy
