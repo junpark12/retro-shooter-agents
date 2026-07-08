@@ -34,6 +34,12 @@
 | `sprites/enemies/enemy_large.png` | 자체 제작 (Python/Pillow, 64×64 RGBA) | Galaxy Storm Team | CC0 |
 | `sprites/enemies/enemy_fast.png` | 자체 제작 (Python/Pillow, 32×32 RGBA) | Galaxy Storm Team | CC0 |
 | `sprites/enemies/enemy_armored.png` | 자체 제작 (Python/Pillow, 48×48 RGBA) | Galaxy Storm Team | CC0 |
+| `sprites/enemies/spaceShips_001.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | 
+| `sprites/enemies/spaceShips_002.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | 
+| `sprites/enemies/spaceShips_003.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | 
+| `sprites/enemies/spaceShips_004.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | 
+| `sprites/enemies/spaceShips_005.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | 
+| `sprites/enemies/alien_ufo_pack.zip` | [OpenGameArt - Alien UFO pack](https://opengameart.org/content/alien-ufo-pack) | Kenney | CC0 |
 
 ---
 
@@ -44,6 +50,10 @@
 | `sprites/bosses/boss_1.png` | 자체 제작 (Python/Pillow, 128×128 RGBA) | Galaxy Storm Team | CC0 |
 | `sprites/bosses/boss_2.png` | 자체 제작 (Python/Pillow, 128×128 RGBA) | Galaxy Storm Team | CC0 |
 | `sprites/bosses/boss_3.png` | 자체 제작 (Python/Pillow, 128×128 RGBA) | Galaxy Storm Team | CC0 |
+| `sprites/bosses/ship_20.png` | [OpenGameArt - 200+ CC0 Spaceship Sprites](https://opengameart.org/content/200-cc0-spaceship-sprites) | Wisedawn | CC0 |
+| `sprites/bosses/ship_80.png` | [OpenGameArt - 200+ CC0 Spaceship Sprites](https://opengameart.org/content/200-cc0-spaceship-sprites) | Wisedawn | CC0 |
+| `sprites/bosses/ship_180.png` | [OpenGameArt - 200+ CC0 Spaceship Sprites](https://opengameart.org/content/200-cc0-spaceship-sprites) | Wisedawn | CC0 |
+| `sprites/bosses/ships_with_engines.png` | [OpenGameArt - 2D spaceship sprites with engines](https://opengameart.org/content/2d-spaceship-sprites-with-engines) | morgan3d | CC0 |
 
 ---
 
@@ -58,18 +68,11 @@
 | `sprites/effects/explosion_1.png` | 자체 제작 (Python/Pillow, 64×64 RGBA) | Galaxy Storm Team | CC0 |
 | `sprites/effects/explosion_2.png` | 자체 제작 (Python/Pillow, 64×64 RGBA) | Galaxy Storm Team | CC0 |
 | `sprites/effects/explosion_3.png` | 자체 제작 (Python/Pillow, 64×64 RGBA) | Galaxy Storm Team | CC0 |
-
----
-
-## Additional Boss Assets (2026-04-02)
-
-| File | Source | Author | License | Usage |
-|------|--------|--------|---------|-------|
-| `sprites/bosses_extra/Titan_0.png` | [OpenGameArt - Titan battlecruiser](https://opengameart.org/content/titan-battlecruiser) | kanadaj (based on kit by Skorpio) | CC-BY-SA 3.0 | Boss candidate ship (large battlecruiser) |
-| `sprites/bosses_extra/og_001_0.png` | [OpenGameArt - Ship Sprites](https://opengameart.org/content/ship-sprites-0) | Prime_8 | CC0 | Boss candidate ship variant |
-| `sprites/bosses_extra/og_002_1.png` | [OpenGameArt - Ship Sprites](https://opengameart.org/content/ship-sprites-0) | Prime_8 | CC0 | Boss candidate ship variant |
-| `sprites/bosses_extra/og_003_0.png` | [OpenGameArt - Ship Sprites](https://opengameart.org/content/ship-sprites-0) | Prime_8 | CC0 | Boss candidate ship variant |
-| `sprites/boss_missiles/*` | [OpenGameArt - SpaceShip Set](https://opengameart.org/content/spaceship-set) | The_Scientist___ | CC0 | Boss missile sprite source (zip contains missile sprite) |
+| `sprites/effects/M484ExplosionSet1.png` | [OpenGameArt](https://opengameart.org/content/m484-explosion-set-1) | Master484 | CC0 |
+| `sprites/bullets/spr_bullet_strip.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 |
+| `sprites/bullets/spr_bullet_strip02.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 |
+| `sprites/bullets/spr_bullet_strip03.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 |
+| `sprites/bullets/spr_bullet_strip04.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 |
 
 ---
 
@@ -118,6 +121,10 @@
 | `bgm/bgm_boss.ogg` | 보스전 | 강렬한 전투 (BPM 200) | 28초 루프 | CC0 (자체 제작) |
 | `bgm/bgm_gameover.ogg` | 게임오버 | 우울·패배감 (BPM 60) | 10초 | CC0 (자체 제작) |
 | `bgm/bgm_victory.ogg` | 승리 | 승리·축제 (BPM 140) | 20초 | CC0 (자체 제작) |
+| `bgm/OutThere_0.ogg` | 우주 배경/타이틀용 앰비언트 | 느리고 광활한 우주 분위기 | 외부 에셋 | CC0 |
+| `bgm/ObservingTheStar.ogg` | 우주 탐사/메뉴용 배경음 | 몽환적·잔잔함 | 외부 에셋 | CC0 |
+| `bgm/Space%20Bass_0.ogg` | 스테이지용 신스/리듬 배경음 | 레트로 우주 액션 | 외부 에셋 | CC0 |
+| `bgm/stage/8bit-spaceshooter.mp3` | 추가 스테이지용 8비트 슈팅 BGM | 레트로·액션·루프형 | 외부 에셋 | CC0 |
 
 ---
 
@@ -172,82 +179,3 @@ OFL 글꼴을 포함한 소프트웨어를 판매 가능.
 ---
 
 *Galaxy Storm Asset Pack — 2025*
-
----
-
-## 🛸 Sprites — Boss Ships (200 Starships)
-
-> Downloaded from OpenGameArt. Individual PNG files (ship_0.png … ship_210.png).
-
-| 파일 | 출처 | 작성자 | 라이선스 | 용도 |
-|------|------|--------|----------|------|
-| `sprites/bosses/ship_20.png` | [OpenGameArt](https://opengameart.org/content/200-spaceships) | Wisedawn | CC0 | Stage 1 Boss (primary) |
-| `sprites/bosses/ship_80.png` | [OpenGameArt](https://opengameart.org/content/200-spaceships) | Wisedawn | CC0 | Stage 2 Boss (primary) |
-| `sprites/bosses/ship_180.png` | [OpenGameArt](https://opengameart.org/content/200-spaceships) | Wisedawn | CC0 | Stage 3 Boss (primary) |
-
----
-
-## 👾 Sprites — Enemy Ships (Kenney Space Shooter Extension)
-
-| 파일 | 출처 | 작성자 | 라이선스 | 용도 |
-|------|------|--------|----------|------|
-| `sprites/enemies/spaceShips_001.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 1 |
-| `sprites/enemies/spaceShips_002.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 2 |
-| `sprites/enemies/spaceShips_003.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 3 |
-| `sprites/enemies/spaceShips_004.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 4 |
-| `sprites/enemies/spaceShips_005.png` | [Kenney.nl](https://kenney.nl/assets/space-shooter-extension) | Kenney | CC0 | Enemy variant 5 |
-
----
-
-## 💥 Sprites — Explosion Sprite Sheet
-
-| 파일 | 출처 | 작성자 | 라이선스 | 용도 |
-|------|------|--------|----------|------|
-| `sprites/effects/M484ExplosionSet1.png` | [OpenGameArt](https://opengameart.org/content/m484-explosion-set-1) | Master484 | CC0 | 9-type animated explosion sprite sheet (yellow/blue/red, large/medium/small) |
-
----
-
-## 🔵 Sprites — Bullet Strips
-
-| 파일 | 출처 | 작성자 | 라이선스 | 용도 |
-|------|------|--------|----------|------|
-| `sprites/bullets/spr_bullet_strip.png`   | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 | Blue/violet glow bullet |
-| `sprites/bullets/spr_bullet_strip02.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 | Green glow bullet |
-| `sprites/bullets/spr_bullet_strip03.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 | Yellow/gold glow bullet |
-| `sprites/bullets/spr_bullet_strip04.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 | Red/orange glow bullet |
-
----
-
-## 📝 Integration Notes (2026-03-31)
-
-| 에셋 | 적용 위치 | 설명 |
-|------|-----------|------|
-| `ship_20/80/180.png` | `sprites.cpp renderBossSprite()` | 200 Starships를 Stage 1/2/3 보스 기본 스프라이트로 사용. boss_1/2/3.png를 fallback으로 유지 |
-| `spaceShips_001-005.png` | `asset_manager.cpp` | SPR_ENEMY_SHIP_1~5 키로 로드. 향후 웨이브별 적 변종으로 활용 가능 |
-| `M484ExplosionSet1.png` | `sprites.cpp renderExplosion()` | SDL_QueryTexture로 시트 크기 동적 계산. 3×3 섹션(색상×크기), 8프레임 애니메이션 |
-| `spr_bullet_strip*.png` | `sprites.cpp renderBulletSprite()` | 적 탄막의 colorIdx에 따라 청/녹/황/적 글로우 orb 사용. laser_enemy.png를 fallback으로 유지 |
-
----
-
-## 🎵 Pending BGM Requests (2026-04-06)
-
-| 파일(예정) | 출처 | 작성자 | 라이선스 | 비고 |
-|------|------|--------|----------|------|
-| `bgm/OutThere_0.ogg` | [OpenGameArt - Space Music: Out There](https://opengameart.org/content/space-music-out-there) | yd | CC0 | 배경/타이틀용 앰비언트 |
-| `bgm/through_space.ogg` | [OpenGameArt - Through Space](https://opengameart.org/content/through-space) | maxstack | CC-BY-SA 3.0 | 스테이지 진행용 신스 트랙 |
-
----
-
-## 🗑️ Removed Assets (2026-04-10)
-
-| 파일 | 이유 |
-|------|------|
-| `Cubemap_Sky_01~25-512x512.png` | 3D 큐브맵 크로스 레이아웃 텍스처 (약 50%가 검정 코너) — 2D 종스크롤 배경으로 사용 불가. 전체 화면에 렌더링 시 검정 세로 줄무늬가 나타나는 구조적 문제. |
-
----
-
-## 👹 Pending Boss Asset Requests (2026-04-08)
-
-| 파일(예정) | 출처 | 작성자 | 라이선스 | 비고 |
-|------|------|--------|----------|------|
-| `sprites/bosses_stage7/*` | [OpenGameArt - Alien Spaceship Sprite Pack](https://opengameart.org/content/alien-spaceship-sprite-pack) | pzUH | CC0 | Stage 7 포함 확장 스테이지용 보스 후보 스프라이트 팩 (zip: Ship.zip) |
