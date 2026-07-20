@@ -76,6 +76,10 @@ enum class PowerUpType {
     SPEEDUP    // increase movement speed (3 stages: 0.7x → 1.0x → 1.3x of base current)
 };
 
+// ─── Bullet speed multiplier ─────────────────────────────────────────────────
+// Applied in fireBullet() / fireHomingBullet() so all bullets share the same scaling.
+constexpr float BULLET_SPEED_MULT = 1.1f;
+
 // ─── Player movement speed constants ─────────────────────────────────────────
 // Base speed is slower than the original 280; collecting SPEEDUP items raises it.
 constexpr float PLAYER_SPEED_BASE   = 168.0f;  // no speedup (≈ 0.6 × 280)

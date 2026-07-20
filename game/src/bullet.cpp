@@ -12,7 +12,7 @@ void fireBullet(BulletPool& bp, Vec2 pos, Vec2 vel, BulletOwner owner, int damag
 
         b.active = true;
         b.pos = pos;
-        b.vel = vel;
+        b.vel = vel * BULLET_SPEED_MULT;
         b.owner = owner;
         b.damage = damage;
         b.hp = 1;
@@ -42,7 +42,7 @@ void fireHomingBullet(BulletPool& bp, Vec2 pos, Vec2 vel, BulletOwner owner,
         if (b.active) continue;
         b.active = true;
         b.pos = pos;
-        b.vel = vel;
+        b.vel = vel * BULLET_SPEED_MULT;
         b.owner = owner;
         b.damage = damage;
         b.hp = 1;
