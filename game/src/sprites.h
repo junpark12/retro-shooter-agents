@@ -21,6 +21,11 @@ void renderPlayerSprite(SDL_Renderer* renderer, const AssetManager& assets,
                         int x, int y, ShipType ship, bool invincible = false,
                         int animFrame = 0);
 
+// Shield aura rendered around the player while shieldTimer > 0.
+// Uses an existing texture when available, with primitive fallback.
+void renderShieldAura(SDL_Renderer* renderer, const AssetManager& assets,
+                      int cx, int cy, float shieldTimer);
+
 // Hitbox indicator: a small bright dot at the player's circular hitbox center.
 // cx, cy are world-space center coordinates; radius is the hitbox radius in px.
 void renderHitboxIndicator(SDL_Renderer* renderer, int cx, int cy, float radius);
