@@ -1,0 +1,54 @@
+name: Native playtest
+
+on:
+  pull_request:
+    paths:
+      - "game/**"
+      - ".github/workflows/playtest.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SDL development libraries
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cmake libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev python3-pil
+      - name: Configure and build
+        run: |
+          cmake -S game -B build -DCMAKE_BUILD_TYPE=Release -DGALAXY_BUILD_TESTS=ON
+          cmake --build build --parallel 2
+      - name: Check gameplay, rendering and generated asset
+        run: |
+          ctest --test-dir build --output-on-failure --no-tests=error
+          python3 game/tools/generate_menu_backdrop.py --check
+      - name: Capture deterministic game screens
+        working-directory: game
+        run: ../build/GalaxyStormPlaytest --capture ../build/playtest-screens
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-playtest-screens
+          path: build/playtest-screens
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SDL development libraries
+        run: vcpkg install sdl2:x64-windows sdl2-image:x64-windows sdl2-mixer:x64-windows sdl2-ttf:x64-windows
+      - name: Configure and build
+        run: |
+          cmake -S game -B build `
+            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
+            -DVCPKG_TARGET_TRIPLET=x64-windows `
+            -DGALAXY_BUILD_TESTS=ON
+          cmake --build build --config Release --parallel 2
+      - name: Check native Windows compatibility
+        run: |
+          $env:PATH = "$env:VCPKG_INSTALLATION_ROOT/installed/x64-windows/bin;$env:PATH"
+          ctest --test-dir build -C Release --output-on-failure --no-tests=error

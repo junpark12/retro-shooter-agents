@@ -38,6 +38,8 @@ struct AssetManager {
 };
 
 // ─── Sprite key constants ─────────────────────────────────────────────────────
+constexpr const char* SPR_UI_MENU_BACKDROP = "ui/menu_backdrop";
+
 // Player ships (Kenney assets)
 constexpr const char* SPR_PLAYER_BAGON  = "player/ship_bagon_k";
 constexpr const char* SPR_PLAYER_DAMUL  = "player/ship_damul_k";

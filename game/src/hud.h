@@ -59,6 +59,9 @@ void renderVictory(SDL_Renderer* renderer, TTF_Font* font, int score);
 void renderText(SDL_Renderer* renderer, TTF_Font* font,
                 const char* text, int x, int y, SDL_Color color);
 
+void renderTextCentered(SDL_Renderer* renderer, TTF_Font* font,
+                        const char* text, int y, SDL_Color color);
+
 // Flashing "WARNING!!" overlay displayed before boss appearance.
 // alpha cycles based on timer for a blinking effect.
 void renderWarning(SDL_Renderer* renderer, TTF_Font* font, float timer);
