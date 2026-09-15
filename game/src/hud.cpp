@@ -50,6 +50,21 @@ void renderText(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x,
     }
 }
 
+void renderTextCentered(SDL_Renderer* renderer, TTF_Font* font, const char* text, int y, SDL_Color color) {
+    if (!text || !text[0]) return;
+    int width = 0;
+    int height = 0;
+    if (font) {
+        if (TTF_SizeUTF8(font, text, &width, &height) != 0) {
+            SDL_LogError(SDL_LOG_CATEGORY_RENDER, "Cannot measure menu text: %s", TTF_GetError());
+            return;
+        }
+    } else {
+        for (const char* p = text; *p; ++p) width += (*p == ' ') ? 4 : 6;
+    }
+    renderText(renderer, font, text, (SCREEN_W - width) / 2, y, color);
+}
+
 void renderHUD(SDL_Renderer* renderer, const AssetManager& assets, TTF_Font* font, const Player& player, int stageNum, int hiScore) {
     char scoreBuf[64];
     std::snprintf(scoreBuf, sizeof(scoreBuf), "SCORE: %07d", std::max(0, player.score));
@@ -185,16 +200,16 @@ void renderBossHP(SDL_Renderer* renderer, TTF_Font* font, int currentHp, int max
     const float ratio = (displayHp >= 0.0f)
                             ? std::clamp(displayHp / static_cast<float>(maxHp), 0.0f, 1.0f)
                             : std::clamp(static_cast<float>(currentHp) / static_cast<float>(maxHp), 0.0f, 1.0f);
-    SDL_Rect border{8, 6, SCREEN_W - 16, 14};
+    SDL_Rect border{8, 56, SCREEN_W - 16, 14};
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderDrawRect(renderer, &border);
     const bool blink = (ratio < 0.12f) && ((SDL_GetTicks() / 80) % 2 == 0);
     SDL_SetRenderDrawColor(renderer, blink ? 255 : 230, blink ? 255 : 30, blink ? 255 : 30, 255);
     SDL_Rect fill{border.x + 1, border.y + 1, static_cast<int>((border.w - 2) * ratio), border.h - 2};
     SDL_RenderFillRect(renderer, &fill);
-    renderText(renderer, font, "BOSS", 10, 22, {255, 255, 255, 255});
+    renderText(renderer, font, "BOSS", 10, 72, {255, 255, 255, 255});
     std::string stars(phase, '*');
-    renderText(renderer, font, stars.c_str(), SCREEN_W - 50, 22, {255, 232, 0, 255});
+    renderText(renderer, font, stars.c_str(), SCREEN_W - 50, 72, {255, 232, 0, 255});
 }
 
 void renderBossAttackWarning(SDL_Renderer* renderer, int bossX, int bossY, int bossW, int bossH,
@@ -271,14 +286,14 @@ void renderCombo(SDL_Renderer* renderer, TTF_Font* font, int comboCount, float c
         const bool blink = ((SDL_GetTicks() / 100) % 2) == 0;
         color = blink ? SDL_Color{255, 40, 40, alpha} : SDL_Color{140, 20, 20, alpha};
     }
-    renderText(renderer, font, buf, SCREEN_W - 140, 50, color);
+    renderText(renderer, font, buf, SCREEN_W - 140, 92, color);
 
     if (comboCount >= 5) {
         char mulBuf[16];
         const float mul = 1.0f + static_cast<float>(comboCount / 4) * 0.5f;
         std::snprintf(mulBuf, sizeof(mulBuf), "%.1fx SCORE", std::min(mul, 8.0f));
         SDL_Color mulColor{255, 100, 255, alpha};
-        renderText(renderer, font, mulBuf, SCREEN_W - 140, 66, mulColor);
+        renderText(renderer, font, mulBuf, SCREEN_W - 140, 108, mulColor);
     }
 }
 
@@ -291,8 +306,8 @@ void renderPaused(SDL_Renderer* renderer, TTF_Font* font) {
     SDL_RenderFillRect(renderer, &overlay);
     SDL_SetRenderDrawBlendMode(renderer, prevBlend);
 
-    renderText(renderer, font, "PAUSED", SCREEN_W / 2 - 48, SCREEN_H / 2 - 24, {255, 232, 0, 255});
-    renderText(renderer, font, "PRESS P TO RESUME", SCREEN_W / 2 - 96, SCREEN_H / 2 + 8, {255, 255, 255, 255});
+    renderTextCentered(renderer, font, "PAUSED", SCREEN_H / 2 - 24, {255, 232, 0, 255});
+    renderTextCentered(renderer, font, "P / ESC: RESUME", SCREEN_H / 2 + 8, {255, 255, 255, 255});
 }
 
 void renderContinue(SDL_Renderer* renderer, TTF_Font* font, int countdown) {

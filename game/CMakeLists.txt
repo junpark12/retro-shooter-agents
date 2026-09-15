@@ -12,7 +12,6 @@ find_package(SDL2_ttf REQUIRED)
 
 # All game source files
 set(SOURCES
-    src/main.cpp
     src/game.cpp
     src/player.cpp
     src/enemy.cpp
@@ -31,51 +30,52 @@ set(SOURCES
     src/particles.cpp
 )
 
-# Headers live in src/ (alongside .cpp files)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_library(GalaxyStormCore STATIC ${SOURCES})
+target_include_directories(GalaxyStormCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Executable — WIN32 suppresses the console window on Windows
-add_executable(${PROJECT_NAME} WIN32 ${SOURCES})
+add_executable(${PROJECT_NAME} WIN32 src/main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE GalaxyStormCore)
 
 # ── Link SDL2 (modern vs legacy) ──────────────────────────────────────────────
 if(TARGET SDL2::SDL2)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2)
+    target_link_libraries(GalaxyStormCore PUBLIC SDL2::SDL2)
     if(TARGET SDL2::SDL2main)
-        target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
+        target_link_libraries(GalaxyStormCore PUBLIC SDL2::SDL2main)
     endif()
 else()
-    target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
+    target_include_directories(GalaxyStormCore PUBLIC ${SDL2_INCLUDE_DIRS})
+    target_link_libraries(GalaxyStormCore PUBLIC ${SDL2_LIBRARIES})
 endif()
 
 # ── Link SDL2_image ───────────────────────────────────────────────────────────
 if(TARGET SDL2_image::SDL2_image)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_image::SDL2_image)
+    target_link_libraries(GalaxyStormCore PUBLIC SDL2_image::SDL2_image)
 elseif(TARGET SDL2::SDL2_image)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2_image)
+    target_link_libraries(GalaxyStormCore PUBLIC SDL2::SDL2_image)
 else()
-    target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_IMAGE_LIBRARIES})
+    target_include_directories(GalaxyStormCore PUBLIC ${SDL2_IMAGE_INCLUDE_DIRS})
+    target_link_libraries(GalaxyStormCore PUBLIC ${SDL2_IMAGE_LIBRARIES})
 endif()
 
 # ── Link SDL2_mixer ───────────────────────────────────────────────────────────
 if(TARGET SDL2_mixer::SDL2_mixer)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_mixer::SDL2_mixer)
+    target_link_libraries(GalaxyStormCore PUBLIC SDL2_mixer::SDL2_mixer)
 elseif(TARGET SDL2::SDL2_mixer)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2_mixer)
+    target_link_libraries(GalaxyStormCore PUBLIC SDL2::SDL2_mixer)
 else()
-    target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_MIXER_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_MIXER_LIBRARIES})
+    target_include_directories(GalaxyStormCore PUBLIC ${SDL2_MIXER_INCLUDE_DIRS})
+    target_link_libraries(GalaxyStormCore PUBLIC ${SDL2_MIXER_LIBRARIES})
 endif()
 
 # ── Link SDL2_ttf ─────────────────────────────────────────────────────────────
 if(TARGET SDL2_ttf::SDL2_ttf)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2_ttf::SDL2_ttf)
+    target_link_libraries(GalaxyStormCore PUBLIC SDL2_ttf::SDL2_ttf)
 elseif(TARGET SDL2::SDL2_ttf)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2_ttf)
+    target_link_libraries(GalaxyStormCore PUBLIC SDL2::SDL2_ttf)
 else()
-    target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_TTF_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} PRIVATE ${SDL2_TTF_LIBRARIES})
+    target_include_directories(GalaxyStormCore PUBLIC ${SDL2_TTF_INCLUDE_DIRS})
+    target_link_libraries(GalaxyStormCore PUBLIC ${SDL2_TTF_LIBRARIES})
 endif()
 
 # ── Copy DLLs on Windows (modern imported targets only) ───────────────────────
@@ -87,6 +87,7 @@ if(WIN32)
                     $<TARGET_FILE:${_tgt}>
                     $<TARGET_FILE_DIR:${PROJECT_NAME}>
             )
+
         endif()
     endforeach()
 endif()
@@ -97,3 +98,14 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         ${CMAKE_CURRENT_SOURCE_DIR}/assets
         $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets
 )
+
+option(GALAXY_BUILD_TESTS "Build deterministic gameplay and rendering checks" OFF)
+if(GALAXY_BUILD_TESTS)
+    enable_testing()
+    add_executable(GalaxyStormPlaytest tests/playtest.cpp)
+    target_link_libraries(GalaxyStormPlaytest PRIVATE GalaxyStormCore)
+    add_test(NAME galaxy-playtest COMMAND GalaxyStormPlaytest)
+    set_tests_properties(galaxy-playtest PROPERTIES
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+endif()

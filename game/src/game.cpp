@@ -8,6 +8,7 @@
 #include "collision.h"
 #include "enemy.h"
 #include "hud.h"
+#include "input.h"
 #include "menu.h"
 #include "particles.h"
 #include "player.h"
@@ -225,6 +226,16 @@ void Game::handleEvents() {
             return;
         }
 
+        if (e.type == SDL_KEYDOWN && !isInitialKeyPress(e)) continue;
+        if (e.type == SDL_WINDOWEVENT && e.window.windowID != SDL_GetWindowID(window_)) continue;
+
+        const GameState nextPauseState = handlePauseEvent(state_, e);
+        if (nextPauseState != state_) {
+            state_ = nextPauseState;
+            if (audio_) audio_->playSFX(state_ == GameState::PAUSED ? SFX_PAUSE_IN : SFX_PAUSE_OUT);
+            continue;
+        }
+
         if (state_ == GameState::TITLE) {
             GameState next = handleMenuEvent(*menu_, e);
             if (next == GameState::SHIP_SELECT) {
@@ -251,20 +262,6 @@ void Game::handleEvents() {
                 state_ = GameState::PLAYING;
             } else if (next == GameState::TITLE) {
                 state_ = GameState::TITLE;
-            }
-        } else if (state_ == GameState::PLAYING) {
-            if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_P) {
-                stateBeforePause_ = state_;
-                state_ = GameState::PAUSED;
-                if (audio_) audio_->playSFX(SFX_PAUSE_IN);
-                return;
-            }
-        } else if (state_ == GameState::PAUSED) {
-            if (e.type == SDL_KEYDOWN && (e.key.keysym.scancode == SDL_SCANCODE_P ||
-                                          e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)) {
-                state_ = stateBeforePause_;
-                if (audio_) audio_->playSFX(SFX_PAUSE_OUT);
-                return;
             }
         } else if (state_ == GameState::CONTINUE) {
             if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_RETURN) {

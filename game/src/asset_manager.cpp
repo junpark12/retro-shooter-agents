@@ -129,6 +129,10 @@ bool AssetManager::init(SDL_Renderer* r) {
     load(SPR_POWERUP_SPEEDUP, "assets/sprites/powerups/speed.png");
 
     // Background + UI
+    if (!load(SPR_UI_MENU_BACKDROP, "assets/sprites/ui/menu_backdrop.png")) {
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Menu backdrop unavailable; using plain background: %s",
+                    IMG_GetError());
+    }
     load(SPR_BG_SPACE,     "assets/sprites/backgrounds/space_bg.png");
     load(SPR_UI_LIFE,      "assets/sprites/ui/life_icon.png");
     load(SPR_UI_BOMB,      "assets/sprites/ui/bomb_icon.png");

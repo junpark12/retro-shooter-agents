@@ -99,6 +99,18 @@
 
 ## 🖥️ Sprites — UI
 
+### Original orbital-dock menu backdrop
+
+| File | Source | License | Reproduction |
+|------|--------|---------|--------------|
+| `sprites/ui/menu_backdrop.png` | Original procedural pixel art; no third-party images | CC0-1.0 | `python3 game/tools/generate_menu_backdrop.py` |
+
+480x640 RGBA. A deterministic local generator creates the navy starfield, ringed
+planet and orbital-dock framing. Used by the title and ship-selection screens.
+The authors dedicate this original backdrop and its generator to the public
+domain under [CC0-1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+Pillow is an authoring dependency, not a game runtime dependency.
+
 | 파일 | 출처 | 작성자 | 라이선스 |
 |------|------|--------|----------|
 | `sprites/ui/life_icon.png` | 자체 제작 (Python/Pillow, 24×24 RGBA) | Galaxy Storm Team | CC0 |
