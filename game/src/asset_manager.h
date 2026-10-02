@@ -147,6 +147,7 @@ constexpr const char* SPR_EXPLOSION_3   = "effects/explosion_3";
 //   Rows:    large-ring (0), medium (1), small (2)
 // Frame size: 48×48 px; 8 frames per animation row.
 constexpr const char* SPR_EXPLOSION_SHEET  = "effects/M484ExplosionSet1";
+constexpr const char* SPR_PARTICLE_STAR    = "effects/kenney_particle_star_04";
 // Engine exhaust fire animation frames (8 frames, index 0-7)
 constexpr const char* SPR_ENGINE_FIRE_0 = "effects/engine_fire00";
 constexpr const char* SPR_ENGINE_FIRE_1 = "effects/engine_fire01";

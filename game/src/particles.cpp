@@ -1,5 +1,7 @@
 #include "particles.h"
 
+#include "asset_manager.h"
+
 #include <SDL.h>
 
 #include <algorithm>
@@ -172,14 +174,32 @@ void updateParticles(ParticleSystem& ps, float dt) {
     }
 }
 
-void renderParticles(SDL_Renderer* renderer, const ParticleSystem& ps) {
+void renderParticles(SDL_Renderer* renderer, const ParticleSystem& ps, const AssetManager* assets) {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_Texture* star = assets ? assets->get(SPR_PARTICLE_STAR) : nullptr;
 
     for (const Particle& p : ps.pool) {
         if (!p.active) continue;
 
         const float lifeT = std::clamp(p.age / p.lifetime, 0.0f, 1.0f);
         const Uint8 alpha = static_cast<Uint8>(255.0f * (1.0f - lifeT));
+        const bool useStar = star && p.b >= 150 && p.initialSize <= 4.5f;
+        if (useStar) {
+            const int extent = std::max(6, static_cast<int>(p.size * 4.0f));
+            SDL_Rect dst{
+                static_cast<int>(p.pos.x - extent * 0.5f),
+                static_cast<int>(p.pos.y - extent * 0.5f),
+                extent,
+                extent
+            };
+            SDL_SetTextureBlendMode(star, SDL_BLENDMODE_BLEND);
+            SDL_SetTextureColorMod(star, p.r, p.g, p.b);
+            SDL_SetTextureAlphaMod(star, alpha);
+            SDL_RenderCopy(renderer, star, nullptr, &dst);
+            SDL_SetTextureColorMod(star, 255, 255, 255);
+            SDL_SetTextureAlphaMod(star, 255);
+            continue;
+        }
         SDL_SetRenderDrawColor(renderer, p.r, p.g, p.b, alpha);
 
         if (p.size <= 1.0f) {

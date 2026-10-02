@@ -203,6 +203,14 @@ void runTests(RenderFixture& fixture) {
         require(SDL_QueryTexture(texture, nullptr, nullptr, &width, &height) == 0, SDL_GetError());
         require(width == SCREEN_W && height == SCREEN_H, "menu backdrop dimensions are incorrect");
     });
+    test("Kenney particle star asset loads for spark rendering", [&] {
+        SDL_Texture* texture = fixture.assets.get(SPR_PARTICLE_STAR);
+        require(texture != nullptr, "particle star texture did not load");
+        int width = 0;
+        int height = 0;
+        require(SDL_QueryTexture(texture, nullptr, nullptr, &width, &height) == 0, SDL_GetError());
+        require(width == 512 && height == 512, "particle star dimensions are incorrect");
+    });
     test("menu remains usable without the optional backdrop", [&] {
         AssetManager missing;
         fixture.clear();
