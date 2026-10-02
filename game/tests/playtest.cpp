@@ -203,6 +203,34 @@ void runTests(RenderFixture& fixture) {
         require(SDL_QueryTexture(texture, nullptr, nullptr, &width, &height) == 0, SDL_GetError());
         require(width == SCREEN_W && height == SCREEN_H, "menu backdrop dimensions are incorrect");
     });
+    test("Kenney particle star asset loads for spark rendering", [&] {
+        SDL_Texture* texture = fixture.assets.get(SPR_PARTICLE_STAR);
+        require(texture != nullptr, "particle star texture did not load");
+        int width = 0;
+        int height = 0;
+        require(SDL_QueryTexture(texture, nullptr, nullptr, &width, &height) == 0, SDL_GetError());
+        require(width == 512 && height == 512, "particle star dimensions are incorrect");
+    });
+    test("power-up flare particle renders behind pickups", [&] {
+        SDL_Texture* texture = fixture.assets.get(SPR_EFFECT_POWERUP_FLARE);
+        require(texture != nullptr, "power-up flare particle did not load");
+        int width = 0;
+        int height = 0;
+        require(SDL_QueryTexture(texture, nullptr, nullptr, &width, &height) == 0, SDL_GetError());
+        require(width == 512 && height == 512, "power-up flare particle dimensions are incorrect");
+        fixture.clear();
+        renderPowerUpSprite(fixture.renderer, fixture.assets, 120, 120, PowerUpType::POWER);
+        const SDL_Rect region{112, 112, 40, 40};
+        const auto pixels = fixture.pixels(region);
+        bool visible = false;
+        for (std::size_t i = 0; i < pixels.size(); i += 4) {
+            if (pixels[i] != 4 || pixels[i + 1] != 8 || pixels[i + 2] != 24) {
+                visible = true;
+                break;
+            }
+        }
+        require(visible, "power-up flare did not render any visible pixels");
+    });
     test("menu remains usable without the optional backdrop", [&] {
         AssetManager missing;
         fixture.clear();

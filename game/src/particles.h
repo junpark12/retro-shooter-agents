@@ -3,6 +3,7 @@
 #include <SDL.h>
 
 namespace galaxy {
+struct AssetManager;
 
 // ─── Particle ─────────────────────────────────────────────────────────────────
 // A single particle used for explosion effects.
@@ -39,6 +40,7 @@ void spawnGrazeSpark(ParticleSystem& ps, Vec2 pos);
 void updateParticles(ParticleSystem& ps, float dt);
 
 // Render all active particles with SDL_SetRenderDrawBlendMode + alpha.
-void renderParticles(SDL_Renderer* renderer, const ParticleSystem& ps);
+void renderParticles(SDL_Renderer* renderer, const ParticleSystem& ps,
+                     const AssetManager* assets = nullptr);
 
 } // namespace galaxy

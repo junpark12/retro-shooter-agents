@@ -69,6 +69,8 @@
 | `sprites/effects/explosion_2.png` | 자체 제작 (Python/Pillow, 64×64 RGBA) | Galaxy Storm Team | CC0 |
 | `sprites/effects/explosion_3.png` | 자체 제작 (Python/Pillow, 64×64 RGBA) | Galaxy Storm Team | CC0 |
 | `sprites/effects/M484ExplosionSet1.png` | [OpenGameArt](https://opengameart.org/content/m484-explosion-set-1) | Master484 | CC0 |
+| `sprites/effects/kenney_particle_star_04.png` | [Kenney.nl Particle Pack](https://kenney.nl/assets/particle-pack) | Kenney | CC0 |
+| `sprites/effects/kenney_particle_flare_01.png` | [Kenney.nl Particle Pack](https://kenney.nl/assets/particle-pack) | Kenney | CC0 |
 | `sprites/bullets/spr_bullet_strip.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 |
 | `sprites/bullets/spr_bullet_strip02.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 |
 | `sprites/bullets/spr_bullet_strip03.png` | [OpenGameArt](https://opengameart.org/content/bullet-collection-1-sleinu) | Bonsaiheldin | CC0 |

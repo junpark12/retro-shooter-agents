@@ -432,7 +432,7 @@ void Game::render() {
     }
     renderPowerUps(renderer_, *assets_, *powerUps_);
     renderPlayer(renderer_, *assets_, *player_);
-    renderParticles(renderer_, *particles_);
+    renderParticles(renderer_, *particles_, assets_);
     renderBullets(renderer_, *assets_, *bullets_);
 
     // Reset viewport after shake

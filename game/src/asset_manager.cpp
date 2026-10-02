@@ -101,7 +101,9 @@ bool AssetManager::init(SDL_Renderer* r) {
     load(SPR_EXPLOSION_1, "assets/sprites/effects/explosion_1.png");
     load(SPR_EXPLOSION_2, "assets/sprites/effects/explosion_2.png");
     load(SPR_EXPLOSION_3, "assets/sprites/effects/explosion_3.png");
+    load(SPR_EFFECT_POWERUP_FLARE, "assets/sprites/effects/kenney_particle_flare_01.png");
     load(SPR_EXPLOSION_SHEET, "assets/sprites/effects/M484ExplosionSet1.png");
+    load(SPR_PARTICLE_STAR, "assets/sprites/effects/kenney_particle_star_04.png");
 
     // Engine fire animation frames (Kenney)
     load(SPR_ENGINE_FIRE_0, "assets/sprites/effects/engine_fire00.png");
