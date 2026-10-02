@@ -141,6 +141,7 @@ constexpr const char* SPR_EXPLOSION_0   = "effects/explosion_0";
 constexpr const char* SPR_EXPLOSION_1   = "effects/explosion_1";
 constexpr const char* SPR_EXPLOSION_2   = "effects/explosion_2";
 constexpr const char* SPR_EXPLOSION_3   = "effects/explosion_3";
+constexpr const char* SPR_EFFECT_POWERUP_FLARE = "effects/kenney_particle_flare_01";
 // M484ExplosionSet1 sprite sheet (Master484 / CC0).
 // Layout: 3 sections wide × 3 sections tall; each section is one animation type.
 //   Columns: yellow/orange (0), blue/purple (1), red/pink (2)

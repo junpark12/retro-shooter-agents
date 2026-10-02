@@ -575,6 +575,14 @@ void renderBulletSprite(SDL_Renderer* renderer, const AssetManager& assets,
 void renderPowerUpSprite(SDL_Renderer* renderer, const AssetManager& assets, int x, int y, PowerUpType type) {
     SDL_Texture* tex = assets.get(powerUpKey(type));
     SDL_Rect dst = (type == PowerUpType::SPEEDUP) ? SDL_Rect{x + 2, y + 2, 20, 20} : SDL_Rect{x, y, 24, 24};
+    if (SDL_Texture* flare = assets.get(SPR_EFFECT_POWERUP_FLARE)) {
+        SDL_Rect flareDst{x - 4, y - 4, 32, 32};
+        SDL_SetTextureColorMod(flare, 120, 255, 255);
+        SDL_SetTextureAlphaMod(flare, 150);
+        SDL_RenderCopy(renderer, flare, nullptr, &flareDst);
+        SDL_SetTextureAlphaMod(flare, 255);
+        SDL_SetTextureColorMod(flare, 255, 255, 255);
+    }
     if (tex) {
         SDL_RenderCopy(renderer, tex, nullptr, &dst);
         renderPowerUpLabel(renderer, x, y, type);
