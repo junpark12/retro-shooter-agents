@@ -374,6 +374,10 @@ void activateBomb(Player& p, BulletPool& bullets) {
 
 void renderPlayer(SDL_Renderer* renderer, const AssetManager& assets, const Player& p) {
     if (!p.active) return;
+    if (p.shieldTimer > 0.0f) {
+        const Vec2 c = p.center();
+        renderShieldAura(renderer, assets, static_cast<int>(c.x), static_cast<int>(c.y), p.shieldTimer);
+    }
     renderPlayerSprite(renderer, assets, static_cast<int>(p.pos.x), static_cast<int>(p.pos.y),
                        p.shipType, p.invincibleTimer > 0.0f, p.animFrame);
     if (p.sidecarActive) {

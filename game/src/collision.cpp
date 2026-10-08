@@ -70,6 +70,45 @@ void damagePlayer(Player& player, int dmg, Vec2 deathPos,
         player.active = false;
     }
 }
+
+void clampPlayerPosition(Player& player) {
+    player.pos.x = std::clamp(player.pos.x, 0.0f, static_cast<float>(SCREEN_W) - 28.0f);
+    player.pos.y = std::clamp(player.pos.y, 0.0f, static_cast<float>(SCREEN_H) - 36.0f);
+}
+
+bool consumeShield(Player& player) {
+    if (player.shieldTimer <= 0.0f) return false;
+    player.shieldTimer = 0.0f;
+    if (player.powerType == PowerUpType::SHIELD) {
+        player.hasPowerUp = false;
+    }
+    return true;
+}
+
+void separatePlayerFromRect(Player& player, const Rect& obstacle) {
+    Rect pb = player.worldBounds();
+    if (!rectsOverlap(pb, obstacle)) return;
+
+    const float pushLeft = (pb.x + pb.w) - obstacle.x;
+    const float pushRight = (obstacle.x + obstacle.w) - pb.x;
+    const float pushUp = (pb.y + pb.h) - obstacle.y;
+    const float pushDown = (obstacle.y + obstacle.h) - pb.y;
+
+    float minPush = pushLeft;
+    int axis = 0; // 0: left, 1: right, 2: up, 3: down
+    if (pushRight < minPush) { minPush = pushRight; axis = 1; }
+    if (pushUp < minPush) { minPush = pushUp; axis = 2; }
+    if (pushDown < minPush) { axis = 3; }
+
+    switch (axis) {
+        case 0: player.pos.x -= pushLeft; break;
+        case 1: player.pos.x += pushRight; break;
+        case 2: player.pos.y -= pushUp; break;
+        default: player.pos.y += pushDown; break;
+    }
+
+    clampPlayerPosition(player);
+}
 }
 
 void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
@@ -152,7 +191,7 @@ void checkBulletEnemyCollision(BulletPool& bullets, EnemyPool& enemies,
 
 void checkBulletPlayerCollision(BulletPool& bullets, Player& player, AudioManager* audio, ParticleSystem* ps) {
     if (!player.active) return;
-    if (player.invincibleTimer > 0.0f || player.shieldTimer > 0.0f) return;
+    if (player.invincibleTimer > 0.0f) return;
 
     Vec2 pc = player.center();
     for (Bullet& b : bullets.pool) {
@@ -177,12 +216,14 @@ void checkBulletPlayerCollision(BulletPool& bullets, Player& player, AudioManage
         if (!circlesOverlap(pc.x, pc.y, player.hitRadius, bc.x, bc.y, b.hitRadius)) continue;
 
         b.active = false;
+        if (consumeShield(player)) {
+            break;
+        }
         if (audio) audio->playSFX(SFX_PLAYER_HIT);
         // Player knockback: push away from bullet direction
         const Vec2 pushDir = (player.center() - bc).normalized();
         player.pos += pushDir * 8.0f;
-        player.pos.x = std::clamp(player.pos.x, 0.0f, static_cast<float>(SCREEN_W) - 28.0f);
-        player.pos.y = std::clamp(player.pos.y, 0.0f, static_cast<float>(SCREEN_H) - 36.0f);
+        clampPlayerPosition(player);
         const Vec2 deathPos = player.center();
         damagePlayer(player, b.damage, deathPos, audio, ps);
         break;
@@ -192,7 +233,7 @@ void checkBulletPlayerCollision(BulletPool& bullets, Player& player, AudioManage
 void checkPlayerEnemyCollision(Player& player, EnemyPool& enemies,
                                AudioManager* audio, ParticleSystem* ps) {
     if (!player.active) return;
-    if (player.invincibleTimer > 0.0f || player.shieldTimer > 0.0f) return;
+    if (player.invincibleTimer > 0.0f) return;
 
     Rect pb = player.worldBounds();
     for (Enemy& e : enemies.pool) {
@@ -201,6 +242,9 @@ void checkPlayerEnemyCollision(Player& player, EnemyPool& enemies,
 
         e.active = false;
         if (ps) spawnExplosion(*ps, e.center(), false);
+        if (consumeShield(player)) {
+            break;
+        }
         if (audio) audio->playSFX(SFX_PLAYER_HIT);
         const Vec2 deathPos = player.center();
         damagePlayer(player, 1, deathPos, audio, ps);
@@ -243,10 +287,16 @@ void checkBulletBossCollision(BulletPool& bullets, Boss& boss, Player& player,
 void checkPlayerBossCollision(Player& player, Boss& boss,
                               AudioManager* audio, ParticleSystem* ps) {
     if (!player.active) return;
-    if (player.invincibleTimer > 0.0f || player.shieldTimer > 0.0f) return;
+    if (player.invincibleTimer > 0.0f) return;
     if (!boss.active || !boss.entranceDone) return;
 
-    if (!rectsOverlap(player.worldBounds(), boss.worldBounds())) return;
+    const Rect bossRect = boss.worldBounds();
+    if (!rectsOverlap(player.worldBounds(), bossRect)) return;
+
+    if (consumeShield(player)) {
+        separatePlayerFromRect(player, bossRect);
+        return;
+    }
 
     if (audio) audio->playSFX(SFX_PLAYER_HIT);
     const Vec2 deathPos = player.center();

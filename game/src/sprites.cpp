@@ -413,6 +413,39 @@ void renderPlayerSprite(SDL_Renderer* renderer, const AssetManager& assets,
     }
 }
 
+void renderShieldAura(SDL_Renderer* renderer, const AssetManager& assets,
+                      int cx, int cy, float shieldTimer) {
+    SDL_BlendMode prevBlendMode = SDL_BLENDMODE_NONE;
+    SDL_GetRenderDrawBlendMode(renderer, &prevBlendMode);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    const float pulse = 1.0f + 0.08f * std::sin((6.0f - shieldTimer) * 8.0f);
+    const int radius = static_cast<int>(24.0f * pulse);
+
+    SDL_Texture* tex = assets.get(SPR_POWERUP_SHIELD);
+    if (tex) {
+        SDL_Rect dst{cx - radius, cy - radius, radius * 2, radius * 2};
+        SDL_SetTextureColorMod(tex, 140, 220, 255);
+        SDL_SetTextureAlphaMod(tex, 110);
+        SDL_RenderCopy(renderer, tex, nullptr, &dst);
+        SDL_SetTextureColorMod(tex, 255, 255, 255);
+        SDL_SetTextureAlphaMod(tex, 255);
+    } else {
+        SDL_SetRenderDrawColor(renderer, 120, 210, 255, 36);
+        drawFilledCircle(renderer, cx, cy, radius);
+    }
+
+    SDL_SetRenderDrawColor(renderer, 170, 235, 255, 160);
+    for (int angle = 0; angle < 360; angle += 6) {
+        const float rad = static_cast<float>(angle) * 3.14159265f / 180.0f;
+        const int px = cx + static_cast<int>(radius * std::cos(rad));
+        const int py = cy + static_cast<int>(radius * std::sin(rad));
+        SDL_RenderDrawPoint(renderer, px, py);
+    }
+
+    SDL_SetRenderDrawBlendMode(renderer, prevBlendMode);
+}
+
 void renderHitboxIndicator(SDL_Renderer* renderer, int cx, int cy, float radius) {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
